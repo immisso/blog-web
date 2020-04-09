@@ -1,0 +1,106 @@
+.homeContainer {
+  width: 1152px;
+  margin: 0 auto;
+  padding: 1.2rem 0;
+  .homeContainerWrapper {
+    display: flex;
+    justify-content: space-between;
+    .homeContainerList {
+      width: 700px;
+    }
+    .homeContainerSiderlist {
+      width: 240px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .homeContainer {
+    width: 100%;
+    .homeContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .homeContainerList {
+        width: 100%;
+      }
+      .homeContainerSiderlist {
+        display: none;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 576px) and (max-width: 767px) {
+  .homeContainer {
+    width: 90%;
+    .homeContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .homeContainerList {
+        width: 100%;
+      }
+      .homeContainerSiderlist {
+        display: none;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .homeContainer {
+    width: 750px;
+    .homeContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .homeContainerList {
+        width: 100%;
+      }
+      .homeContainerSiderlist {
+        display: none;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .homeContainer {
+    width: 960px;
+    .homeContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .homeContainerList {
+        width: 700px;
+      }
+      .homeContainerSiderlist {
+        width: 240px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .homeContainer {
+    width: 960px;
+    .homeContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .homeContainerList {
+        width: 700px;
+      }
+      .homeContainerSiderlist {
+        width: 240px;
+      }
+    }
+  }
+}
+
+.ant-list-vertical .ant-list-item-action {
+  margin-top: 5px !important;
+}
+
+.aboutColor {
+  color: #909090;
+}
