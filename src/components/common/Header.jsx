@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-07 13:44:28
+ * @Last Modified time: 2020-04-11 18:00:29
  */
 
 import React, { useState, useEffect } from 'react';
@@ -45,18 +45,13 @@ const MainHeader = props => {
   console.log('header');
 
   // eslint-disable-next-line react/prop-types
-  const {
-    dispatch,
-    article: { categories },
-  } = props;
+  const { dispatch, categories } = props;
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/categories' });
     }
   }, []);
-  console.log('eeeeeeeeeeeeeeeeeeeeeeeeeee');
-  console.log(props);
-  // console.log(article)
+
   const [visible, setVisible] = useState(false);
   const showDrawer = () => {
     setVisible(true);
@@ -241,7 +236,7 @@ const MainHeader = props => {
   );
 };
 
-export default connect(({ article, loading }) => ({
-  article,
+export default connect(({ article: { categories }, loading }) => ({
+  categories,
   loading: loading,
 }))(MainHeader);

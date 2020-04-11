@@ -2,10 +2,15 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-09 07:46:54
+ * @Last Modified time: 2020-04-10 07:17:18
  */
 
-import { getCategories, getArticles, getHotArticles } from '@/services/article';
+import {
+  getCategories,
+  getArticles,
+  getHotArticles,
+  getArticleDetail,
+} from '@/services/article';
 
 export default {
   namespace: 'article',
@@ -13,6 +18,7 @@ export default {
     categories: [],
     articles: [],
     hots: [],
+    detail: {},
   },
   effects: {
     *categories({ payload }, { call, put }) {
@@ -36,6 +42,13 @@ export default {
         payload: response,
       });
     },
+    *detail({ payload }, { call, put }) {
+      const response = yield call(getArticleDetail, payload);
+      yield put({
+        type: 'detailHandle',
+        payload: response,
+      });
+    },
   },
   reducers: {
     categoriesHandle(state, { payload }) {
@@ -54,6 +67,12 @@ export default {
       return {
         ...state,
         hots: payload.status === 200 ? payload.data : [],
+      };
+    },
+    detailHandle(state, { payload }) {
+      return {
+        ...state,
+        detail: payload.status === 200 ? payload.data : {},
       };
     },
   },

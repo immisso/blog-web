@@ -22,6 +22,7 @@
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.0.18",
     "dva": "^2.4.1",
+    "highlight.js": "^9.18.1",
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
