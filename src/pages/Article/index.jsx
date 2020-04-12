@@ -277,8 +277,8 @@ const Article = props => {
   );
 };
 
-export default connect(({ article: { detail, hots }, lodding }) => ({
+export default connect(({ article: { detail, hots }, loading }) => ({
   detail,
   hots,
-  lodding,
+  loading,
 }))(Article);

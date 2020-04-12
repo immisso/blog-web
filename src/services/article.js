@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:58:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 16:10:48
+ * @Last Modified time: 2020-04-13 07:48:52
  */
 
 import { stringify } from 'qs';
@@ -40,4 +40,10 @@ export async function createNoLoginComment(data) {
     method: 'POST',
     data,
   });
+}
+
+// 获取tags
+
+export async function getTags() {
+  return request('/api/tags');
 }

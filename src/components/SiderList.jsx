@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-08 07:37:50
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-09 07:33:31
+ * @Last Modified time: 2020-04-13 07:28:58
  */
 
 import React from 'react';
@@ -21,8 +21,9 @@ const SiderList = props => {
       split={split}
       renderItem={item => (
         <List.Item
+          className="pl-0"
           actions={[
-            <span style={{ fontSize: 13 }} key="111">
+            <span className="ft-13" key="111">
               {/* <Icon
               type="eye"
               theme="outlined"

@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-11 18:00:29
+ * @Last Modified time: 2020-04-12 21:16:02
  */
 
 import React, { useState, useEffect } from 'react';
@@ -42,9 +42,6 @@ const tabs = [
 // const categories = null
 
 const MainHeader = props => {
-  console.log('header');
-
-  // eslint-disable-next-line react/prop-types
   const { dispatch, categories } = props;
   useEffect(() => {
     if (dispatch) {

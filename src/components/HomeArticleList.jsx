@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 07:58:49
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-09 08:04:20
+ * @Last Modified time: 2020-04-12 21:25:10
  */
 
 import React, { useState, useEffect } from 'react';
@@ -20,20 +20,21 @@ const IconText = ({ icon, text }) => (
 );
 
 const HomeArticleList = props => {
-  const { dispatch, articles } = props;
+  const { dispatch, articles, loading } = props;
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/articles' });
     }
-  });
+  }, []);
   return (
     <div>
       <Card bordered={false}>
         <List
           className="demo-loadmore-list"
-          // loading={loading}
+          loading={loading}
           itemLayout="vertical"
-          // loadMore={loadMore}
+          // loadMore="加载更多"
+          pagination
           dataSource={articles}
           renderItem={item => (
             <Skeleton avatar title={false} loading={false} active>
@@ -55,6 +56,14 @@ const HomeArticleList = props => {
                     key="list-vertical-message"
                   />,
                 ]}
+                extra={
+                  <img
+                    width={150}
+                    // className="mt-20"
+                    alt="logo"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                  />
+                }
               >
                 <List.Item.Meta
                   title={
@@ -75,7 +84,7 @@ const HomeArticleList = props => {
                     </span>
                   }
                 />
-                {/* <div>{item.abstract}</div> */}
+                {/* <div className="ft-13">{item.abstract}</div> */}
               </List.Item>
             </Skeleton>
           )}
@@ -85,6 +94,7 @@ const HomeArticleList = props => {
   );
 };
 
-export default connect(({ article: { articles }, loadding }) => ({
+export default connect(({ article: { articles }, loading }) => ({
   articles,
+  loading: loading.effects['article/articles'],
 }))(HomeArticleList);

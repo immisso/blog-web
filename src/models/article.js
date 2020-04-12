@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 16:09:34
+ * @Last Modified time: 2020-04-13 07:47:56
  */
 
 import {
@@ -11,6 +11,7 @@ import {
   getHotArticles,
   getArticleDetail,
   getComments,
+  getTags,
   createNoLoginComment,
 } from '@/services/article';
 
@@ -21,6 +22,7 @@ export default {
     articles: [],
     hots: [],
     comments: [],
+    tags: [],
     detail: {},
   },
   effects: {
@@ -56,6 +58,13 @@ export default {
       const response = yield call(getComments, payload);
       yield put({
         type: 'commentHandle',
+        payload: response,
+      });
+    },
+    *tags({ payload }, { call, put }) {
+      const response = yield call(getTags, payload);
+      yield put({
+        type: 'tagsHandle',
         payload: response,
       });
     },
@@ -96,6 +105,12 @@ export default {
       return {
         ...state,
         comments: payload.status === 200 ? payload.data : [],
+      };
+    },
+    tagsHandle(state, { payload }) {
+      return {
+        ...state,
+        tags: payload.status === 200 ? payload.data : [],
       };
     },
     createNoLoginCommentHandle(state, { payload }) {

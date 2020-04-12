@@ -13,12 +13,12 @@ export default defineConfig({
       path: '/',
       component: '@/pages/Home',
       exact: true,
-      routes: [
-        {
-          path: '/',
-          component: '@/components/HomeArticleList',
-        },
-      ],
+      // routes: [
+      //   {
+      //     path: '/',
+      //     component: '@/components/HomeArticleList',
+      //   },
+      // ],
     },
     {
       path: '/article/:id',
