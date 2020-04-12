@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-11 18:47:25
+ * @Last Modified time: 2020-04-12 16:27:25
  */
 
 import React, { useEffect, useState } from 'react';
@@ -22,6 +22,7 @@ import {
 import Header from '@/components/common/Header';
 import UserAvatar from '@/components/common/UserAvatar';
 import ArticleAnchor from '@/components/Anchor';
+import AddComment from '@/components/Comment';
 
 import hljs from 'highlight.js/lib/highlight';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -130,6 +131,16 @@ const Article = props => {
                 />
               </div>
             </Card>
+            <Card
+              title="评论"
+              bordered={false}
+              // loading={loading}
+              className="mtb-20"
+              id="comment"
+              // size="small"
+            >
+              <AddComment id={id} />
+            </Card>
           </div>
           <div className={styles.articleContainerSider}>
             <Card
@@ -211,7 +222,6 @@ const Article = props => {
                 split={false}
                 renderItem={item => (
                   <List.Item
-                    // style={{ paddingLeft: 0 }}
                     className="pl-0"
                     actions={[
                       <span key="1">

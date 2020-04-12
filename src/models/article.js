@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-10 07:17:18
+ * @Last Modified time: 2020-04-12 16:09:34
  */
 
 import {
@@ -10,6 +10,8 @@ import {
   getArticles,
   getHotArticles,
   getArticleDetail,
+  getComments,
+  createNoLoginComment,
 } from '@/services/article';
 
 export default {
@@ -18,6 +20,7 @@ export default {
     categories: [],
     articles: [],
     hots: [],
+    comments: [],
     detail: {},
   },
   effects: {
@@ -49,6 +52,20 @@ export default {
         payload: response,
       });
     },
+    *comments({ payload }, { call, put }) {
+      const response = yield call(getComments, payload);
+      yield put({
+        type: 'commentHandle',
+        payload: response,
+      });
+    },
+    *addNoLoginComment({ payload }, { call, put }) {
+      const response = yield call(createNoLoginComment, payload);
+      yield put({
+        type: 'createNoLoginCommentHandle',
+        payload: response,
+      });
+    },
   },
   reducers: {
     categoriesHandle(state, { payload }) {
@@ -73,6 +90,21 @@ export default {
       return {
         ...state,
         detail: payload.status === 200 ? payload.data : {},
+      };
+    },
+    commentHandle(state, { payload }) {
+      return {
+        ...state,
+        comments: payload.status === 200 ? payload.data : [],
+      };
+    },
+    createNoLoginCommentHandle(state, { payload }) {
+      return {
+        ...state,
+        comments:
+          payload.status === 200
+            ? [payload.data, ...state.comments]
+            : [...state.comments],
       };
     },
   },
