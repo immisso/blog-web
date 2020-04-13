@@ -77,7 +77,10 @@ const MainHeader = props => {
                 />
               </svg>
             </Link>
-            <Menu mode="horizontal">
+            <Menu
+              mode="horizontal"
+              style={{ height: '64px', borderBottom: 'none' }}
+            >
               {tabs &&
                 tabs.map(item => (
                   <Menu.Item key={item.key}>

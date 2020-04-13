@@ -19,8 +19,8 @@ import {
   LikeOutlined,
   MessageOutlined,
 } from '@ant-design/icons';
-import Header from '@/components/common/Header';
-import UserAvatar from '@/components/common/UserAvatar';
+import Header from '@/components/Common/Header';
+import UserAvatar from '@/components/Common/UserAvatar';
 import ArticleAnchor from '@/components/Anchor';
 import AddComment from '@/components/Comment';
 

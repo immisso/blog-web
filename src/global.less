@@ -1,13 +1,30 @@
 .ant-layout-header {
-  // height: 42px;
-  // line-height: 42px;
   position: relative;
+  height: 64px;
+  // flex-direction: row;
+  // flex-wrap: nowrap;
   background: #ffffff !important;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.02), 0 1px 0 rgba(0, 0, 0, 0.02);
 }
 
 .ant-list-vertical .ant-list-item-action {
   margin-top: 5px !important;
+}
+
+.ant-menu-vertical .ant-menu-item,
+.ant-menu-vertical-left .ant-menu-item,
+.ant-menu-vertical-right .ant-menu-item,
+.ant-menu-inline .ant-menu-item,
+.ant-menu-vertical .ant-menu-submenu-title,
+.ant-menu-vertical-left .ant-menu-submenu-title,
+.ant-menu-vertical-right .ant-menu-submenu-title,
+.ant-menu-inline .ant-menu-submenu-title,
+.ant-menu-vertical .ant-menu-item:not(:last-child),
+.ant-menu-vertical-left .ant-menu-item:not(:last-child),
+.ant-menu-vertical-right .ant-menu-item:not(:last-child),
+.ant-menu-inline .ant-menu-item:not(:last-child) {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 // anchor

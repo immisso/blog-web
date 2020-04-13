@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react';
 import { Layout, Card } from 'antd';
 import { connect } from 'dva';
-import Header from '@/components/common/Header';
+import Header from '@/components/Common/Header';
 import SiderList from '@/components/SiderList';
 import HomeArticleList from '@/components/HomeArticleList';
 import Tags from '@/components/Tags';

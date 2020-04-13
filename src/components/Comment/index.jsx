@@ -9,7 +9,7 @@ import { connect } from 'dva';
 import { Link } from 'umi';
 import { Comment, Divider, Tooltip, List } from 'antd';
 import moment from 'moment';
-import UserAvatar from '@/components/common/UserAvatar';
+import UserAvatar from '@/components/Common/UserAvatar';
 import LoginCommentForm from '@/components/forms/LoginCommentForm';
 import NoLoginCommentForm from '@/components/forms/NoLoginCommentForm';
 
