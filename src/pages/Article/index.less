@@ -1,0 +1,140 @@
+.articlePanel {
+  position: fixed;
+  width: 40px;
+  height: 200px;
+  top: 16rem;
+  margin-left: -4rem;
+  .articlePanelItem {
+    display: flex;
+    flex-flow: column;
+    width: 40px;
+    margin-bottom: 20px;
+    align-items: center;
+    .articlePanelIcon {
+      margin-bottom: 5px;
+      width: 38px;
+      height: 38px;
+      background: #ffffff;
+      border-radius: 50%;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      &:hover {
+        outline-color: #cccccc;
+      }
+    }
+    .articlePanelCount {
+      color: #cccccc;
+    }
+  }
+}
+
+.articleContainer {
+  width: 1152px;
+  padding: 1.2rem 0;
+  margin: 0 auto;
+  .articleContainerWrapper {
+    display: flex;
+    justify-content: space-between;
+    .articleContainerDetail {
+      width: 700px;
+    }
+    .articleContainerSider {
+      width: 240px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .articleContainer {
+    width: 100%;
+    .articleContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .articleContainerDetail {
+        width: 100%;
+      }
+      .articleContainerSider {
+        width: 100%;
+        display: none;
+      }
+      .articlePanel {
+        display: none;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 576px) and (max-width: 767px) {
+  .articleContainer {
+    width: 90%;
+    .articleContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .articleContainerDetail {
+        width: 100%;
+      }
+      .articleContainerSider {
+        width: 100%;
+        display: none;
+      }
+      .articlePanel {
+        display: none;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .articleContainer {
+    width: 750px;
+    .articleContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .articleContainerDetail {
+        width: 100%;
+      }
+      .articleContainerSider {
+        width: 100%;
+        display: none;
+      }
+      .articlePanel {
+        display: none;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .articleContainer {
+    width: 960px;
+    .articleContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .articleContainerDetail {
+        width: 700px;
+      }
+      .articleContainerSider {
+        width: 240px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .articleContainer {
+    width: 960px;
+    .articleContainerWrapper {
+      display: flex;
+      justify-content: space-between;
+      .articleContainerDetail {
+        width: 700px;
+      }
+      .articleContainerSider {
+        width: 240px;
+      }
+    }
+  }
+}

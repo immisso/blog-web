@@ -2,10 +2,18 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-09 07:46:54
+ * @Last Modified time: 2020-04-13 07:47:56
  */
 
-import { getCategories, getArticles, getHotArticles } from '@/services/article';
+import {
+  getCategories,
+  getArticles,
+  getHotArticles,
+  getArticleDetail,
+  getComments,
+  getTags,
+  createNoLoginComment,
+} from '@/services/article';
 
 export default {
   namespace: 'article',
@@ -13,6 +21,9 @@ export default {
     categories: [],
     articles: [],
     hots: [],
+    comments: [],
+    tags: [],
+    detail: {},
   },
   effects: {
     *categories({ payload }, { call, put }) {
@@ -36,6 +47,34 @@ export default {
         payload: response,
       });
     },
+    *detail({ payload }, { call, put }) {
+      const response = yield call(getArticleDetail, payload);
+      yield put({
+        type: 'detailHandle',
+        payload: response,
+      });
+    },
+    *comments({ payload }, { call, put }) {
+      const response = yield call(getComments, payload);
+      yield put({
+        type: 'commentHandle',
+        payload: response,
+      });
+    },
+    *tags({ payload }, { call, put }) {
+      const response = yield call(getTags, payload);
+      yield put({
+        type: 'tagsHandle',
+        payload: response,
+      });
+    },
+    *addNoLoginComment({ payload }, { call, put }) {
+      const response = yield call(createNoLoginComment, payload);
+      yield put({
+        type: 'createNoLoginCommentHandle',
+        payload: response,
+      });
+    },
   },
   reducers: {
     categoriesHandle(state, { payload }) {
@@ -54,6 +93,33 @@ export default {
       return {
         ...state,
         hots: payload.status === 200 ? payload.data : [],
+      };
+    },
+    detailHandle(state, { payload }) {
+      return {
+        ...state,
+        detail: payload.status === 200 ? payload.data : {},
+      };
+    },
+    commentHandle(state, { payload }) {
+      return {
+        ...state,
+        comments: payload.status === 200 ? payload.data : [],
+      };
+    },
+    tagsHandle(state, { payload }) {
+      return {
+        ...state,
+        tags: payload.status === 200 ? payload.data : [],
+      };
+    },
+    createNoLoginCommentHandle(state, { payload }) {
+      return {
+        ...state,
+        comments:
+          payload.status === 200
+            ? [payload.data, ...state.comments]
+            : [...state.comments],
       };
     },
   },

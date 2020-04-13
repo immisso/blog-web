@@ -10,18 +10,19 @@ export default defineConfig({
   },
   routes: [
     {
-      path: '/article/:id',
-      component: '@/pages/Article',
-    },
-    {
       path: '/',
       component: '@/pages/Home',
-      routes: [
-        {
-          path: '/',
-          component: '@/components/HomeArticleList',
-        },
-      ],
+      exact: true,
+      // routes: [
+      //   {
+      //     path: '/',
+      //     component: '@/components/HomeArticleList',
+      //   },
+      // ],
+    },
+    {
+      path: '/article/:id',
+      component: '@/pages/Article',
     },
   ],
 });
