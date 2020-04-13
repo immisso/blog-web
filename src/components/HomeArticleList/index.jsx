@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 07:58:49
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 21:25:10
+ * @Last Modified time: 2020-04-13 20:03:23
  */
 
 import React, { useState, useEffect } from 'react';
@@ -20,12 +20,22 @@ const IconText = ({ icon, text }) => (
 );
 
 const HomeArticleList = props => {
-  const { dispatch, articles, loading } = props;
+  const { dispatch, articles, articleCount, loading } = props;
+  const [page, setPage] = useState(1);
   useEffect(() => {
     if (dispatch) {
-      dispatch({ type: 'article/articles' });
+      dispatch({ type: 'article/articles', payload: { page, pageSize: 10 } });
     }
   }, []);
+  const pageChange = pageNum => {
+    setPage(pageNum);
+    if (dispatch) {
+      dispatch({
+        type: 'article/articles',
+        payload: { page: pageNum, pageSize: 10 },
+      });
+    }
+  };
   return (
     <div>
       <Card bordered={false}>
@@ -33,9 +43,13 @@ const HomeArticleList = props => {
           className="demo-loadmore-list"
           loading={loading}
           itemLayout="vertical"
-          // loadMore="加载更多"
-          pagination
           dataSource={articles}
+          pagination={{
+            pageSize: 10,
+            total: articleCount,
+            current: page,
+            onChange: pageChange,
+          }}
           renderItem={item => (
             <Skeleton avatar title={false} loading={false} active>
               <List.Item
@@ -94,7 +108,8 @@ const HomeArticleList = props => {
   );
 };
 
-export default connect(({ article: { articles }, loading }) => ({
+export default connect(({ article: { articles, articleCount }, loading }) => ({
   articles,
+  articleCount,
   loading: loading.effects['article/articles'],
 }))(HomeArticleList);

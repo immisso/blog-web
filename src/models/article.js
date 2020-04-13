@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-13 07:47:56
+ * @Last Modified time: 2020-04-13 13:38:49
  */
 
 import {
@@ -24,6 +24,7 @@ export default {
     comments: [],
     tags: [],
     detail: {},
+    articleCount: 0,
   },
   effects: {
     *categories({ payload }, { call, put }) {
@@ -86,7 +87,8 @@ export default {
     articlesHandle(state, { payload }) {
       return {
         ...state,
-        articles: payload.status === 200 ? payload.data : [],
+        articles: payload.status === 200 ? payload.data.articles : [],
+        articleCount: payload.status === 200 ? payload.data.count : 0,
       };
     },
     hotHandle(state, { payload }) {

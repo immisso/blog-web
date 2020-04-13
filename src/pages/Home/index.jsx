@@ -2,13 +2,13 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 11:41:31
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-13 07:56:04
+ * @Last Modified time: 2020-04-13 20:57:20
  */
 
 import React, { useEffect } from 'react';
 import { Layout, Card } from 'antd';
 import { connect } from 'dva';
-import Header from '@/components/Common/Header';
+import Header from '@/components/Header';
 import SiderList from '@/components/SiderList';
 import HomeArticleList from '@/components/HomeArticleList';
 import Tags from '@/components/Tags';
@@ -17,7 +17,7 @@ import styles from './index.less';
 const { Content } = Layout;
 
 const Home = props => {
-  const { dispatch, hots } = props;
+  const { dispatch, hots, loading } = props;
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/hot' });
@@ -32,7 +32,12 @@ const Home = props => {
             <HomeArticleList />
           </div>
           <div className={styles.homeContainerSiderlist}>
-            <Card size="small" bordered={false} title="热门文章">
+            <Card
+              size="small"
+              loading={loading}
+              bordered={false}
+              title="热门文章"
+            >
               <SiderList
                 dataSource={hots}
                 bordered={false}
@@ -42,11 +47,11 @@ const Home = props => {
             </Card>
             <Tags />
             <div className="mt-10 ft-13 pl-10">
-              <div className={styles.aboutColor}>
+              {/* <div className={styles.aboutColor}>
                 <span className="mr-5">友情链接</span>
                 <a href="http://www.scxingm.cn/">www.scxingm.cn</a>
-              </div>
-              <div className={styles.aboutColor}>蜀ICP备16032900号-2</div>
+              </div> */}
+              {/* <div className={styles.aboutColor}>蜀ICP备16032900号-2</div> */}
               <div className={styles.aboutColor}>©2019 柒叶 Create by QiYe</div>
             </div>
           </div>
@@ -60,5 +65,5 @@ const Home = props => {
 
 export default connect(({ article: { hots }, loading }) => ({
   hots,
-  loading,
+  loading: loading.effects['article/hot'],
 }))(Home);

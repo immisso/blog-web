@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:58:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-13 07:48:52
+ * @Last Modified time: 2020-04-13 13:41:23
  */
 
 import { stringify } from 'qs';
@@ -15,8 +15,8 @@ export async function getCategories() {
 }
 
 // 获取文章列表
-export async function getArticles() {
-  return request('/api/articles');
+export async function getArticles(params) {
+  return request(`/api/articles?${stringify(params)}`);
 }
 
 // 获取热门文章列表

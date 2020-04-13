@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 16:27:25
+ * @Last Modified time: 2020-04-13 20:57:58
  */
 
 import React, { useEffect, useState } from 'react';
@@ -19,8 +19,8 @@ import {
   LikeOutlined,
   MessageOutlined,
 } from '@ant-design/icons';
-import Header from '@/components/Common/Header';
-import UserAvatar from '@/components/Common/UserAvatar';
+import Header from '@/components/Header';
+import UserAvatar from '@/components/UserAvatar';
 import ArticleAnchor from '@/components/Anchor';
 import AddComment from '@/components/Comment';
 
@@ -70,6 +70,8 @@ const createMarkup = body => {
 const Article = props => {
   const {
     dispatch,
+    loading,
+    loading2,
     detail,
     hots,
     match: {
@@ -77,27 +79,20 @@ const Article = props => {
     },
   } = props;
 
-  // const anchors = JSON.parse(detail.anchor || '[]');
-
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/detail', payload: { id } });
       dispatch({ type: 'article/hot' });
     }
   }, []);
-  console.log('2222222222222222222222222222222222');
-  console.log(detail);
+
   return (
     <>
       <Header />
       <Content className={styles.articleContainer}>
         <div className={styles.articleContainerWrapper}>
           <div className={styles.articleContainerDetail}>
-            <Card
-              bordered={false}
-              // loading={loading}
-              className="p-1m"
-            >
+            <Card bordered={false} loading={loading} className="p-1m">
               <div className="pt-3">
                 <div
                   className="mb-1m"
@@ -131,23 +126,14 @@ const Article = props => {
                 />
               </div>
             </Card>
-            <Card
-              title="评论"
-              bordered={false}
-              // loading={loading}
-              className="mtb-20"
-              id="comment"
-              // size="small"
-            >
-              <AddComment id={id} />
-            </Card>
+            <AddComment id={id} />
           </div>
           <div className={styles.articleContainerSider}>
             <Card
               title="关于作者"
               bordered={false}
               size="small"
-              // loading={loading}
+              loading={loading}
             >
               <div style={{ display: 'flex', marginBottom: 20 }}>
                 {detail && detail.user && detail.user.avatar && (
@@ -185,33 +171,41 @@ const Article = props => {
               </Row>
               <Divider dashed className="mb-0" />
               <div className="ft-16 ml-10 mt-10">
-                <Tooltip title="https://www.immisso.com">
-                  <a href="https://www.immisso.com" className="mr-10">
-                    <GlobalOutlined />
-                  </a>
-                </Tooltip>
-                <Tooltip title="https://github.com/immisso">
-                  <a href="https://github.com/immisso" className="mr-10">
-                    <GithubOutlined />
-                  </a>
-                </Tooltip>
-                <Tooltip title="微博">
-                  <a href="/" className="mr-10">
-                    <WeiboCircleOutlined />
-                  </a>
-                </Tooltip>
-                <Tooltip title="https://gitee.com/misso">
-                  <a href="https://gitee.com/misso">
-                    <IconFont type="icon-gitee" />
-                  </a>
-                </Tooltip>
+                {detail.user && detail.user.website && (
+                  <Tooltip title={detail.user.website}>
+                    <a href={detail.user.website} className="mr-10">
+                      <GlobalOutlined />
+                    </a>
+                  </Tooltip>
+                )}
+                {detail.user && detail.user.github && (
+                  <Tooltip title={detail.user.github}>
+                    <a href={detail.user.github} className="mr-10">
+                      <GithubOutlined />
+                    </a>
+                  </Tooltip>
+                )}
+                {detail.user && detail.user.weibo && (
+                  <Tooltip title={detail.user.weibo}>
+                    <a href={detail.user.weibo} className="mr-10">
+                      <WeiboCircleOutlined />
+                    </a>
+                  </Tooltip>
+                )}
+                {detail.user && detail.user.gitee && (
+                  <Tooltip title={detail.user.gitee}>
+                    <a href={detail.user.gitee}>
+                      <IconFont type="icon-gitee" />
+                    </a>
+                  </Tooltip>
+                )}
               </div>
             </Card>
             <Card
               title="相关文章"
               size="small"
               bordered={false}
-              // loading={loading}
+              loading={loading2}
               className="mt-20"
             >
               <List
@@ -257,7 +251,7 @@ const Article = props => {
               </div>
               <div className={styles.articlePanelCount}>
                 {/* <span>{likeNum}</span> */}
-                <span>100</span>
+                <span>{detail.like}</span>
               </div>
             </div>
             <div className={styles.articlePanelItem}>
@@ -267,7 +261,7 @@ const Article = props => {
               </div>
               <div className={styles.articlePanelCount}>
                 {/* <span>{commentNum}</span> */}
-                <span>123</span>
+                <span>{detail.comment}</span>
               </div>
             </div>
           </div>
@@ -280,5 +274,6 @@ const Article = props => {
 export default connect(({ article: { detail, hots }, loading }) => ({
   detail,
   hots,
-  loading,
+  loading: loading.effects['article/detail'],
+  loading2: loading.effects['article/hot'],
 }))(Article);

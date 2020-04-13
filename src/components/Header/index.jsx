@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 21:16:02
+ * @Last Modified time: 2020-04-13 20:56:36
  */
 
 import React, { useState, useEffect } from 'react';
@@ -11,7 +11,7 @@ import { connect } from 'dva';
 import Icon, { MenuOutlined } from '@ant-design/icons';
 import { Link } from 'umi';
 
-import styles from '../styles/Header.less';
+import styles from './index.less';
 
 const { Header } = Layout;
 const { SubMenu } = Menu;

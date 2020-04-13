@@ -2,14 +2,14 @@
  * @Author: 柒叶
  * @Date: 2020-04-11 20:19:37
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 20:45:48
+ * @Last Modified time: 2020-04-13 20:57:40
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Link } from 'umi';
-import { Comment, Divider, Tooltip, List } from 'antd';
+import { Comment, Divider, Tooltip, List, Card } from 'antd';
 import moment from 'moment';
-import UserAvatar from '@/components/Common/UserAvatar';
+import UserAvatar from '@/components/UserAvatar';
 import LoginCommentForm from '@/components/forms/LoginCommentForm';
 import NoLoginCommentForm from '@/components/forms/NoLoginCommentForm';
 
@@ -25,14 +25,20 @@ const Datetime = ({ time }) => {
 };
 
 const AddComment = props => {
-  const { user, dispatch, id, comments } = props;
+  const { user, dispatch, id, comments, loading } = props;
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/comments', payload: { id } });
     }
   }, []);
   return (
-    <>
+    <Card
+      title="评论"
+      bordered={false}
+      loading={loading}
+      className="mtb-20"
+      id="comment"
+    >
       <List
         className="comment-list"
         itemLayout="horizontal"
@@ -64,11 +70,11 @@ const AddComment = props => {
       ) : (
         <NoLoginCommentForm id={id} />
       )}
-    </>
+    </Card>
   );
 };
 
 export default connect(({ article: { comments }, loading }) => ({
   comments,
-  loading,
+  loading: loading.effects['article/comments'],
 }))(AddComment);
