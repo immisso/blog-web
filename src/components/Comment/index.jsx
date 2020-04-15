@@ -10,8 +10,8 @@ import { Link } from 'umi';
 import { Comment, Divider, Tooltip, List, Card } from 'antd';
 import moment from 'moment';
 import UserAvatar from '@/components/UserAvatar';
-import LoginCommentForm from '@/components/forms/LoginCommentForm';
-import NoLoginCommentForm from '@/components/forms/NoLoginCommentForm';
+import LoginCommentForm from '@/components/Forms/LoginCommentForm';
+import NoLoginCommentForm from '@/components/Forms/NoLoginCommentForm';
 
 moment.locale('zh-cn');
 const Content = ({ content }) => <p>{content}</p>;

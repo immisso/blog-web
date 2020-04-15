@@ -24,5 +24,9 @@ export default defineConfig({
       path: '/article/:id',
       component: '@/pages/Article',
     },
+    {
+      path: '/write',
+      component: '@/pages/Write',
+    },
   ],
 });

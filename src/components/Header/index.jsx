@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-13 20:56:36
+ * @Last Modified time: 2020-04-14 06:02:40
  */
 
 import React, { useState, useEffect } from 'react';
@@ -10,6 +10,7 @@ import { Layout, Menu, Drawer, Button } from 'antd';
 import { connect } from 'dva';
 import Icon, { MenuOutlined } from '@ant-design/icons';
 import { Link } from 'umi';
+import UserAvatar from '@/components/UserAvatar';
 
 import styles from './index.less';
 
@@ -141,11 +142,36 @@ const MainHeader = props => {
           </div>
         </div>
         <div className={styles.homeHeaderRight}>
-          <span>
+          {/* <span>
             <Link to="/user/login">登录</Link>
             <span className="pd-5">·</span>
             <Link to="/user/register">注册</Link>
-          </span>
+          </span> */}
+          <Menu
+            mode="horizontal"
+            style={{ height: '64px', borderBottom: 'none' }}
+          >
+            <SubMenu
+              title={
+                <UserAvatar
+                  src={
+                    'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/002.png'
+                  }
+                />
+              }
+            >
+              <Menu.Item key="setting:1">
+                <Link to="/write">写文章</Link>
+              </Menu.Item>
+              <Menu.Item key="setting:2">草稿</Menu.Item>
+              <Menu.Divider />
+              <Menu.Item key="setting:3">个人中心</Menu.Item>
+              <Menu.Item key="setting:4">设置</Menu.Item>
+              <Menu.Item key="setting:5">主题</Menu.Item>
+              <Menu.Divider />
+              <Menu.Item key="setting:6">退出</Menu.Item>
+            </SubMenu>
+          </Menu>
         </div>
       </div>
       <Drawer
