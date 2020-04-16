@@ -1,0 +1,546 @@
+@charset "UTF-8";
+/*!
+Misty Dark
+Brought to you with ❤️ by E-Tiger Studio, 2017-2020
+https://github.com/etigerstudio/typora-misty-theme
+ */
+.cm-s-inner .cm-operator,
+.cm-s-inner .cm-property,
+.cm-s-inner .cm-variable {
+  color: #b8bfc6
+}
+.cm-s-inner .cm-keyword {
+  color: #c88fd0
+}
+.cm-s-inner .cm-tag {
+  color: #7df46a
+}
+.cm-s-inner .cm-attribute {
+  color: #7575e4
+}
+.CodeMirror div.CodeMirror-cursor {
+  border-left: 1px solid #b8bfc6;
+  z-index: 3
+}
+.cm-s-inner .cm-string {
+  color: #d26b6b
+}
+.cm-s-inner .cm-comment,
+.cm-s-inner.cm-comment {
+  color: #da924a
+}
+.cm-s-inner .cm-def,
+.cm-s-inner .cm-header,
+.cm-s-inner.cm-def,
+.cm-s-inner.cm-header {
+  color: #8d8df0
+}
+.cm-s-inner .cm-quote,
+.cm-s-inner.cm-quote {
+  color: #57ac57
+}
+.cm-s-inner .cm-hr {
+  color: #d8d5d5
+}
+.cm-s-inner .cm-link {
+  color: #d3d3ef
+}
+.cm-s-inner .cm-negative {
+  color: #d95050
+}
+.cm-s-inner .cm-positive {
+  color: #50e650
+}
+.cm-s-inner .cm-string-2 {
+  color: #f50
+}
+.cm-s-inner .cm-meta,
+.cm-s-inner .cm-qualifier {
+  color: #b7b3b3
+}
+.cm-s-inner .cm-builtin {
+  color: #f3b3f8
+}
+.cm-s-inner .cm-bracket {
+  color: #997
+}
+.cm-s-inner .cm-atom,
+.cm-s-inner.cm-atom {
+  color: #84b6cb
+}
+.cm-s-inner .cm-number {
+  color: #64ab8f
+}
+.cm-s-inner .cm-variable {
+  color: #b8bfc6
+}
+.cm-s-inner .cm-variable-2 {
+  color: #9fbad5
+}
+.cm-s-inner .cm-variable-3 {
+  color: #1cc685
+}
+.CodeMirror-selected,
+.CodeMirror-selectedtext {
+  background: #4a89dc;
+  color: #fff!important;
+  text-shadow: none
+}
+:root {
+  --control-text-color: #8B97A3;
+  --side-bar-bg-color: #171717;
+  --bg-color: #242424;
+  --window-border: 1px solid rgba(0,0,0,.07);
+  --active-file-bg-color: #242424;
+  --active-file-text-color: #B8C8D9;
+  --item-hover-bg-color: #242424;
+  --heading-char-color: #4D6580;
+  --text-color: #8B97A3;
+  --active-toggle-btn-color: #53575C;
+  --rawblock-edit-panel-bd: #3A3C3D;
+  --select-text-bg-color: hsl(220, 15%, 30%)
+}
+.form-control {
+  background-color: var(--bg-color);
+  border-color: #53575c
+}
+.modal-header {
+  border-bottom-color: #53575c
+}
+.modal-footer {
+  border-top-color: #53575c
+}
+.btn-default {
+  border-color: #53575c
+}
+.btn-primary {
+  background-color: #203a60;
+  border-color: #2f568e
+}
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: subpixel-antialiased;
+  background-color: #2b2b2b
+}
+body {
+  font-family: "SF UI Text",-apple-system,-apple-system-body,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  color: #a9b7c6;
+  line-height: 1.5
+}
+#write {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px 30px 100px
+}
+#write > ol:first-child,
+#write > ul:first-child {
+  margin-top: 30px
+}
+body > :first-child {
+  margin-top: 0!important
+}
+body > :last-child {
+  margin-bottom: 0!important
+}
+a {
+  color: #6dadf2
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  position: relative;
+  margin-top: 1.8rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+  cursor: text;
+  color: #b8c8d9
+}
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+h5:hover a.anchor,
+h6:hover a.anchor {
+  text-decoration: none
+}
+h1 code,
+h1 tt,
+h2 code,
+h2 tt,
+h3 code,
+h3 tt,
+h4 code,
+h4 tt,
+h5 code,
+h5 tt,
+h6 code,
+h6 tt {
+  font-size: inherit
+}
+h1 {
+  text-align: center;
+  padding-bottom: .3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  margin: 1em auto 1.2em
+}
+h1:after {
+  border-bottom: 2px dashed #5f8055;
+  content: '';
+  width: 100px;
+  display: block;
+  margin: .2em auto 0;
+  height: 2px
+}
+h2 {
+  font-size: 1.75em;
+  padding-left: 9px;
+  line-height: 1.4;
+  border-left: 6px solid #3d5266
+}
+h3 {
+  font-size: 1.5em;
+  line-height: 1.43
+}
+h3:before {
+  border-radius: 50%;
+  background-color: #4d6580;
+  content: '';
+  width: 6px;
+  display: inline-block;
+  height: 6px;
+  vertical-align: middle;
+  margin-bottom: .18em;
+  margin-right: 8px
+}
+#write > h3.md-focus:before,
+#write > h4.md-focus:before {
+  background-color: transparent;
+  width: auto;
+  height: auto
+}
+h4 {
+  font-size: 1.25em
+}
+h4:before {
+  background-color: #4d6580;
+  content: '';
+  width: 6px;
+  display: inline-block;
+  height: 2px;
+  vertical-align: middle;
+  margin-bottom: .18em;
+  margin-right: 8px
+}
+h5 {
+  font-size: 1em
+}
+h6 {
+  font-size: 1em;
+  color: #93a0ad
+}
+blockquote,
+dl,
+ol,
+p,
+table,
+ul {
+  margin: .8em 0
+}
+li > ol,
+li > ul {
+  margin: 0
+}
+hr {
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #3a3c3d;
+  border: 0
+}
+a:first-child h1,
+a:first-child h2,
+a:first-child h3,
+a:first-child h4,
+a:first-child h5,
+a:first-child h6,
+body>h1:first-child,
+body>h1:first-child+h2,
+body>h2:first-child,
+body>h3:first-child,
+body>h4:first-child,
+body>h5:first-child,
+body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0
+}
+h1 p,
+h2 p,
+h3 p,
+h4 p,
+h5 p,
+h6 p {
+  margin-top: 0
+}
+li p.first {
+  display: inline-block
+}
+ol,
+ul {
+  padding-left: 30px
+}
+ol:first-child,
+ul:first-child {
+  margin-top: 0
+}
+ol:last-child,
+ul:last-child {
+  margin-bottom: 0
+}
+blockquote {
+  border-left: 4px dotted #4e555c;
+  padding: 0 12px;
+  color: #8b97a3;
+  font-size: .9em
+}
+blockquote blockquote {
+  padding-right: 0
+}
+table {
+  padding: 0;
+  word-break: initial
+}
+table tr {
+  border-top: 1px solid #53575c;
+  margin: 0;
+  padding: 0
+}
+table.md-table tr:nth-child(2n) {
+  background-color: #32373d
+}
+table tr td,
+table tr th {
+  border: 1px solid #53575c;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px
+}
+table tr td:first-child,
+table tr th:first-child {
+  margin-top: 0
+}
+table tr td:last-child,
+table tr th:last-child {
+  margin-bottom: 0
+}
+.CodeMirror-gutters {
+  border-right: 1px solid #ddd
+}
+.md-fences,
+code,
+tt {
+  font-size: 90%;
+  border-radius: 3px;
+  font-family: "SF Mono",Consolas,"Liberation Mono",Menlo,Courier,monospace
+}
+code,
+tt {
+  margin: 0 2px;
+  padding: 2px 4px;
+  background-color: #414952
+}
+.md-fences {
+  background-color: #3a3c3d;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  padding: 12px 1em
+}
+.md-task-list-item > input {
+  margin-left: -1.45em;
+  margin-top: calc(1em - 10px)
+}
+#write pre.md-meta-block {
+  padding: 1rem;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #323538;
+  border: 0;
+  border-radius: 3px;
+  color: #8a9199;
+  margin-top: 0!important
+}
+.mathjax-block > .code-tooltip {
+  bottom: .375rem
+}
+#write > h3.md-focus:before {
+  left: -1.5625rem;
+  top: .375rem
+}
+#write>h4.md-focus:before,
+#write>h5.md-focus:before,
+#write>h6.md-focus:before {
+  left: -1.5625rem;
+  top: .285714286rem
+}
+.md-image > .md-meta {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-family: "SF Mono",Consolas,"Liberation Mono",Courier,monospace;
+  padding: 2px 4px 0;
+  font-size: .9em;
+  color: inherit
+}
+.md-tag {
+  color: inherit
+}
+.md-toc {
+  margin-top: 20px;
+  padding-bottom: 20px
+}
+.sidebar-tabs {
+  border-bottom: none
+}
+#typora-quick-open {
+  background-color: #171717
+}
+#typora-quick-open > #typora-quick-open-input > input {
+  background-color: #171717;
+  border: none
+}
+#typora-quick-open > #typora-quick-open-input > input::placeholder {
+  color: #7c8691
+}
+.typora-quick-open-item {
+  padding-top: 3px
+}
+.typora-quick-open-list {
+  margin-top: 4px
+}
+.typora-quick-open-item-path {
+  margin-top: -2px
+}
+#md-notification:before {
+  top: 10px
+}
+.context-menu,
+.megamenu-content,
+footer,
+header {
+  font-family: "SF UI Text",-apple-system,-apple-system-body,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"
+}
+.file-node-content:hover .file-node-icon,
+.file-node-content:hover .file-node-open-state {
+  visibility: visible
+}
+.mac-seamless-mode #typora-sidebar {
+  background-color: var(--side-bar-bg-color)
+}
+.md-lang {
+  color: #b4654d
+}
+.pin-outline #outline-content .outline-active strong,
+.pin-outline .outline-active {
+  color: #a0aebd;
+  font-weight: 600
+}
+.outline-label {
+  color: #7c8691;
+  font-weight: 400
+}
+.file-list-item-summary {
+  color: #77818c;
+  font-family: "SF UI Text",-apple-system,-apple-system-body,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"
+}
+.active > .file-list-item-summary {
+  color: #b8c8d9
+}
+#write div.md-toc-tooltip {
+  background-color: #2b2b2b
+}
+.context-menu {
+  background-color: #242424
+}
+.context-menu.dropdown-menu .divider {
+  background-color: #53575c
+}
+.on-focus-mode .md-end-block:not(.md-focus) img,
+.on-focus-mode .md-end-block:not(.md-focus):not(.md-focus-container) *,
+.on-focus-mode .md-task-list-item:not(.md-focus-container)>input {
+  color: #575e66!important
+}
+.on-focus-mode li[cid]:not(.md-focus-container) {
+  color: #575e66
+}
+.on-focus-mode .CodeMirror.cm-s-inner:not(.CodeMirror-focused) *,
+.on-focus-mode .md-fences.md-focus .CodeMirror-code > :not(.CodeMirror-activeline) * {
+  color: #575e66!important
+}
+.on-focus-mode .md-focus,
+.on-focus-mode .md-focus-container {
+  color: #b4c3d4
+}
+.on-focus-mode #typora-source .CodeMirror-code > :not(.CodeMirror-activeline) * {
+  color: #575e66!important
+}
+.menu-style-btn,
+.modal-content {
+  border: 1px solid #53575c
+}
+input {
+  border-color: #53575c
+}
+footer.stopselect {
+  border-top-color: #53575c
+}
+.btn-default.active,
+.btn-default.focus,
+.btn-default:active,
+.btn-default:focus,
+.btn-default:hover,
+.open > .dropdown-toggle.btn-default {
+  border-color: #53575c
+}
+.ty-tooltip {
+  background-color: #3a3c3d;
+  color: #b8c8d9
+}
+@media print {
+  body {
+    font-weight: 400
+  }
+  b,
+  strong {
+    font-weight: 600
+  }
+  pre,
+  table {
+    page-break-inside: avoid
+  }
+  pre {
+    word-wrap: break-word
+  }
+}
+body {
+  font-weight: 400;
+  -webkit-font-smoothing: unset
+}
+b,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+  font-weight: 600
+}
+h1,
+table tr th {
+  font-weight: 400
+}
+.file-list-item-file-name {
+  font-weight: 500
+}
