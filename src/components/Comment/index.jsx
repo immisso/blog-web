@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-11 20:19:37
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-13 20:57:40
+ * @Last Modified time: 2020-04-18 06:31:33
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
@@ -55,7 +55,7 @@ const AddComment = props => {
           </List.Item>
         )}
       />
-      <Divider orientation="left">我想说↓</Divider>
+      <Divider />
       {user && user.id ? (
         <Comment
           avatar={

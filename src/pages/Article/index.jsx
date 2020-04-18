@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-13 20:57:58
+ * @Last Modified time: 2020-04-18 06:25:13
  */
 
 import React, { useEffect, useState } from 'react';
@@ -19,53 +19,23 @@ import {
   LikeOutlined,
   MessageOutlined,
 } from '@ant-design/icons';
+import MathJax from 'react-mathjax';
 import Header from '@/components/Header';
 import UserAvatar from '@/components/UserAvatar';
 import ArticleAnchor from '@/components/Anchor';
 import AddComment from '@/components/Comment';
-
-import hljs from 'highlight.js/lib/highlight';
-import javascript from 'highlight.js/lib/languages/javascript';
-import python from 'highlight.js/lib/languages/python';
-import go from 'highlight.js/lib/languages/go';
-import rust from 'highlight.js/lib/languages/rust';
-import less from 'highlight.js/lib/languages/less';
-import css from 'highlight.js/lib/languages/css';
-import json from 'highlight.js/lib/languages/json';
-import php from 'highlight.js/lib/languages/php';
-import java from 'highlight.js/lib/languages/java';
-import sql from 'highlight.js/lib/languages/sql';
-import cpp from 'highlight.js/lib/languages/cpp';
-import nginx from 'highlight.js/lib/languages/nginx';
-import shell from 'highlight.js/lib/languages/shell';
+import Markdown from '@/components/Markdown';
 
 import styles from './index.less';
-import './markdown-github.css';
-import 'highlight.js/styles/github.css';
-import 'highlight.js/styles/atom-one-dark.css';
-
-hljs.registerLanguage('javascript', javascript);
-hljs.registerLanguage('python', python);
-hljs.registerLanguage('go', go);
-hljs.registerLanguage('rust', rust);
-hljs.registerLanguage('less', less);
-hljs.registerLanguage('css', css);
-hljs.registerLanguage('json', json);
-hljs.registerLanguage('php', php);
-hljs.registerLanguage('java', java);
-hljs.registerLanguage('sql', sql);
-hljs.registerLanguage('cpp', cpp);
-hljs.registerLanguage('nginx', nginx);
-hljs.registerLanguage('shell', shell);
+// import './markdown-github.css'
+// import './misty-light-macos.css'
+import './markdown.css';
+// import './vue.css'
 
 const { Content } = Layout;
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1439645_kzb7blmpkvc.js',
 });
-
-const createMarkup = body => {
-  return { __html: body };
-};
 
 const Article = props => {
   const {
@@ -92,7 +62,12 @@ const Article = props => {
       <Content className={styles.articleContainer}>
         <div className={styles.articleContainerWrapper}>
           <div className={styles.articleContainerDetail}>
-            <Card bordered={false} loading={loading} className="p-1m">
+            <Card
+              size="small"
+              bordered={false}
+              loading={loading}
+              className="p-1m"
+            >
               <div className="pt-3">
                 <div
                   className="mb-1m"
@@ -104,7 +79,7 @@ const Article = props => {
                 >
                   <div style={{ display: 'flex' }}>
                     {detail && detail.user && detail.user.avatar && (
-                      <UserAvatar src={detail.user.avatar} />
+                      <UserAvatar size="large" src={detail.user.avatar} />
                     )}
                     <div className="pl-1m">
                       <h4 className="mb-0 fw-700">
@@ -119,11 +94,14 @@ const Article = props => {
                     </div>
                   </div>
                 </div>
-                <h2 className="mt-15m fw-700">{detail.title}</h2>
-                <div
-                  className="markdown-body"
-                  dangerouslySetInnerHTML={createMarkup(detail.content_html)}
-                />
+                <h1 className="mt-15m fw-700">{detail.title}</h1>
+                <div className="markdown-body ft-16">
+                  {/* <Markdown markdown={detail.content_mark} /> */}
+
+                  <MathJax.Provider>
+                    <Markdown markdown={detail.content_mark} />
+                  </MathJax.Provider>
+                </div>
               </div>
             </Card>
             <AddComment id={id} />

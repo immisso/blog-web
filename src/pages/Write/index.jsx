@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-16 08:09:27
+ * @Last Modified time: 2020-04-18 06:24:57
  */
 
 import React, { useState, useEffect } from 'react';
@@ -13,11 +13,12 @@ import {
   LoadingOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import MathJax from 'react-mathjax';
 
 import UserAvatar from '@/components/UserAvatar';
 import Markdown from '@/components/Markdown';
 
-import './vue.css';
+// import './vue.css'
 
 const { CheckableTag } = Tag;
 
@@ -128,13 +129,16 @@ const Write = props => {
           <div
             style={{
               // height: 'auto',
-              minHeight: 600,
+              minHeight: 'calc(100vh - 56px)',
+              // minHeight: 600,
+              overflowY: 'auto',
               background: '#fff',
               borderRight: '1px solid #ccc',
             }}
           >
             <Input.TextArea
               style={{
+                minHeight: 'calc(100vh - 60px)',
                 border: 'none',
                 outline: 'none',
                 padding: 20,
@@ -144,19 +148,21 @@ const Write = props => {
               rows={27}
               onChange={onChangeMarkdown}
               value={markdown}
-              spellcheck="false"
-              autocomplete="off"
-              autocapitalize="off"
-              autocorrect="off"
+              spellCheck="false"
+              autoComplete="off"
+              autoCapitalize="off"
+              autoCorrect="off"
               autoSize
-              // allowClear={true}
             />
           </div>
         </Col>
         <Col span={12}>
           <div style={{ height: '100%', background: '#fff', padding: 20 }}>
             <div className="markdown-body">
-              <Markdown markdown={markdown} />
+              {/* <Markdown markdown={markdown} /> */}
+              <MathJax.Provider input="tex">
+                <Markdown markdown={markdown} />
+              </MathJax.Provider>
             </div>
           </div>
         </Col>
