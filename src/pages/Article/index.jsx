@@ -2,14 +2,14 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-18 06:25:13
+ * @Last Modified time: 2020-04-18 17:59:37
  */
 
-import React, { useEffect, useState } from 'react';
-import { Layout, Card, List, Row, Col, Divider, Tooltip, Button } from 'antd';
-import moment from 'moment';
-import { Link } from 'umi';
-import { connect } from 'dva';
+import React, { useEffect, useState } from 'react'
+import { Layout, Card, List, Row, Col, Divider, Tooltip, Button } from 'antd'
+import moment from 'moment'
+import { Link } from 'umi'
+import { connect } from 'dva'
 import {
   createFromIconfontCN,
   WeiboCircleOutlined,
@@ -18,24 +18,24 @@ import {
   EyeOutlined,
   LikeOutlined,
   MessageOutlined,
-} from '@ant-design/icons';
-import MathJax from 'react-mathjax';
-import Header from '@/components/Header';
-import UserAvatar from '@/components/UserAvatar';
-import ArticleAnchor from '@/components/Anchor';
-import AddComment from '@/components/Comment';
-import Markdown from '@/components/Markdown';
+} from '@ant-design/icons'
+import MathJax from 'react-mathjax'
+import Header from '@/components/Header'
+import UserAvatar from '@/components/UserAvatar'
+import ArticleAnchor from '@/components/Anchor'
+import AddComment from '@/components/Comment'
+import Markdown from '@/components/Markdown'
 
-import styles from './index.less';
+import styles from './index.less'
 // import './markdown-github.css'
 // import './misty-light-macos.css'
-import './markdown.css';
+import './markdown.css'
 // import './vue.css'
 
-const { Content } = Layout;
+const { Content } = Layout
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1439645_kzb7blmpkvc.js',
-});
+})
 
 const Article = props => {
   const {
@@ -47,14 +47,14 @@ const Article = props => {
     match: {
       params: { id },
     },
-  } = props;
+  } = props
 
   useEffect(() => {
     if (dispatch) {
-      dispatch({ type: 'article/detail', payload: { id } });
-      dispatch({ type: 'article/hot' });
+      dispatch({ type: 'article/detail', payload: { id } })
+      dispatch({ type: 'article/hot' })
     }
-  }, []);
+  }, [])
 
   return (
     <>
@@ -94,10 +94,8 @@ const Article = props => {
                     </div>
                   </div>
                 </div>
-                <h1 className="mt-15m fw-700">{detail.title}</h1>
+                <h1 className="mt-15m fw-700 mb-15m">{detail.title}</h1>
                 <div className="markdown-body ft-16">
-                  {/* <Markdown markdown={detail.content_mark} /> */}
-
                   <MathJax.Provider>
                     <Markdown markdown={detail.content_mark} />
                   </MathJax.Provider>
@@ -115,7 +113,7 @@ const Article = props => {
             >
               <div style={{ display: 'flex', marginBottom: 20 }}>
                 {detail && detail.user && detail.user.avatar && (
-                  <UserAvatar src={detail.user.avatar} />
+                  <UserAvatar size="large" src={detail.user.avatar} />
                 )}
                 <div className="pl-1m">
                   <h5>{detail.user && detail.user.nickname}</h5>
@@ -246,12 +244,12 @@ const Article = props => {
         </div>
       </Content>
     </>
-  );
-};
+  )
+}
 
 export default connect(({ article: { detail, hots }, loading }) => ({
   detail,
   hots,
   loading: loading.effects['article/detail'],
   loading2: loading.effects['article/hot'],
-}))(Article);
+}))(Article)

@@ -1,4 +1,4 @@
-import { defineConfig } from 'umi';
+import { defineConfig } from 'umi'
 
 export default defineConfig({
   scripts: [
@@ -48,8 +48,8 @@ export default defineConfig({
       component: '@/pages/Article',
     },
     {
-      path: '/write',
+      path: '/write/draft/:key',
       component: '@/pages/Write',
     },
   ],
-});
+})

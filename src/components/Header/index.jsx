@@ -5,17 +5,17 @@
  * @Last Modified time: 2020-04-14 06:02:40
  */
 
-import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Drawer, Button } from 'antd';
-import { connect } from 'dva';
-import Icon, { MenuOutlined } from '@ant-design/icons';
-import { Link } from 'umi';
-import UserAvatar from '@/components/UserAvatar';
+import React, { useState, useEffect } from 'react'
+import { Layout, Menu, Drawer, Button } from 'antd'
+import { connect } from 'dva'
+import Icon, { MenuOutlined } from '@ant-design/icons'
+import { Link } from 'umi'
+import UserAvatar from '@/components/UserAvatar'
 
-import styles from './index.less';
+import styles from './index.less'
 
-const { Header } = Layout;
-const { SubMenu } = Menu;
+const { Header } = Layout
+const { SubMenu } = Menu
 
 const tabs = [
   {
@@ -38,26 +38,26 @@ const tabs = [
   //   icon: 'project',
   //   path: '/home/course/all'
   // }
-];
+]
 
 // const categories = null
 
 const MainHeader = props => {
-  const { dispatch, categories } = props;
+  const { dispatch, categories } = props
   useEffect(() => {
     if (dispatch) {
-      dispatch({ type: 'article/categories' });
+      dispatch({ type: 'article/categories' })
     }
-  }, []);
+  }, [])
 
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
   const showDrawer = () => {
-    setVisible(true);
-  };
+    setVisible(true)
+  }
   const onClose = () => {
-    setVisible(false);
-  };
-  const handleClick = () => {};
+    setVisible(false)
+  }
+  const handleClick = () => {}
   return (
     <Header>
       <div className={styles.homeHeader}>
@@ -130,7 +130,7 @@ const MainHeader = props => {
                         {item.name}
                       </Link>
                     </Menu.Item>
-                  );
+                  )
                 })}
             </Menu>
           </div>
@@ -161,7 +161,7 @@ const MainHeader = props => {
               }
             >
               <Menu.Item key="setting:1">
-                <Link to="/write">写文章</Link>
+                <Link to="/write/draft/new">写文章</Link>
               </Menu.Item>
               <Menu.Item key="setting:2">草稿</Menu.Item>
               <Menu.Divider />
@@ -254,15 +254,15 @@ const MainHeader = props => {
                     {item.name}
                   </Link>
                 </Menu.Item>
-              );
+              )
             })}
         </Menu>
       </Drawer>
     </Header>
-  );
-};
+  )
+}
 
 export default connect(({ article: { categories }, loading }) => ({
   categories,
   loading: loading,
-}))(MainHeader);
+}))(MainHeader)

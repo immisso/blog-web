@@ -2,31 +2,33 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-18 06:24:57
+ * @Last Modified time: 2020-04-19 11:14:42
  */
 
-import React, { useState, useEffect } from 'react';
-import { connect } from 'dva';
-import { Input, Row, Col, Button, Popover, Tag, Upload } from 'antd';
+import React, { useState, useEffect } from 'react'
+import { connect } from 'dva'
+import { Input, Row, Col, Button, Popover, Tag, Upload } from 'antd'
 import {
   CaretDownOutlined,
   LoadingOutlined,
   PlusOutlined,
-} from '@ant-design/icons';
-import MathJax from 'react-mathjax';
+} from '@ant-design/icons'
+import { history } from 'umi'
+import MathJax from 'react-mathjax'
 
-import UserAvatar from '@/components/UserAvatar';
-import Markdown from '@/components/Markdown';
+import UserAvatar from '@/components/UserAvatar'
+import Markdown from '@/components/Markdown'
 
 // import './vue.css'
+import './markdown.css'
 
-const { CheckableTag } = Tag;
+const { CheckableTag } = Tag
 
 const Content = props => {
-  const { categories, tags } = props;
-  console.log('eeeeeeeeeeeeeeeeeeeee');
-  console.log(tags);
-  console.log(categories);
+  const { categories, tags } = props
+  console.log('eeeeeeeeeeeeeeeeeeeee')
+  console.log(tags)
+  console.log(categories)
   return (
     <div>
       <h4 style={{ marginBottom: 16 }}>分类</h4>
@@ -68,23 +70,73 @@ const Content = props => {
         <Button type="primary">发布文章</Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const Write = props => {
-  const { dispatch, categories, tags } = props;
-  const [markdown, setMarkdown] = useState('');
+  const {
+    dispatch,
+    categories,
+    tags,
+    title,
+    markdown,
+    match: {
+      params: { key },
+    },
+  } = props
+
+  // const [title, setTitle] = useState(null)
+  // const [markdown, setMarkdown] = useState(null)
 
   useEffect(() => {
     if (dispatch) {
-      dispatch({ type: 'article/categories' });
-      dispatch({ type: 'article/tags' });
+      dispatch({ type: 'article/categories' })
+      dispatch({ type: 'article/tags' })
+      if (key !== 'write') {
+        dispatch({ type: 'write/draft', payload: { id: key } })
+      }
     }
-  }, []);
+  }, [])
+
+  console.log('222222222333333333333333')
+  console.log(title)
+  console.log(markdown)
 
   const onChangeMarkdown = e => {
-    setMarkdown(e.target.value);
-  };
+    // setMarkdown(e.target.value)
+    if (dispatch)
+      dispatch({
+        type: 'write/setMarkdown',
+        payload: { markdown: e.target.value },
+      })
+  }
+
+  const onChangeTitle = e => {
+    // setTitle(e.target.value)
+    if (dispatch)
+      dispatch({ type: 'write/setTitle', payload: { title: e.target.value } })
+  }
+
+  const saveDraft = () => {
+    if (dispatch) {
+      if (key === 'write') {
+        dispatch({
+          type: 'write/saveDraft',
+          payload: { markdown, title },
+          callback: res => {
+            if (res.status === 200) {
+              history.push(`/write/draft/${res.data.id}`)
+            }
+          },
+        })
+      } else {
+        dispatch({
+          type: 'write/updateDraft',
+          payload: { markdown, title, id: key },
+        })
+      }
+    }
+  }
   return (
     <>
       <Row>
@@ -98,6 +150,8 @@ const Write = props => {
                 outline: 'none',
                 fontWeight: 700,
               }}
+              value={title}
+              onChange={onChangeTitle}
               size="large"
               placeholder="请输入标题"
             />
@@ -116,7 +170,7 @@ const Write = props => {
               <CaretDownOutlined />
             </Button>
           </Popover>
-          <Button type="primary" className="mt-10 mr-20">
+          <Button type="primary" className="mt-10 mr-20" onClick={saveDraft}>
             保存草稿
           </Button>
           <UserAvatar
@@ -168,11 +222,15 @@ const Write = props => {
         </Col>
       </Row>
     </>
-  );
-};
+  )
+}
 
-export default connect(({ article: { categories, tags }, loading }) => ({
-  categories,
-  tags,
-  loading,
-}))(Write);
+export default connect(
+  ({ article: { categories, tags }, write: { title, markdown }, loading }) => ({
+    categories,
+    tags,
+    title,
+    markdown,
+    loading,
+  }),
+)(Write)
