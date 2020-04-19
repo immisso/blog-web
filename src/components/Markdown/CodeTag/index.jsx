@@ -2,12 +2,12 @@
  * @Author: 柒叶
  * @Date: 2020-04-16 06:35:02
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-17 06:44:19
+ * @Last Modified time: 2020-04-19 16:00:25
  */
 
-import React from 'react';
+import React from 'react'
 // import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import SyntaxHighlighter from 'react-syntax-highlighter';
+import SyntaxHighlighter from 'react-syntax-highlighter'
 
 import {
   coy,
@@ -33,7 +33,7 @@ import {
   pojoaque,
   vs,
   xonokai,
-} from 'react-syntax-highlighter/dist/esm/styles/prism';
+} from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 import {
   docco,
@@ -44,7 +44,7 @@ import {
   arduinoLight,
   ascetic,
   github,
-} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+} from 'react-syntax-highlighter/dist/esm/styles/hljs'
 // import {
 //   json,
 //   jsx,
@@ -65,7 +65,8 @@ import {
 // } from 'react-syntax-highlighter/dist/esm/languages/prism'
 
 const CodeTag = props => {
-  const { value, language } = props;
+  const { value, language } = props
+  if (!value) return null
   return (
     <SyntaxHighlighter
       language={language}
@@ -74,7 +75,7 @@ const CodeTag = props => {
     >
       {value}
     </SyntaxHighlighter>
-  );
-};
+  )
+}
 
-export default CodeTag;
+export default CodeTag

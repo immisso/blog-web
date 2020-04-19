@@ -2,22 +2,32 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-19 11:14:42
+ * @Last Modified time: 2020-04-19 21:01:31
  */
 
 import React, { useState, useEffect } from 'react'
 import { connect } from 'dva'
-import { Input, Row, Col, Button, Popover, Tag, Upload } from 'antd'
+import moment from 'moment'
 import {
-  CaretDownOutlined,
-  LoadingOutlined,
-  PlusOutlined,
-} from '@ant-design/icons'
-import { history } from 'umi'
+  Input,
+  Row,
+  Col,
+  Button,
+  Popover,
+  Tag,
+  Upload,
+  Dropdown,
+  Menu,
+  Drawer,
+  List,
+} from 'antd'
+import { CaretDownOutlined, PlusOutlined } from '@ant-design/icons'
+import { history, Link } from 'umi'
 import MathJax from 'react-mathjax'
 
 import UserAvatar from '@/components/UserAvatar'
 import Markdown from '@/components/Markdown'
+import CheckTag from '@/components/CheckTag'
 
 // import './vue.css'
 import './markdown.css'
@@ -25,17 +35,26 @@ import './markdown.css'
 const { CheckableTag } = Tag
 
 const Content = props => {
-  const { categories, tags } = props
-  console.log('eeeeeeeeeeeeeeeeeeeee')
-  console.log(tags)
-  console.log(categories)
+  const {
+    categories,
+    tags,
+    selectedTag,
+    selectedCategory,
+    checkTagHandle,
+    checkCategorysHandle,
+  } = props
   return (
     <div>
       <h4 style={{ marginBottom: 16 }}>分类</h4>
       <div>
+        {/* {categories && <CheckTag checkTagHandle={checkTagHandle} data={categories} />} */}
         {categories &&
-          categories.map((category, index) => (
-            <CheckableTag key={category.en_name} checked={index === 0}>
+          categories.map(category => (
+            <CheckableTag
+              key={category.en_name}
+              checked={category.id === selectedCategory}
+              onChange={selected => checkCategorysHandle(category)}
+            >
               {category.name}
             </CheckableTag>
           ))}
@@ -43,8 +62,12 @@ const Content = props => {
       <h4 style={{ marginBottom: 16, marginTop: 10 }}>标签</h4>
       <div>
         {tags &&
-          tags.map((tag, index) => (
-            <CheckableTag key={tag.en_name} checked={index === 0}>
+          tags.map(tag => (
+            <CheckableTag
+              key={tag.en_name}
+              checked={tag.id === selectedTag}
+              onChange={() => checkTagHandle(tag)}
+            >
               {tag.name}
             </CheckableTag>
           ))}
@@ -80,46 +103,52 @@ const Write = props => {
     tags,
     title,
     markdown,
+    drafts,
+    selectedCategory,
+    selectedTag,
+    loading,
     match: {
       params: { key },
     },
   } = props
 
-  // const [title, setTitle] = useState(null)
-  // const [markdown, setMarkdown] = useState(null)
+  const [visible, setVisible] = useState(false)
+  // const [selectedCategory, setSelectedCategory] = useState(null)
+  // const [selectedTag, setSelectedTag] = useState(null)
 
   useEffect(() => {
     if (dispatch) {
-      dispatch({ type: 'article/categories' })
-      dispatch({ type: 'article/tags' })
-      if (key !== 'write') {
+      dispatch({ type: 'write/categories' })
+      // dispatch({ type: 'article/tags' })
+      if (key !== 'new' && /^\d+$/.test(key)) {
         dispatch({ type: 'write/draft', payload: { id: key } })
       }
     }
-  }, [])
-
-  console.log('222222222333333333333333')
-  console.log(title)
-  console.log(markdown)
+  }, [key])
 
   const onChangeMarkdown = e => {
-    // setMarkdown(e.target.value)
-    if (dispatch)
+    if (dispatch) {
       dispatch({
         type: 'write/setMarkdown',
         payload: { markdown: e.target.value },
       })
+    }
   }
 
   const onChangeTitle = e => {
-    // setTitle(e.target.value)
-    if (dispatch)
+    if (dispatch) {
       dispatch({ type: 'write/setTitle', payload: { title: e.target.value } })
+    }
   }
 
   const saveDraft = () => {
     if (dispatch) {
-      if (key === 'write') {
+      if (key !== 'new' && /^\d+$/.test(key)) {
+        dispatch({
+          type: 'write/updateDraft',
+          payload: { markdown, title, id: key },
+        })
+      } else {
         dispatch({
           type: 'write/saveDraft',
           payload: { markdown, title },
@@ -129,27 +158,71 @@ const Write = props => {
             }
           },
         })
-      } else {
-        dispatch({
-          type: 'write/updateDraft',
-          payload: { markdown, title, id: key },
-        })
       }
     }
   }
+
+  const showDrawer = () => {
+    if (dispatch) {
+      dispatch({ type: 'write/drafts' })
+    }
+    setVisible(true)
+  }
+
+  const onClose = () => {
+    setVisible(false)
+  }
+
+  const writeNew = () => {
+    dispatch({
+      type: 'write/setMarkdown',
+      payload: { markdown: null },
+    })
+    dispatch({ type: 'write/setTitle', payload: { title: null } })
+    history.push('/write/draft/new')
+  }
+
+  const checkTagHandle = tag => {
+    if (dispatch) {
+      dispatch({
+        type: 'write/setSelecteTag',
+        payload: { selectedTag: tag.id },
+      })
+    }
+  }
+
+  const checkCategorysHandle = category => {
+    if (dispatch) {
+      dispatch({
+        type: 'write/setSelecteCategory',
+        payload: { selectedCategory: category.id },
+      })
+      dispatch({ type: 'write/setTags', payload: { tags: category.tags } })
+    }
+    // setSelectedCategory(category.id)
+  }
+
+  const writeMenu = (
+    <Menu className="mt-20">
+      <Menu.Item key="0">
+        <a onClick={writeNew}>写文章</a>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <a onClick={showDrawer}>草稿箱</a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="3">
+        <Link to="/">回到首页</Link>
+      </Menu.Item>
+    </Menu>
+  )
   return (
     <>
       <Row>
         <Col span={19}>
           <div style={{ height: 55 }}>
             <Input
-              style={{
-                height: 55,
-                fontSize: 18,
-                border: 'none',
-                outline: 'none',
-                fontWeight: 700,
-              }}
+              className="fw-700 h-55 ft-18 bdn tln"
               value={title}
               onChange={onChangeTitle}
               size="large"
@@ -160,8 +233,17 @@ const Write = props => {
         <Col span={5} style={{ background: '#fff' }}>
           <Popover
             placement="bottom"
-            title={<strong>发布文章</strong>}
-            content={<Content categories={categories} tags={tags} />}
+            // title={<strong>发布文章</strong>}
+            content={
+              <Content
+                categories={categories}
+                tags={tags}
+                checkTagHandle={checkTagHandle}
+                checkCategorysHandle={checkCategorysHandle}
+                selectedCategory={selectedCategory}
+                selectedTag={selectedTag}
+              />
+            }
             overlayStyle={{ width: 300 }}
             trigger="click"
           >
@@ -170,12 +252,50 @@ const Write = props => {
               <CaretDownOutlined />
             </Button>
           </Popover>
-          <Button type="primary" className="mt-10 mr-20" onClick={saveDraft}>
+          <Button
+            loading={loading}
+            type="primary"
+            className="mt-10 mr-20"
+            onClick={saveDraft}
+          >
             保存草稿
           </Button>
-          <UserAvatar
-            src={'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/002.png'}
-          />
+          <Dropdown overlay={writeMenu} trigger={['click']}>
+            <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+              <UserAvatar
+                src={
+                  'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/002.png'
+                }
+              />
+            </a>
+          </Dropdown>
+          {visible && (
+            <Drawer title="草稿箱" onClose={onClose} visible={visible}>
+              <List
+                itemLayout="horizontal"
+                dataSource={drafts}
+                renderItem={item => (
+                  <List.Item>
+                    <List.Item.Meta
+                      title={
+                        <a
+                          onClick={() => {
+                            history.push(`/write/draft/${item.id}`)
+                            onClose()
+                          }}
+                        >
+                          {item.title}
+                        </a>
+                      }
+                      description={`${moment(item.updatedAt).format(
+                        'YYYY[年]MM[月]DD[日] HH:mm',
+                      )}`}
+                    />
+                  </List.Item>
+                )}
+              />
+            </Drawer>
+          )}
         </Col>
       </Row>
       <Row style={{ borderTop: '1px solid #ccc' }}>
@@ -213,7 +333,6 @@ const Write = props => {
         <Col span={12}>
           <div style={{ height: '100%', background: '#fff', padding: 20 }}>
             <div className="markdown-body">
-              {/* <Markdown markdown={markdown} /> */}
               <MathJax.Provider input="tex">
                 <Markdown markdown={markdown} />
               </MathJax.Provider>
@@ -226,11 +345,25 @@ const Write = props => {
 }
 
 export default connect(
-  ({ article: { categories, tags }, write: { title, markdown }, loading }) => ({
+  ({
+    write: {
+      title,
+      markdown,
+      drafts,
+      categories,
+      tags,
+      selectedCategory,
+      selectedTag,
+    },
+    loading,
+  }) => ({
     categories,
     tags,
     title,
     markdown,
-    loading,
+    drafts,
+    selectedCategory,
+    selectedTag,
+    loading: loading.effects['write/updateDraft'],
   }),
 )(Write)

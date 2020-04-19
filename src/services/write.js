@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:58:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-19 10:59:59
+ * @Last Modified time: 2020-04-19 20:31:52
  */
 
 import { stringify } from 'qs'
@@ -21,10 +21,19 @@ export async function getDraft(params) {
   return request(`/api/draft?${stringify(params)}`)
 }
 
+// 获取drafts
+export async function getDrafts() {
+  return request('/api/drafts')
+}
+
 // 更新draft
 export async function updateDraft(data) {
   return request('/api/update/draft', {
     method: 'POST',
     data,
   })
+}
+
+export async function getCategories() {
+  return request('/api/categories')
 }
