@@ -2,10 +2,11 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-19 21:01:31
+ * @Last Modified time: 2020-04-21 12:34:23
  */
 
 import React, { useState, useEffect } from 'react'
+import ReactDOMServer from 'react-dom/server'
 import { connect } from 'dva'
 import moment from 'moment'
 import {
@@ -27,7 +28,6 @@ import MathJax from 'react-mathjax'
 
 import UserAvatar from '@/components/UserAvatar'
 import Markdown from '@/components/Markdown'
-import CheckTag from '@/components/CheckTag'
 
 // import './vue.css'
 import './markdown.css'
@@ -42,6 +42,7 @@ const Content = props => {
     selectedCategory,
     checkTagHandle,
     checkCategorysHandle,
+    onPublish,
   } = props
   return (
     <div>
@@ -90,7 +91,9 @@ const Content = props => {
         </Upload>
       </div>
       <div className="mt-20 tc">
-        <Button type="primary">发布文章</Button>
+        <Button type="primary" onClick={onPublish}>
+          发布文章
+        </Button>
       </div>
     </div>
   )
@@ -202,6 +205,40 @@ const Write = props => {
     // setSelectedCategory(category.id)
   }
 
+  const onPublish = () => {
+    if (dispatch) {
+      dispatch({
+        type: 'write/publish',
+        payload: {
+          markdown,
+          title,
+          selectedTag,
+          selectedCategory,
+          html: ReactDOMServer.renderToString(
+            <MathJax.Provider input="tex">
+              <Markdown markdown={markdown} />
+            </MathJax.Provider>,
+          ),
+        },
+        callback: res => {
+          if (res.status === 200) {
+            history.push('/')
+          }
+        },
+      })
+    }
+    // console.log('eeeeeeeeeeeeeeeeeeeeeeeee')
+    // console.log(markdown)
+    // console.log(title)
+    // console.log(selectedTag)
+    // console.log(selectedCategory)
+    // console.log(
+    //   ReactDOMServer.renderToString(<MathJax.Provider input="tex">
+    //     <Markdown markdown={markdown} />
+    //   </MathJax.Provider>)
+    // )
+  }
+
   const writeMenu = (
     <Menu className="mt-20">
       <Menu.Item key="0">
@@ -242,6 +279,7 @@ const Write = props => {
                 checkCategorysHandle={checkCategorysHandle}
                 selectedCategory={selectedCategory}
                 selectedTag={selectedTag}
+                onPublish={onPublish}
               />
             }
             overlayStyle={{ width: 300 }}

@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-19 21:08:37
+ * @Last Modified time: 2020-04-21 12:46:54
  */
 
 import {
@@ -11,6 +11,7 @@ import {
   updateDraft,
   getDrafts,
   getCategories,
+  createPublish,
 } from '@/services/write'
 
 export default {
@@ -47,6 +48,13 @@ export default {
         payload: response,
       })
     },
+    *categories({ payload }, { call, put }) {
+      const response = yield call(getCategories, payload)
+      yield put({
+        type: 'categoriesHandle',
+        payload: response,
+      })
+    },
     *updateDraft({ payload }, { call, put }) {
       const response = yield call(updateDraft, payload)
       yield put({
@@ -54,12 +62,10 @@ export default {
         payload: response,
       })
     },
-    *categories({ payload }, { call, put }) {
-      const response = yield call(getCategories, payload)
-      yield put({
-        type: 'categoriesHandle',
-        payload: response,
-      })
+
+    *publish({ payload, callback }, { call, put }) {
+      const response = yield call(createPublish, payload)
+      if (callback) callback(response)
     },
   },
   reducers: {

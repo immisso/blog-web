@@ -21,8 +21,10 @@
   "dependencies": {
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.0.18",
+    "ali-oss": "^6.7.0",
     "dva": "^2.4.1",
     "lint-staged": "^10.0.7",
+    "markdown-to-jsx": "^6.11.1",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:58:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-19 20:31:52
+ * @Last Modified time: 2020-04-20 12:36:39
  */
 
 import { stringify } from 'qs'
@@ -34,6 +34,15 @@ export async function updateDraft(data) {
   })
 }
 
+// 获到标签和分类
 export async function getCategories() {
   return request('/api/categories')
+}
+
+// 发布文章
+export async function createPublish(data) {
+  return request('/api/create/publish', {
+    method: 'POST',
+    data,
+  })
 }
