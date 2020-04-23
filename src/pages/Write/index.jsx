@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-21 12:34:23
+ * @Last Modified time: 2020-04-23 20:54:52
  */
 
 import React, { useState, useEffect } from 'react'
@@ -21,13 +21,31 @@ import {
   Menu,
   Drawer,
   List,
+  Affix,
+  Modal,
+  message,
 } from 'antd'
-import { CaretDownOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+  CaretDownOutlined,
+  PlusOutlined,
+  EllipsisOutlined,
+  PictureOutlined,
+  BoldOutlined,
+  ItalicOutlined,
+  UnderlineOutlined,
+  StrikethroughOutlined,
+  FullscreenOutlined,
+  UploadOutlined,
+  InboxOutlined,
+  TableOutlined,
+  LinkOutlined,
+} from '@ant-design/icons'
 import { history, Link } from 'umi'
 import MathJax from 'react-mathjax'
 
 import UserAvatar from '@/components/UserAvatar'
 import Markdown from '@/components/Markdown'
+import AliOssUpload from '@/components/AliOssUpload'
 
 // import './vue.css'
 import './markdown.css'
@@ -75,20 +93,7 @@ const Content = props => {
       </div>
       <h4 style={{ marginBottom: 16, marginTop: 10 }}>文章封面图</h4>
       <div>
-        {/* <Input bordered={false}/> */}
-        <Upload
-          name="avatar"
-          listType="picture-card"
-          className="avatar-uploader"
-          showUploadList={false}
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        >
-          <div>
-            {/* {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />} */}
-            <PlusOutlined />
-            <div className="ant-upload-text">Upload</div>
-          </div>
-        </Upload>
+        <AliOssUpload type="click" />
       </div>
       <div className="mt-20 tc">
         <Button type="primary" onClick={onPublish}>
@@ -96,6 +101,59 @@ const Content = props => {
         </Button>
       </div>
     </div>
+  )
+}
+
+const ImageModal = props => {
+  const {
+    imageModalVisible,
+    closeImageModal,
+    insertImageOk,
+    returnImage,
+    insertImageValue,
+    insertImageValueChange,
+  } = props
+
+  // const a = {
+  //   name: 'file',
+  //   multiple: true,
+  //   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  //   onChange (info) {
+  //     const { status } = info.file
+  //     if (status !== 'uploading') {
+  //       console.log(info.file, info.fileList)
+  //     }
+  //     if (status === 'done') {
+  //       message.success(`${info.file.name} file uploaded successfully.`)
+  //     } else if (status === 'error') {
+  //       message.error(`${info.file.name} file upload failed.`)
+  //     }
+  //   }
+  // }
+  return (
+    <Modal
+      title="插入图片"
+      okText="确定"
+      cancelText="取消"
+      width={350}
+      closable={false}
+      destroyOnClose={true}
+      onCancel={closeImageModal}
+      visible={imageModalVisible}
+      onOk={insertImageOk}
+      // footer={null}
+    >
+      <AliOssUpload type="drag" returnImage={returnImage} />
+      <p className="tc mt-10">或</p>
+      <Input
+        placeholder="输入网络图片地址"
+        size="large"
+        value={insertImageValue}
+        prefix={<PictureOutlined />}
+        style={{ border: '1px solid #ccc' }}
+        onChange={insertImageValueChange}
+      />
+    </Modal>
   )
 }
 
@@ -116,6 +174,10 @@ const Write = props => {
   } = props
 
   const [visible, setVisible] = useState(false)
+  const [imageModalVisible, setImageModalVisible] = useState(false)
+  const [coverImageUrl, setCoverImageUrl] = useState(null)
+  const [insertImages, setInsertImages] = useState([])
+  const [insertImageValue, setInsertImageValue] = useState(null)
   // const [selectedCategory, setSelectedCategory] = useState(null)
   // const [selectedTag, setSelectedTag] = useState(null)
 
@@ -176,6 +238,15 @@ const Write = props => {
     setVisible(false)
   }
 
+  const showImageModal = () => {
+    setImageModalVisible(true)
+  }
+
+  const closeImageModal = () => {
+    setInsertImages([])
+    setImageModalVisible(false)
+  }
+
   const writeNew = () => {
     dispatch({
       type: 'write/setMarkdown',
@@ -227,22 +298,43 @@ const Write = props => {
         },
       })
     }
-    // console.log('eeeeeeeeeeeeeeeeeeeeeeeee')
-    // console.log(markdown)
-    // console.log(title)
-    // console.log(selectedTag)
-    // console.log(selectedCategory)
-    // console.log(
-    //   ReactDOMServer.renderToString(<MathJax.Provider input="tex">
-    //     <Markdown markdown={markdown} />
-    //   </MathJax.Provider>)
-    // )
+  }
+
+  const insertImageValueChange = e => {
+    console.log('1111111111111111111111111')
+    console.log(e.target.value)
+    setInsertImageValue(e.target.value)
+  }
+
+  const insertImageOk = () => {
+    let images = []
+    if (insertImageValue) {
+      images = [...insertImages, insertImageValue]
+    }
+
+    if (images.length > 0) {
+      let str = ''
+      images.length > 0 &&
+        images.map(image => {
+          str += `![](${image})`
+        })
+      if (dispatch) {
+        dispatch({
+          type: 'write/setMarkdown',
+          payload: { markdown: markdown + str },
+        })
+      }
+    }
+  }
+
+  const returnImage = imageUrl => {
+    setInsertImages([...insertImages, imageUrl])
   }
 
   const writeMenu = (
     <Menu className="mt-20">
       <Menu.Item key="0">
-        <a onClick={writeNew}>写文章</a>
+        <a onClick={writeNew}></a>
       </Menu.Item>
       <Menu.Item key="1">
         <a onClick={showDrawer}>草稿箱</a>
@@ -250,6 +342,116 @@ const Write = props => {
       <Menu.Divider />
       <Menu.Item key="3">
         <Link to="/">回到首页</Link>
+      </Menu.Item>
+    </Menu>
+  )
+  const addBold = () => {
+    if (dispatch) {
+      dispatch({
+        type: 'write/setMarkdown',
+        payload: { markdown: markdown + '**加粗**' },
+      })
+    }
+  }
+
+  const addItalic = () => {
+    if (dispatch) {
+      dispatch({
+        type: 'write/setMarkdown',
+        payload: { markdown: markdown + '*斜体*' },
+      })
+    }
+  }
+
+  const addTable = () => {
+    if (dispatch) {
+      dispatch({
+        type: 'write/setMarkdown',
+        payload: {
+          markdown:
+            markdown +
+            '\n| Col1 | Col2 | Col3 |\n| :----: | :----: | :----: |\n| field1 | field2 | field3 |',
+        },
+      })
+    }
+  }
+  const addLink = () => {
+    if (dispatch) {
+      dispatch({
+        type: 'write/setMarkdown',
+        payload: { markdown: markdown + '[描述](链接)' },
+      })
+    }
+  }
+
+  const addHeading = () => {
+    if (dispatch) {
+      dispatch({
+        type: 'write/setMarkdown',
+        payload: {
+          markdown: markdown ? `${markdown}\n## 标题` : markdown + '## 标题',
+        },
+      })
+    }
+  }
+
+  const fastMenu = (
+    <Menu>
+      <Menu.Item key="0">
+        <a onClick={showImageModal}>
+          <PictureOutlined />
+        </a>
+        <ImageModal
+          imageModalVisible={imageModalVisible}
+          closeImageModal={closeImageModal}
+          insertImageOk={insertImageOk}
+          returnImage={returnImage}
+          insertImageValue={insertImageValue}
+          insertImageValueChange={insertImageValueChange}
+        />
+      </Menu.Item>
+      <Menu.Item key="1">
+        <a onClick={addBold}>
+          <BoldOutlined />
+        </a>
+      </Menu.Item>
+      {/* <Menu.Divider /> */}
+      <Menu.Item key="3">
+        <a onClick={addItalic}>
+          <ItalicOutlined />
+        </a>
+      </Menu.Item>
+      <Menu.Item key="3">
+        <a onClick={addTable}>
+          {/* <ItalicOutlined /> */}
+          <TableOutlined />
+        </a>
+      </Menu.Item>
+
+      <Menu.Item key="6">
+        <a onClick={addLink}>
+          <LinkOutlined />
+        </a>
+      </Menu.Item>
+      <Menu.Item key="6">
+        <a onClick={addHeading}>
+          <svg
+            t="1587646200731"
+            className="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="18237"
+            width="16"
+            height="16"
+          >
+            <path
+              d="M235.5 871.691v-740h98v304h385v-304h98v740h-98v-349h-385v349h-98z"
+              p-id="18238"
+              fill="#515151"
+            ></path>
+          </svg>
+        </a>
       </Menu.Item>
     </Menu>
   )
@@ -268,6 +470,7 @@ const Write = props => {
           </div>
         </Col>
         <Col span={5} style={{ background: '#fff' }}>
+          {/* <FullscreenOutlined /> */}
           <Popover
             placement="bottom"
             // title={<strong>发布文章</strong>}
@@ -338,6 +541,12 @@ const Write = props => {
       </Row>
       <Row style={{ borderTop: '1px solid #ccc' }}>
         <Col span={12}>
+          <div style={{ position: 'absolute', right: 20, top: 10, zIndex: 10 }}>
+            <Dropdown overlay={fastMenu} placement="bottomCenter" overlayStyle>
+              <EllipsisOutlined style={{ fontSize: 25 }} />
+            </Dropdown>
+            {/* <span className="ml-10"><FullscreenOutlined style={{ fontSize: 20 }} /></span> */}
+          </div>
           <div
             style={{
               // height: 'auto',
@@ -356,6 +565,7 @@ const Write = props => {
                 padding: 20,
                 resize: 'none',
               }}
+              selectiontext="我们"
               placeholder="请输入Markdown"
               rows={27}
               onChange={onChangeMarkdown}

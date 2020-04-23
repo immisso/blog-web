@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-21 12:46:54
+ * @Last Modified time: 2020-04-23 18:51:06
  */
 
 import {
@@ -20,7 +20,7 @@ export default {
     drafts: [],
     categories: [],
     tags: [],
-    markdown: null,
+    markdown: '',
     title: null,
     selectedCategory: null,
     selectedTag: null,
