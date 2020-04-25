@@ -2,10 +2,10 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-23 20:54:52
+ * @Last Modified time: 2020-04-25 16:48:35
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import ReactDOMServer from 'react-dom/server'
 import { connect } from 'dva'
 import moment from 'moment'
@@ -24,6 +24,7 @@ import {
   Affix,
   Modal,
   message,
+  Tooltip,
 } from 'antd'
 import {
   CaretDownOutlined,
@@ -42,6 +43,7 @@ import {
 } from '@ant-design/icons'
 import { history, Link } from 'umi'
 import MathJax from 'react-mathjax'
+import KeyboardEventHandler from 'react-keyboard-event-handler'
 
 import UserAvatar from '@/components/UserAvatar'
 import Markdown from '@/components/Markdown'
@@ -178,6 +180,7 @@ const Write = props => {
   const [coverImageUrl, setCoverImageUrl] = useState(null)
   const [insertImages, setInsertImages] = useState([])
   const [insertImageValue, setInsertImageValue] = useState(null)
+  const inputEl = useRef(null)
   // const [selectedCategory, setSelectedCategory] = useState(null)
   // const [selectedTag, setSelectedTag] = useState(null)
 
@@ -188,6 +191,9 @@ const Write = props => {
       if (key !== 'new' && /^\d+$/.test(key)) {
         dispatch({ type: 'write/draft', payload: { id: key } })
       }
+    }
+    if (inputEl) {
+      inputEl.current.focus()
     }
   }, [key])
 
@@ -394,63 +400,93 @@ const Write = props => {
       })
     }
   }
+  const onKeyEvent = (key, e) => {
+    e.preventDefault()
+    console.log('444444444444444444444444')
+    console.log(key)
+    switch (key) {
+      case 'ctrl+b':
+        addBold()
+        break
+      case 'ctrl+h':
+        addHeading()
+        break
+      case 'ctrl+l':
+        addLink()
+        break
+      case 'ctrl+alt+t':
+        addTable()
+        break
+      case 'ctrl+i':
+        showImageModal()
+        break
+      case 'ctrl+alt+i':
+        addItalic()
+        break
+      default:
+        break
+    }
+  }
 
   const fastMenu = (
     <Menu>
       <Menu.Item key="0">
         <a onClick={showImageModal}>
-          <PictureOutlined />
+          <Tooltip title="图片" placement="left">
+            <PictureOutlined />
+          </Tooltip>
         </a>
-        <ImageModal
-          imageModalVisible={imageModalVisible}
-          closeImageModal={closeImageModal}
-          insertImageOk={insertImageOk}
-          returnImage={returnImage}
-          insertImageValue={insertImageValue}
-          insertImageValueChange={insertImageValueChange}
-        />
       </Menu.Item>
-      <Menu.Item key="1">
+      <Menu.Item key="bold">
         <a onClick={addBold}>
-          <BoldOutlined />
+          <Tooltip title="加粗" placement="left">
+            <BoldOutlined />
+          </Tooltip>
         </a>
       </Menu.Item>
       {/* <Menu.Divider /> */}
-      <Menu.Item key="3">
+      <Menu.Item key="italic">
         <a onClick={addItalic}>
-          <ItalicOutlined />
+          <Tooltip title="斜体" placement="left">
+            <ItalicOutlined />
+          </Tooltip>
         </a>
       </Menu.Item>
-      <Menu.Item key="3">
+      <Menu.Item key="table">
         <a onClick={addTable}>
-          {/* <ItalicOutlined /> */}
-          <TableOutlined />
+          <Tooltip title="表格" placement="left">
+            <TableOutlined />
+          </Tooltip>
         </a>
       </Menu.Item>
 
-      <Menu.Item key="6">
+      <Menu.Item key="link">
         <a onClick={addLink}>
-          <LinkOutlined />
+          <Tooltip title="链接" placement="left">
+            <LinkOutlined />
+          </Tooltip>
         </a>
       </Menu.Item>
-      <Menu.Item key="6">
+      <Menu.Item key="heading">
         <a onClick={addHeading}>
-          <svg
-            t="1587646200731"
-            className="icon"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            p-id="18237"
-            width="16"
-            height="16"
-          >
-            <path
-              d="M235.5 871.691v-740h98v304h385v-304h98v740h-98v-349h-385v349h-98z"
-              p-id="18238"
-              fill="#515151"
-            ></path>
-          </svg>
+          <Tooltip title="标题" placement="left">
+            <svg
+              t="1587646200731"
+              className="icon"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              p-id="18237"
+              width="1em"
+              height="1em"
+            >
+              <path
+                d="M235.5 871.691v-740h98v304h385v-304h98v740h-98v-349h-385v349h-98z"
+                p-id="18238"
+                fill="#515151"
+              ></path>
+            </svg>
+          </Tooltip>
         </a>
       </Menu.Item>
     </Menu>
@@ -466,6 +502,7 @@ const Write = props => {
               onChange={onChangeTitle}
               size="large"
               placeholder="请输入标题"
+              ref={inputEl}
             />
           </div>
         </Col>
@@ -557,25 +594,37 @@ const Write = props => {
               borderRight: '1px solid #ccc',
             }}
           >
-            <Input.TextArea
-              style={{
-                minHeight: 'calc(100vh - 60px)',
-                border: 'none',
-                outline: 'none',
-                padding: 20,
-                resize: 'none',
-              }}
-              selectiontext="我们"
-              placeholder="请输入Markdown"
-              rows={27}
-              onChange={onChangeMarkdown}
-              value={markdown}
-              spellCheck="false"
-              autoComplete="off"
-              autoCapitalize="off"
-              autoCorrect="off"
-              autoSize
-            />
+            <KeyboardEventHandler
+              handleKeys={[
+                'ctrl+b',
+                'ctrl+l',
+                'ctrl+h',
+                'ctrl+alt+t',
+                'ctrl+i',
+                'ctrl+alt+i',
+              ]}
+              onKeyEvent={onKeyEvent}
+            >
+              <Input.TextArea
+                style={{
+                  minHeight: 'calc(100vh - 60px)',
+                  border: 'none',
+                  outline: 'none',
+                  padding: 20,
+                  resize: 'none',
+                }}
+                selectiontext="我们"
+                placeholder="请输入Markdown"
+                rows={27}
+                onChange={onChangeMarkdown}
+                value={markdown}
+                spellCheck="false"
+                autoComplete="off"
+                autoCapitalize="off"
+                autoCorrect="off"
+                autoSize
+              />
+            </KeyboardEventHandler>
           </div>
         </Col>
         <Col span={12}>
@@ -588,6 +637,14 @@ const Write = props => {
           </div>
         </Col>
       </Row>
+      <ImageModal
+        imageModalVisible={imageModalVisible}
+        closeImageModal={closeImageModal}
+        insertImageOk={insertImageOk}
+        returnImage={returnImage}
+        insertImageValue={insertImageValue}
+        insertImageValueChange={insertImageValueChange}
+      />
     </>
   )
 }
