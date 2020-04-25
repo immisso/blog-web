@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-25 16:48:35
+ * @Last Modified time: 2020-04-25 18:33:45
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -51,6 +51,7 @@ import AliOssUpload from '@/components/AliOssUpload'
 
 // import './vue.css'
 import './markdown.css'
+import styles from './index.less'
 
 const { CheckableTag } = Tag
 
@@ -340,7 +341,7 @@ const Write = props => {
   const writeMenu = (
     <Menu className="mt-20">
       <Menu.Item key="0">
-        <a onClick={writeNew}></a>
+        <a onClick={writeNew}>写文章</a>
       </Menu.Item>
       <Menu.Item key="1">
         <a onClick={showDrawer}>草稿箱</a>
@@ -607,12 +608,13 @@ const Write = props => {
             >
               <Input.TextArea
                 style={{
-                  minHeight: 'calc(100vh - 60px)',
+                  // minHeight: 'calc(100vh - 60px)',
                   border: 'none',
                   outline: 'none',
                   padding: 20,
                   resize: 'none',
                 }}
+                className={styles.textareScroll}
                 selectiontext="我们"
                 placeholder="请输入Markdown"
                 rows={27}

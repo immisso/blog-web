@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-21 20:46:32
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-23 21:06:28
+ * @Last Modified time: 2020-04-25 18:40:32
  */
 
 import React, { useState } from 'react'
@@ -15,11 +15,18 @@ import {
   LoadingOutlined,
   InboxOutlined,
 } from '@ant-design/icons'
+import { accessKeySecret, accessKeyId, bucket } from '@/config/secret'
 
 const { Dragger } = Upload
 // import './index.css'
 
-const client = new OSS({})
+const client = new OSS({
+  region: 'oss-cn-hangzhou',
+  accessKeyId,
+  accessKeySecret,
+  bucket,
+  secure: true,
+})
 
 const UploadToOss = (path, file) => {
   return new Promise((resolve, reject) => {
