@@ -36,12 +36,6 @@ export default defineConfig({
       path: '/',
       component: '@/pages/Home',
       exact: true,
-      // routes: [
-      //   {
-      //     path: '/',
-      //     component: '@/components/HomeArticleList',
-      //   },
-      // ],
     },
     {
       path: '/article/:id',
@@ -50,6 +44,28 @@ export default defineConfig({
     {
       path: '/write/draft/:key',
       component: '@/pages/Write',
+    },
+    {
+      path: '/admin',
+      component: '@/pages/Admin',
+      routes: [
+        {
+          path: '/admin/categories',
+          component: '@/components/Admin/Category',
+        },
+        {
+          path: '/admin/tags',
+          component: '@/components/Admin/Tag',
+        },
+        {
+          path: '/admin/articles',
+          component: '@/components/Admin/Article',
+        },
+        {
+          path: '/admin/comments',
+          component: '@/components/Admin/Comment',
+        },
+      ],
     },
   ],
 })

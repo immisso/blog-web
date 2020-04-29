@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-25 18:33:45
+ * @Last Modified time: 2020-04-27 14:27:53
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -64,6 +64,7 @@ const Content = props => {
     checkTagHandle,
     checkCategorysHandle,
     onPublish,
+    returnCoverImageUrl,
   } = props
   return (
     <div>
@@ -96,7 +97,7 @@ const Content = props => {
       </div>
       <h4 style={{ marginBottom: 16, marginTop: 10 }}>文章封面图</h4>
       <div>
-        <AliOssUpload type="click" />
+        <AliOssUpload type="click" returnImageUrl={returnCoverImageUrl} />
       </div>
       <div className="mt-20 tc">
         <Button type="primary" onClick={onPublish}>
@@ -146,7 +147,7 @@ const ImageModal = props => {
       onOk={insertImageOk}
       // footer={null}
     >
-      <AliOssUpload type="drag" returnImage={returnImage} />
+      <AliOssUpload type="drag" returnImageUrl={returnImage} />
       <p className="tc mt-10">或</p>
       <Input
         placeholder="输入网络图片地址"
@@ -292,6 +293,7 @@ const Write = props => {
           title,
           selectedTag,
           selectedCategory,
+          coverImageUrl,
           html: ReactDOMServer.renderToString(
             <MathJax.Provider input="tex">
               <Markdown markdown={markdown} />
@@ -336,6 +338,10 @@ const Write = props => {
 
   const returnImage = imageUrl => {
     setInsertImages([...insertImages, imageUrl])
+  }
+
+  const returnCoverImageUrl = imageUrl => {
+    setCoverImageUrl(imageUrl)
   }
 
   const writeMenu = (
@@ -521,6 +527,7 @@ const Write = props => {
                 selectedCategory={selectedCategory}
                 selectedTag={selectedTag}
                 onPublish={onPublish}
+                returnCoverImageUrl={returnCoverImageUrl}
               />
             }
             overlayStyle={{ width: 300 }}

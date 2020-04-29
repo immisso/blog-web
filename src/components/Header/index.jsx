@@ -2,11 +2,11 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-14 06:02:40
+ * @Last Modified time: 2020-04-27 17:58:55
  */
 
 import React, { useState, useEffect } from 'react'
-import { Layout, Menu, Drawer, Button } from 'antd'
+import { Layout, Menu, Drawer, Button, Dropdown } from 'antd'
 import { connect } from 'dva'
 import Icon, { MenuOutlined } from '@ant-design/icons'
 import { Link } from 'umi'
@@ -147,31 +147,35 @@ const MainHeader = props => {
             <span className="pd-5">·</span>
             <Link to="/user/register">注册</Link>
           </span> */}
-          <Menu
-            mode="horizontal"
-            style={{ height: '64px', borderBottom: 'none' }}
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item key="setting:1">
+                  <Link to="/write/draft/new">写文章</Link>
+                </Menu.Item>
+                <Menu.Item key="setting:2">写教程</Menu.Item>
+                <Menu.Item key="setting:3">草稿箱</Menu.Item>
+                <Menu.Divider />
+                <Menu.Item key="setting:4">
+                  <Link to="/admin">管理中心</Link>
+                </Menu.Item>
+                <Menu.Item key="setting:5">个人中心</Menu.Item>
+                <Menu.Divider />
+                <Menu.Item key="setting:6">设置</Menu.Item>
+                <Menu.Item key="setting:7">退出</Menu.Item>
+              </Menu>
+            }
+            trigger={['click']}
           >
-            <SubMenu
-              title={
-                <UserAvatar
-                  src={
-                    'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/002.png'
-                  }
-                />
-              }
-            >
-              <Menu.Item key="setting:1">
-                <Link to="/write/draft/new">写文章</Link>
-              </Menu.Item>
-              <Menu.Item key="setting:2">草稿</Menu.Item>
-              <Menu.Divider />
-              <Menu.Item key="setting:3">个人中心</Menu.Item>
-              <Menu.Item key="setting:4">设置</Menu.Item>
-              <Menu.Item key="setting:5">主题</Menu.Item>
-              <Menu.Divider />
-              <Menu.Item key="setting:6">退出</Menu.Item>
-            </SubMenu>
-          </Menu>
+            <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+              <UserAvatar
+                src={
+                  'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/002.png'
+                }
+                size="large"
+              />
+            </a>
+          </Dropdown>
         </div>
       </div>
       <Drawer

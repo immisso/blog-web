@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-21 20:46:32
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-25 18:40:32
+ * @Last Modified time: 2020-04-27 08:05:18
  */
 
 import React, { useState } from 'react'
@@ -47,7 +47,7 @@ const filePath = file => {
 }
 
 const AliOssUpload = props => {
-  const { type, returnImage } = props
+  const { type, returnImageUrl } = props
   const [loading, setLoadding] = useState(false)
   const [imageUrl, setImageUrl] = useState(null)
 
@@ -67,7 +67,7 @@ const AliOssUpload = props => {
         console.log('eeeeeeeeeeeeeeeeeeeeeeeeee')
         console.log(data)
         setImageUrl(data.url)
-        returnImage(data.url)
+        returnImageUrl(data.url)
       })
       .catch(error => {
         console.log('bbbbbbbbbbbbbbbbbbbbbbbbbb')
