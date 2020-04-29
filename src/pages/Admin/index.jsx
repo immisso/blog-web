@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-27 17:56:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-29 09:13:35
+ * @Last Modified time: 2020-04-29 13:00:57
  */
 
 import React, { useState } from 'react'
@@ -64,8 +64,6 @@ const Admin = props => {
         //   return routes
         // }}
         menuItemRender={(menuItemProps, defaultDom) => {
-          console.log('555555555555555555555555555555')
-          console.log(menuItemProps)
           if (
             menuItemProps.isUrl ||
             menuItemProps.children ||
