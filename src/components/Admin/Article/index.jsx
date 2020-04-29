@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-28 20:58:37
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-29 13:17:09
+ * @Last Modified time: 2020-04-29 13:22:51
  */
 import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Tag } from 'antd'
@@ -75,8 +75,6 @@ const columns = [
 const Article = props => {
   const { dispatch, articles, articleCount, loading } = props
   const [page, setPage] = useState(1)
-  console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-  console.log(articles)
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/articles', payload: { page, pageSize: 10 } })

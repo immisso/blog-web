@@ -50,6 +50,10 @@ export default defineConfig({
       component: '@/pages/Admin',
       routes: [
         {
+          path: '/admin',
+          redirect: '/admin/categories',
+        },
+        {
           path: '/admin/categories',
           component: '@/components/Admin/Category',
         },

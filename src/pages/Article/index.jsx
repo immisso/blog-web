@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-18 17:59:37
+ * @Last Modified time: 2020-04-29 13:33:28
  */
 
 import React, { useEffect, useState } from 'react'
@@ -94,6 +94,12 @@ const Article = props => {
                     </div>
                   </div>
                 </div>
+                {detail && detail.cover && (
+                  <div>
+                    <img style={{ width: '100%' }} src={detail.cover} />
+                  </div>
+                )}
+
                 <h1 className="mt-15m fw-700 mb-15m">{detail.title}</h1>
                 <div className="markdown-body ft-16">
                   <MathJax.Provider>
