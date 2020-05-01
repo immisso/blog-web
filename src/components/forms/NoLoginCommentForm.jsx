@@ -2,16 +2,16 @@
  * @Author: 柒叶
  * @Date: 2020-04-12 14:07:31
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 18:50:01
+ * @Last Modified time: 2020-05-01 11:02:39
  */
 
-import React, { useState } from 'react';
-import { Button, Input, Form } from 'antd';
-import { connect } from 'dva';
+import React, { useState } from 'react'
+import { Button, Input, Form } from 'antd'
+import { connect } from 'dva'
 
 const NoLoginCommentForm = props => {
-  const { dispatch, id } = props;
-  const [form] = Form.useForm();
+  const { dispatch, id } = props
+  const [form] = Form.useForm()
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -21,16 +21,16 @@ const NoLoginCommentForm = props => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const onFinish = values => {
     if (dispatch) {
       dispatch({
         type: 'article/addNoLoginComment',
         payload: { ...values, article_id: id },
-      });
+      })
     }
-    form.resetFields();
-  };
+    form.resetFields()
+  }
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
       <Form.Item
@@ -57,7 +57,7 @@ const NoLoginCommentForm = props => {
         rules={[
           {
             required: true,
-            message: '名字不能不空',
+            message: '名字不能为空',
           },
         ]}
       >
@@ -94,9 +94,9 @@ const NoLoginCommentForm = props => {
         </Button>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
 export default connect(({ loading }) => ({
   loading: loading.effects['article/addNoLoginComment'],
-}))(NoLoginCommentForm);
+}))(NoLoginCommentForm)

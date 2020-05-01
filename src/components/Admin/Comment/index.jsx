@@ -2,12 +2,13 @@
  * @Author: 柒叶
  * @Date: 2020-04-28 20:59:36
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-30 07:32:10
+ * @Last Modified time: 2020-04-30 07:59:21
  */
 
 import React, { useEffect } from 'react'
 import { Card, Table, Button, Tag } from 'antd'
 import { connect } from 'dva'
+import { Link } from 'umi'
 import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -15,10 +16,12 @@ const columns = [
   {
     title: 'ID',
     dataIndex: 'id',
+    width: 50,
   },
   {
     title: '评论用户',
     dataIndex: 'user',
+    ellipsis: true,
     render(user) {
       return <span>{user.nickname}</span>
     },
@@ -26,14 +29,20 @@ const columns = [
   {
     title: '评论文章',
     dataIndex: 'article',
-    // width: 150,
+    ellipsis: true,
+    width: 150,
     render(article) {
-      return <span>{article.title}</span>
+      return (
+        <Link className="ft-13" to={`/article/${article.id}`}>
+          {article.title}
+        </Link>
+      )
     },
   },
   {
     title: '评论内容',
     dataIndex: 'content',
+    ellipsis: true,
   },
   {
     title: '状态',

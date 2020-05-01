@@ -2,11 +2,12 @@
  * @Author: 柒叶
  * @Date: 2020-04-28 20:58:37
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-29 13:22:51
+ * @Last Modified time: 2020-04-30 07:56:26
  */
 import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Tag } from 'antd'
 import { connect } from 'dva'
+import { Link } from 'umi'
 import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -14,11 +15,20 @@ const columns = [
   {
     title: 'ID',
     dataIndex: 'id',
+    width: 50,
   },
   {
     title: '标题',
-    dataIndex: 'title',
+    // dataIndex: 'title',
     width: 150,
+    ellipsis: true,
+    render(article) {
+      return (
+        <Link className="ft-13" to={`/article/${article.id}`}>
+          {article.title}
+        </Link>
+      )
+    },
   },
   {
     title: '分类',
@@ -91,7 +101,7 @@ const Article = props => {
   }
   return (
     <>
-      <Card size="small" bodyStyle={{ margin: 12 }}>
+      <Card size="small">
         <Table
           columns={columns}
           dataSource={articles}
