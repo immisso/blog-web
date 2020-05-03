@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-29 18:04:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-01 17:41:41
+ * @Last Modified time: 2020-05-02 19:25:53
  */
 import { stringify } from 'qs'
 import request from '@/utils/request'
@@ -53,4 +53,25 @@ export async function createTag(data) {
     method: 'POST',
     data,
   })
+}
+
+// 删除文章
+export async function deleteArticle(data) {
+  return request('/api/admin/delete/article', {
+    method: 'POST',
+    data,
+  })
+}
+
+// 删除评论
+export async function deleteComment(data) {
+  return request('/api/admin/delete/comment', {
+    method: 'POST',
+    data,
+  })
+}
+
+// 获取文章列表
+export async function getArticles(params) {
+  return request(`/api/admin/articles?${stringify(params)}`)
 }
