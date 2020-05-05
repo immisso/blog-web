@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-29 13:33:28
+ * @Last Modified time: 2020-05-04 15:47:25
  */
 
 import React, { useEffect, useState } from 'react'
@@ -108,7 +108,7 @@ const Article = props => {
                 </div>
               </div>
             </Card>
-            <AddComment id={id} />
+            <AddComment id={id} author={detail.user_id} />
           </div>
           <div className={styles.articleContainerSider}>
             <Card

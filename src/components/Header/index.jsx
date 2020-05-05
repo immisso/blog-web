@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-27 17:58:55
+ * @Last Modified time: 2020-05-04 20:04:03
  */
 
 import React, { useState, useEffect } from 'react'
@@ -43,7 +43,7 @@ const tabs = [
 // const categories = null
 
 const MainHeader = props => {
-  const { dispatch, categories } = props
+  const { dispatch, categories, pathname } = props
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/categories' })
@@ -51,6 +51,7 @@ const MainHeader = props => {
   }, [])
 
   const [visible, setVisible] = useState(false)
+
   const showDrawer = () => {
     setVisible(true)
   }
@@ -81,10 +82,12 @@ const MainHeader = props => {
             <Menu
               mode="horizontal"
               style={{ height: '64px', borderBottom: 'none' }}
+              defaultSelectedKeys={['/home']}
+              selectedKeys={[pathname]}
             >
               {tabs &&
                 tabs.map(item => (
-                  <Menu.Item key={item.key}>
+                  <Menu.Item key="/home">
                     <Link
                       to={{
                         pathname: item.path,
@@ -104,10 +107,10 @@ const MainHeader = props => {
                           {item.name}
                         </span>
                       }
-                      key={item.id}
+                      key={`/home/${item.en_name}`}
                     >
                       {item.tags.map(tag => (
-                        <Menu.Item key={`${item.id}-${tag.id}`}>
+                        <Menu.Item key={`/home/${item.en_name}/${tag.name}`}>
                           <Link
                             to={{
                               pathname: `/home/${item.en_name}/${tag.name}`,
@@ -120,7 +123,7 @@ const MainHeader = props => {
                       ))}
                     </SubMenu>
                   ) : (
-                    <Menu.Item key={item.id}>
+                    <Menu.Item key={`/home/${item.en_name}`}>
                       <Link
                         to={{
                           pathname: `/home/${item.en_name}`,
@@ -154,14 +157,12 @@ const MainHeader = props => {
                   <Link to="/write/draft/new">写文章</Link>
                 </Menu.Item>
                 <Menu.Item key="setting:2">写教程</Menu.Item>
-                <Menu.Item key="setting:3">草稿箱</Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key="setting:4">
                   <Link to="/admin">管理中心</Link>
                 </Menu.Item>
                 <Menu.Item key="setting:5">个人中心</Menu.Item>
                 <Menu.Divider />
-                <Menu.Item key="setting:6">设置</Menu.Item>
                 <Menu.Item key="setting:7">退出</Menu.Item>
               </Menu>
             }
@@ -207,8 +208,9 @@ const MainHeader = props => {
       >
         <Menu
           onClick={handleClick}
-          defaultSelectedKeys={['home']}
+          selectedKeys={['home']}
           // defaultOpenKeys={['sub1']}
+          // selectedKeys={[this.state.current]}
           mode="inline"
         >
           {tabs &&

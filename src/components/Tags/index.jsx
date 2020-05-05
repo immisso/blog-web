@@ -2,20 +2,22 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 07:33:17
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-13 07:58:05
+ * @Last Modified time: 2020-05-04 10:36:27
  */
 
-import React, { useState, useEffect } from 'react';
-import { Tag, Button, Space, Card } from 'antd';
-import { connect } from 'dva';
+import React, { useState, useEffect } from 'react'
+import { Tag, Button, Space, Card } from 'antd'
+import { Link } from 'umi'
+import { connect } from 'dva'
 
 const Tags = props => {
-  const { dispatch, tags, loading } = props;
+  const { dispatch, tags, loading } = props
   useEffect(() => {
     if (dispatch) {
-      dispatch({ type: 'article/tags' });
+      dispatch({ type: 'article/tags' })
     }
-  }, []);
+  }, [])
+
   return (
     <Card
       loading={loading}
@@ -27,14 +29,21 @@ const Tags = props => {
       {tags &&
         tags.map(tag => (
           <Tag key={tag.en_name} className="mb-10">
-            {tag.name}
+            <Link
+              to={{
+                pathname: `/home/${tag.category.en_name}/${tag.name}`,
+                state: { category: tag.category_id, tag: tag.id },
+              }}
+            >
+              {tag.name}
+            </Link>
           </Tag>
         ))}
     </Card>
-  );
-};
+  )
+}
 
 export default connect(({ article: { tags }, loading }) => ({
   tags,
   loading: loading.effects['article/tags'],
-}))(Tags);
+}))(Tags)

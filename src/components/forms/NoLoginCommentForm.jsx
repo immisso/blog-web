@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-12 14:07:31
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-01 11:02:39
+ * @Last Modified time: 2020-05-04 15:48:11
  */
 
 import React, { useState } from 'react'
@@ -10,7 +10,7 @@ import { Button, Input, Form } from 'antd'
 import { connect } from 'dva'
 
 const NoLoginCommentForm = props => {
-  const { dispatch, id } = props
+  const { dispatch, id, author } = props
   const [form] = Form.useForm()
   const formItemLayout = {
     labelCol: {
@@ -26,7 +26,7 @@ const NoLoginCommentForm = props => {
     if (dispatch) {
       dispatch({
         type: 'article/addNoLoginComment',
-        payload: { ...values, article_id: id },
+        payload: { ...values, article_id: id, author },
       })
     }
     form.resetFields()
@@ -48,7 +48,7 @@ const NoLoginCommentForm = props => {
           },
         ]}
       >
-        <Input size="large" placeholder="输入您的电子邮箱" />
+        <Input placeholder="输入您的电子邮箱" />
       </Form.Item>
       <Form.Item
         {...formItemLayout}
@@ -61,7 +61,7 @@ const NoLoginCommentForm = props => {
           },
         ]}
       >
-        <Input size="large" placeholder="输入您的名字" />
+        <Input placeholder="输入您的名字" />
       </Form.Item>
       <Form.Item
         {...formItemLayout}
@@ -74,7 +74,7 @@ const NoLoginCommentForm = props => {
           },
         ]}
       >
-        <Input size="large" placeholder="输入您的网址" />
+        <Input placeholder="输入您的网址" />
       </Form.Item>
       <Form.Item
         name="content"

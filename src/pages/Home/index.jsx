@@ -2,35 +2,38 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 11:41:31
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-13 20:57:20
+ * @Last Modified time: 2020-05-04 20:02:22
  */
 
-import React, { useEffect } from 'react';
-import { Layout, Card } from 'antd';
-import { connect } from 'dva';
-import Header from '@/components/Header';
-import SiderList from '@/components/SiderList';
-import HomeArticleList from '@/components/HomeArticleList';
-import Tags from '@/components/Tags';
-import styles from './index.less';
+import React, { useEffect } from 'react'
+import { Layout, Card } from 'antd'
+import { connect } from 'dva'
+import Header from '@/components/Header'
+import SiderList from '@/components/SiderList'
+import Tags from '@/components/Tags'
+import styles from './index.less'
 
-const { Content } = Layout;
+const { Content } = Layout
 
 const Home = props => {
-  const { dispatch, hots, loading } = props;
+  const {
+    dispatch,
+    hots,
+    loading,
+    children,
+    location: { pathname },
+  } = props
   useEffect(() => {
     if (dispatch) {
-      dispatch({ type: 'article/hot' });
+      dispatch({ type: 'article/hot' })
     }
-  }, []);
+  }, [])
   return (
     <>
-      <Header />
+      <Header pathname={pathname} />
       <Content className={styles.homeContainer}>
         <div className={styles.homeContainerWrapper}>
-          <div className={styles.homeContainerList}>
-            <HomeArticleList />
-          </div>
+          <div className={styles.homeContainerList}>{children}</div>
           <div className={styles.homeContainerSiderlist}>
             <Card
               size="small"
@@ -58,12 +61,10 @@ const Home = props => {
         </div>
       </Content>
     </>
-  );
-};
-
-// export default Home
+  )
+}
 
 export default connect(({ article: { hots }, loading }) => ({
   hots,
   loading: loading.effects['article/hot'],
-}))(Home);
+}))(Home)

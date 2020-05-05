@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 07:58:49
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-29 12:56:18
+ * @Last Modified time: 2020-05-03 11:02:10
  */
 
 import React, { useState, useEffect } from 'react'
@@ -20,19 +20,32 @@ const IconText = ({ icon, text }) => (
 )
 
 const HomeArticleList = props => {
-  const { dispatch, articles, articleCount, loading } = props
+  const {
+    dispatch,
+    articles,
+    articleCount,
+    loading,
+    location: { state = {} },
+  } = props
+  const { category, tag } = state
   const [page, setPage] = useState(1)
-  useEffect(() => {
-    if (dispatch) {
-      dispatch({ type: 'article/articles', payload: { page, pageSize: 10 } })
-    }
-  }, [])
+  useEffect(
+    () => {
+      if (dispatch) {
+        dispatch({
+          type: 'article/articles',
+          payload: { page, pageSize: 10, category, tag },
+        })
+      }
+    },
+    tag ? [tag] : category ? [category] : [],
+  )
   const pageChange = pageNum => {
     setPage(pageNum)
     if (dispatch) {
       dispatch({
         type: 'article/articles',
-        payload: { page: pageNum, pageSize: 10 },
+        payload: { page: pageNum, pageSize: 10, category, tag },
       })
     }
   }

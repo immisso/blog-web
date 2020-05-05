@@ -34,8 +34,28 @@ export default defineConfig({
   routes: [
     {
       path: '/',
+      redirect: '/home',
+    },
+    {
+      path: '/home',
       component: '@/pages/Home',
-      exact: true,
+      // exact: true,
+      routes: [
+        {
+          path: '/home',
+          component: '@/components/HomeArticleList',
+        },
+        {
+          path: '/home/:category',
+          exact: true,
+          component: '@/components/HomeArticleList',
+        },
+        {
+          path: '/home/:category/:tag',
+          exact: true,
+          component: '@/components/HomeArticleList',
+        },
+      ],
     },
     {
       path: '/article/:id',
@@ -70,6 +90,14 @@ export default defineConfig({
           component: '@/components/Admin/Comment',
         },
       ],
+    },
+    {
+      path: '/login',
+      component: '@/pages/Login',
+    },
+    {
+      path: '/register',
+      component: '@/pages/Register',
     },
   ],
 })
