@@ -2,20 +2,31 @@
  * @Author: 柒叶
  * @Date: 2020-05-05 14:52:52
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-06 07:17:40
+ * @Last Modified time: 2020-05-06 13:09:36
  */
 
 import React from 'react'
 import { Button, Row, Form, Input, message, Checkbox } from 'antd'
 import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'umi'
+import { connect } from 'dva'
 
 const Login = props => {
   const [form] = Form.useForm()
-
+  const { dispatch, history } = props
   const onFinish = values => {
-    console.log('eeeeeeeeeeeeeeeeeeeeeeeeee')
-    console.log(values)
+    if (dispatch) {
+      dispatch({
+        type: 'user/login',
+        payload: values,
+        callback(res) {
+          if (res && res.status === 200) {
+            message.success('登录成功')
+            history.push('/')
+          }
+        },
+      })
+    }
   }
   return (
     <>
@@ -74,4 +85,7 @@ const Login = props => {
   )
 }
 
-export default Login
+export default connect(({ user, loading }) => ({
+  user,
+  loading,
+}))(Login)

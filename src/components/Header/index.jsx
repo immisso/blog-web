@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-04 20:04:03
+ * @Last Modified time: 2020-05-06 20:21:26
  */
 
 import React, { useState, useEffect } from 'react'
@@ -161,7 +161,9 @@ const MainHeader = props => {
                 <Menu.Item key="setting:4">
                   <Link to="/admin">管理中心</Link>
                 </Menu.Item>
-                <Menu.Item key="setting:5">个人中心</Menu.Item>
+                <Menu.Item key="setting:5">
+                  <Link to="/account">个人中心</Link>
+                </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key="setting:7">退出</Menu.Item>
               </Menu>

@@ -2,19 +2,33 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 07:16:03
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-06 07:27:11
+ * @Last Modified time: 2020-05-06 13:08:46
  */
 
 import React from 'react'
 import { Button, Row, Form, Input, message } from 'antd'
 import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'umi'
+import { connect } from 'dva'
 
 const Register = props => {
+  const { dispatch, history } = props
   const [form] = Form.useForm()
   const onFinish = values => {
-    console.log('eeeeeeeeeeeeeeeeeeeeeeeeee')
-    console.log(values)
+    if (dispatch) {
+      dispatch({
+        type: 'user/register',
+        payload: values,
+        callback(res) {
+          if (res && res.status === 200) {
+            message.success('注册成功')
+            history.push('/login')
+          } else {
+            message.warn('该用户已经存在')
+          }
+        },
+      })
+    }
   }
   return (
     <>
@@ -85,4 +99,7 @@ const Register = props => {
   )
 }
 
-export default Register
+export default connect(({ user, loading }) => ({
+  user,
+  loading,
+}))(Register)

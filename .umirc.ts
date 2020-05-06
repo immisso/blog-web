@@ -99,5 +99,15 @@ export default defineConfig({
       path: '/register',
       component: '@/pages/Register',
     },
+    {
+      path: '/account',
+      component: '@/pages/Account',
+      routes: [
+        {
+          path: '/account/me',
+          component: '@/components/Account/Me',
+        },
+      ],
+    },
   ],
 })
