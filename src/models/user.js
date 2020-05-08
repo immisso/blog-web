@@ -2,9 +2,14 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 09:25:04
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-08 09:47:29
+ * @Last Modified time: 2020-05-08 20:16:13
  */
-import { registerAccount, loginAccount, getAccount } from '@/services/user'
+import {
+  registerAccount,
+  loginAccount,
+  getAccount,
+  logoutAccount,
+} from '@/services/user'
 
 export default {
   namespace: 'user',
@@ -29,8 +34,21 @@ export default {
         payload: response,
       })
     },
+
+    *logout({ payload }, { call, put }) {
+      yield call(logoutAccount, payload)
+      yield put({
+        type: 'updateAccount',
+        payload: {},
+      })
+    },
   },
   reducers: {
+    updateAccount(state, { payload }) {
+      return {
+        account: payload,
+      }
+    },
     accountHandle(state, { payload }) {
       return {
         account: payload.status === 200 ? payload.data : {},

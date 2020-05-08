@@ -33,11 +33,14 @@ const Login = props => {
               callback(user) {
                 if (user.status === 200) {
                   storageHelper.set('user', user.data)
+                  message.success('登录成功')
+                  history.push('/')
                 }
-                message.success('登录成功')
-                history.push('/')
               },
             })
+          } else {
+            message.error('登录失败，请重新登录')
+            history.push('/login')
           }
         },
       })

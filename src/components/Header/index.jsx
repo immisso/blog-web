@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-06 20:21:26
+ * @Last Modified time: 2020-05-08 20:33:21
  */
 
 import React, { useState, useEffect } from 'react'
@@ -11,6 +11,7 @@ import { connect } from 'dva'
 import Icon, { MenuOutlined } from '@ant-design/icons'
 import { Link } from 'umi'
 import UserAvatar from '@/components/UserAvatar'
+import storageHelper from '@/utils/storage'
 
 import styles from './index.less'
 
@@ -43,20 +44,31 @@ const tabs = [
 // const categories = null
 
 const MainHeader = props => {
-  const { dispatch, categories, pathname } = props
+  const { dispatch, categories, account, pathname } = props
+
+  const [visible, setVisible] = useState(false)
+
   useEffect(() => {
+    const user = storageHelper.get('user')
+    if (user && user.exp * 1000 > new Date().getTime()) {
+      dispatch({ type: 'user/updateAccount', payload: user })
+    }
     if (dispatch) {
       dispatch({ type: 'article/categories' })
     }
   }, [])
-
-  const [visible, setVisible] = useState(false)
 
   const showDrawer = () => {
     setVisible(true)
   }
   const onClose = () => {
     setVisible(false)
+  }
+  const logout = () => {
+    storageHelper.clear('user')
+    if (dispatch) {
+      dispatch({ type: 'user/logout' })
+    }
   }
   const handleClick = () => {}
   return (
@@ -145,40 +157,47 @@ const MainHeader = props => {
           </div>
         </div>
         <div className={styles.homeHeaderRight}>
-          {/* <span>
-            <Link to="/user/login">登录</Link>
-            <span className="pd-5">·</span>
-            <Link to="/user/register">注册</Link>
-          </span> */}
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item key="setting:1">
-                  <Link to="/write/draft/new">写文章</Link>
-                </Menu.Item>
-                <Menu.Item key="setting:2">写教程</Menu.Item>
-                <Menu.Divider />
-                <Menu.Item key="setting:4">
-                  <Link to="/admin">管理中心</Link>
-                </Menu.Item>
-                <Menu.Item key="setting:5">
-                  <Link to="/account">个人中心</Link>
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item key="setting:7">退出</Menu.Item>
-              </Menu>
-            }
-            trigger={['click']}
-          >
-            <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-              <UserAvatar
-                src={
-                  'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/002.png'
-                }
-                size="large"
-              />
-            </a>
-          </Dropdown>
+          {account && account.email && account.id ? (
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item key="setting:1">
+                    <Link to="/write/draft/new">写文章</Link>
+                  </Menu.Item>
+                  <Menu.Item key="setting:2">写教程</Menu.Item>
+                  <Menu.Divider />
+                  {account.account_type === 'ADMIN' ? (
+                    <Menu.Item key="setting:4">
+                      <Link to="/admin">管理中心</Link>
+                    </Menu.Item>
+                  ) : (
+                    ''
+                  )}
+                  <Menu.Item key="setting:5">
+                    <Link to="/account">个人中心</Link>
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item key="setting:7" onClick={logout}>
+                    退出
+                  </Menu.Item>
+                </Menu>
+              }
+              trigger={['click']}
+            >
+              <a
+                className="ant-dropdown-link"
+                onClick={e => e.preventDefault()}
+              >
+                <UserAvatar src={account.avatar} size="large" />
+              </a>
+            </Dropdown>
+          ) : (
+            <span>
+              <Link to="/login">登录</Link>
+              <span className="pd-5">·</span>
+              <Link to="/register">注册</Link>
+            </span>
+          )}
         </div>
       </div>
       <Drawer
@@ -270,7 +289,10 @@ const MainHeader = props => {
   )
 }
 
-export default connect(({ article: { categories }, loading }) => ({
-  categories,
-  loading: loading,
-}))(MainHeader)
+export default connect(
+  ({ article: { categories }, user: { account }, loading }) => ({
+    categories,
+    account,
+    loading: loading,
+  }),
+)(MainHeader)
