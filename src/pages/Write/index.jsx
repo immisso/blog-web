@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-27 14:27:53
+ * @Last Modified time: 2020-05-09 07:48:40
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -48,6 +48,7 @@ import KeyboardEventHandler from 'react-keyboard-event-handler'
 import UserAvatar from '@/components/UserAvatar'
 import Markdown from '@/components/Markdown'
 import AliOssUpload from '@/components/AliOssUpload'
+import storageHelper from '@/utils/storage'
 
 // import './vue.css'
 import './markdown.css'
@@ -171,6 +172,7 @@ const Write = props => {
     drafts,
     selectedCategory,
     selectedTag,
+    account,
     loading,
     match: {
       params: { key },
@@ -187,6 +189,14 @@ const Write = props => {
   // const [selectedTag, setSelectedTag] = useState(null)
 
   useEffect(() => {
+    if (!account.id) {
+      const user = storageHelper.get('user')
+      if (user && user.exp * 1000 > new Date().getTime()) {
+        dispatch({ type: 'user/updateAccount', payload: user })
+      } else {
+        history.push('/login')
+      }
+    }
     if (dispatch) {
       dispatch({ type: 'write/categories' })
       // dispatch({ type: 'article/tags' })
@@ -548,11 +558,7 @@ const Write = props => {
           </Button>
           <Dropdown overlay={writeMenu} trigger={['click']}>
             <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-              <UserAvatar
-                src={
-                  'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/002.png'
-                }
-              />
+              <UserAvatar src={account.avatar} />
             </a>
           </Dropdown>
           {visible && (
@@ -669,6 +675,7 @@ export default connect(
       selectedCategory,
       selectedTag,
     },
+    user: { account },
     loading,
   }) => ({
     categories,
@@ -678,6 +685,7 @@ export default connect(
     drafts,
     selectedCategory,
     selectedTag,
+    account,
     loading: loading.effects['write/updateDraft'],
   }),
 )(Write)
