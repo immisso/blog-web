@@ -104,6 +104,10 @@ export default defineConfig({
       component: '@/pages/Account',
       routes: [
         {
+          path: '/account',
+          redirect: '/account/me',
+        },
+        {
           path: '/account/me',
           component: '@/components/Account/Me',
         },

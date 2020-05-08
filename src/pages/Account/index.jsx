@@ -2,10 +2,11 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 20:18:13
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-06 20:56:01
+ * @Last Modified time: 2020-05-07 09:28:25
  */
 import React from 'react'
 import { Button, Menu, Row, Col } from 'antd'
+import { Link } from 'umi'
 import Header from '@/components/Header'
 import styles from './index.less'
 
@@ -19,7 +20,9 @@ const Account = props => {
           <div className={styles.main}>
             <div className={styles.leftmenu}>
               <Menu mode="inline">
-                <Menu.Item>我的信息</Menu.Item>
+                <Menu.Item>
+                  <Link to="/account/me">我的信息</Link>
+                </Menu.Item>
                 <Menu.Item>主题设置</Menu.Item>
                 <Menu.Item>代码风格</Menu.Item>
               </Menu>

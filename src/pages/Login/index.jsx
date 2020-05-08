@@ -2,18 +2,25 @@
  * @Author: 柒叶
  * @Date: 2020-05-05 14:52:52
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-06 13:09:36
+ * @Last Modified time: 2020-05-08 13:46:00
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Row, Form, Input, message, Checkbox } from 'antd'
 import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'umi'
 import { connect } from 'dva'
+import storageHelper from '@/utils/storage'
 
 const Login = props => {
   const [form] = Form.useForm()
   const { dispatch, history } = props
+  useEffect(() => {
+    const user = storageHelper.get('user')
+    if (user && user.id && user.exp * 1000 > new Date().getTime()) {
+      history.push('/')
+    }
+  }, [])
   const onFinish = values => {
     if (dispatch) {
       dispatch({
@@ -21,8 +28,16 @@ const Login = props => {
         payload: values,
         callback(res) {
           if (res && res.status === 200) {
-            message.success('登录成功')
-            history.push('/')
+            dispatch({
+              type: 'user/account',
+              callback(user) {
+                if (user.status === 200) {
+                  storageHelper.set('user', user.data)
+                }
+                message.success('登录成功')
+                history.push('/')
+              },
+            })
           }
         },
       })
@@ -66,7 +81,7 @@ const Login = props => {
             </Form.Item>
             <Form.Item>
               <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>自动登录</Checkbox>
+                <Checkbox checked>自动登录</Checkbox>
               </Form.Item>
               <a className="fr" href="/">
                 忘记密码
