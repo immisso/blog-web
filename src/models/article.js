@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-19 10:58:54
+ * @Last Modified time: 2020-05-10 20:38:22
  */
 
 import {
@@ -13,6 +13,7 @@ import {
   getComments,
   getTags,
   createNoLoginComment,
+  updateFavorite,
 } from '@/services/article'
 
 export default {
@@ -75,6 +76,10 @@ export default {
         type: 'createNoLoginCommentHandle',
         payload: response,
       })
+    },
+    *favorite({ payload, callback }, { call, put }) {
+      const response = yield call(updateFavorite, payload)
+      if (callback) callback(response)
     },
   },
   reducers: {

@@ -5,14 +5,14 @@
  * @Last Modified time: 2020-04-13 07:28:58
  */
 
-import React from 'react';
-import { List } from 'antd';
-import { Link } from 'umi';
-import { EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import React from 'react'
+import { List } from 'antd'
+import { Link } from 'umi'
+import { EyeOutlined, LikeOutlined } from '@ant-design/icons'
 
 const SiderList = props => {
   // eslint-disable-next-line react/prop-types
-  const { dataSource, bordered, size, split } = props;
+  const { dataSource, bordered, size, split } = props
   return (
     <List
       itemLayout="vertical"
@@ -30,7 +30,7 @@ const SiderList = props => {
             </span>,
             <span key="2">
               <LikeOutlined />
-              <span className="pl-2 pointer">{item.like}</span>
+              <span className="pl-2 pointer">{item.favorite}</span>
             </span>,
           ]}
         >
@@ -44,7 +44,7 @@ const SiderList = props => {
         </List.Item>
       )}
     />
-  );
-};
+  )
+}
 
-export default SiderList;
+export default SiderList

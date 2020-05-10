@@ -2,11 +2,11 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-04 15:47:25
+ * @Last Modified time: 2020-05-10 20:39:45
  */
 
 import React, { useEffect, useState } from 'react'
-import { Layout, Card, List, Row, Col, Divider, Tooltip, Button } from 'antd'
+import { Layout, Card, List, Row, Col, Divider, Tooltip } from 'antd'
 import moment from 'moment'
 import { Link } from 'umi'
 import { connect } from 'dva'
@@ -44,6 +44,7 @@ const Article = props => {
     loading2,
     detail,
     hots,
+    history,
     match: {
       params: { id },
     },
@@ -55,6 +56,20 @@ const Article = props => {
       dispatch({ type: 'article/hot' })
     }
   }, [])
+
+  const handleLike = () => {
+    if (dispatch) {
+      dispatch({
+        type: 'article/favorite',
+        payload: { id, author: detail.user_id },
+        callback(res) {
+          if (res.status !== 200) {
+            history.push('/login')
+          }
+        },
+      })
+    }
+  }
 
   return (
     <>
@@ -206,7 +221,7 @@ const Article = props => {
                       </span>,
                       <span key="2">
                         <LikeOutlined />
-                        <span className="pl-2 pointer">{item.like}</span>
+                        <span className="pl-2 pointer">{item.favorite}</span>
                       </span>,
                     ]}
                   >
@@ -228,12 +243,15 @@ const Article = props => {
           <div className={styles.articlePanel}>
             <div className={styles.articlePanelItem}>
               <div className={styles.articlePanelIcon}>
-                <LikeOutlined style={{ color: '#ccc' }} />
+                <LikeOutlined
+                  style={{ color: '#007bff' }}
+                  onClick={handleLike}
+                />
                 {/* <ThumbsUp color={islike ? '#007bff' : '#ccc'} onClick={this.handleLike} /> */}
               </div>
               <div className={styles.articlePanelCount}>
                 {/* <span>{likeNum}</span> */}
-                <span>{detail.like}</span>
+                <span>{detail.favorite}</span>
               </div>
             </div>
             <div className={styles.articlePanelItem}>

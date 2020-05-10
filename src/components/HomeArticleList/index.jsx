@@ -74,7 +74,7 @@ const HomeArticleList = props => {
                   />,
                   <IconText
                     icon={LikeOutlined}
-                    text={item.like}
+                    text={item.favorite}
                     key="list-vertical-like-o"
                   />,
                   <IconText
