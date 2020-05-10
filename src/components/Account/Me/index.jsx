@@ -2,15 +2,62 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 20:59:56
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-07 10:38:22
+ * @Last Modified time: 2020-05-09 13:13:10
  */
 
-import React from 'react'
-import { Form, Input, Row, Col, Avatar, Button, Tag } from 'antd'
+import React, { useEffect } from 'react'
+import { Form, Input, Row, Col, Avatar, Button, Tag, message } from 'antd'
+import { connect } from 'dva'
+import storageHelper from '@/utils/storage'
 
 const Me = props => {
+  const { dispatch, account, history } = props
+
   const [form] = Form.useForm()
-  const onFinish = () => {}
+  console.log('eeeeeeeeeeeeeeeeeeeeeee')
+  console.log(account)
+  useEffect(() => {
+    if (!account.id) {
+      const user = storageHelper.get('user')
+      if (user && user.exp * 1000 > new Date().getTime()) {
+        dispatch({ type: 'user/updateAccount', payload: user })
+      } else {
+        history.push('/login')
+      }
+    }
+    if (dispatch) {
+      dispatch({
+        type: 'user/account',
+        callback(res) {
+          if (res.status === 200) {
+            const account = res.data
+            Object.keys(form.getFieldsValue()).forEach(key => {
+              const obj = {}
+              obj[key] = account[key] || null
+              form.setFieldsValue(obj)
+            })
+          }
+        },
+      })
+    }
+  }, [])
+
+  const onFinish = values => {
+    // console.log('44444444444444444444444444')
+    // console.log(values)
+    if (dispatch) {
+      dispatch({
+        type: 'user/setAccount',
+        payload: values,
+        callback(res) {
+          if (res.status === 200) {
+            message.success('更新成功')
+          }
+        },
+      })
+    }
+  }
+
   return (
     <>
       <h2>个人信息</h2>
@@ -82,6 +129,11 @@ const Me = props => {
             >
               <Input placeholder="微博地址" />
             </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                更新
+              </Button>
+            </Form.Item>
           </Form>
         </Col>
         <Col span={12}>
@@ -105,4 +157,7 @@ const Me = props => {
   )
 }
 
-export default Me
+export default connect(({ user: { account }, loading }) => ({
+  account,
+  loading,
+}))(Me)

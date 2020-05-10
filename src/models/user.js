@@ -2,13 +2,14 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 09:25:04
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-08 20:16:13
+ * @Last Modified time: 2020-05-09 12:44:39
  */
 import {
   registerAccount,
   loginAccount,
   getAccount,
   logoutAccount,
+  modifyAccount,
 } from '@/services/user'
 
 export default {
@@ -40,6 +41,15 @@ export default {
       yield put({
         type: 'updateAccount',
         payload: {},
+      })
+    },
+
+    *setAccount({ payload, callback }, { call, put }) {
+      const response = yield call(modifyAccount, payload)
+      if (callback) callback(response)
+      yield put({
+        type: 'accountHandle',
+        payload: response,
       })
     },
   },

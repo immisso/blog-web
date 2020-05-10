@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 09:22:30
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-08 20:20:00
+ * @Last Modified time: 2020-05-09 12:37:54
  */
 import { stringify } from 'qs'
 import request from '@/utils/request'
@@ -30,7 +30,11 @@ export async function getAccount() {
 }
 
 // 退出登录
-
 export async function logoutAccount() {
   return request('/api/logout', { method: 'POST' })
+}
+
+// 修改用户信息
+export async function modifyAccount(data) {
+  return request('/api/update/account', { method: 'POST', data })
 }
