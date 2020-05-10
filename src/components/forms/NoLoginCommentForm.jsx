@@ -2,16 +2,16 @@
  * @Author: 柒叶
  * @Date: 2020-04-12 14:07:31
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 18:50:01
+ * @Last Modified time: 2020-05-04 15:48:11
  */
 
-import React, { useState } from 'react';
-import { Button, Input, Form } from 'antd';
-import { connect } from 'dva';
+import React, { useState } from 'react'
+import { Button, Input, Form } from 'antd'
+import { connect } from 'dva'
 
 const NoLoginCommentForm = props => {
-  const { dispatch, id } = props;
-  const [form] = Form.useForm();
+  const { dispatch, id, author } = props
+  const [form] = Form.useForm()
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -21,16 +21,16 @@ const NoLoginCommentForm = props => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const onFinish = values => {
     if (dispatch) {
       dispatch({
         type: 'article/addNoLoginComment',
-        payload: { ...values, article_id: id },
-      });
+        payload: { ...values, article_id: id, author },
+      })
     }
-    form.resetFields();
-  };
+    form.resetFields()
+  }
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
       <Form.Item
@@ -48,7 +48,7 @@ const NoLoginCommentForm = props => {
           },
         ]}
       >
-        <Input size="large" placeholder="输入您的电子邮箱" />
+        <Input placeholder="输入您的电子邮箱" />
       </Form.Item>
       <Form.Item
         {...formItemLayout}
@@ -57,11 +57,11 @@ const NoLoginCommentForm = props => {
         rules={[
           {
             required: true,
-            message: '名字不能不空',
+            message: '名字不能为空',
           },
         ]}
       >
-        <Input size="large" placeholder="输入您的名字" />
+        <Input placeholder="输入您的名字" />
       </Form.Item>
       <Form.Item
         {...formItemLayout}
@@ -74,7 +74,7 @@ const NoLoginCommentForm = props => {
           },
         ]}
       >
-        <Input size="large" placeholder="输入您的网址" />
+        <Input placeholder="输入您的网址" />
       </Form.Item>
       <Form.Item
         name="content"
@@ -94,9 +94,9 @@ const NoLoginCommentForm = props => {
         </Button>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
 export default connect(({ loading }) => ({
   loading: loading.effects['article/addNoLoginComment'],
-}))(NoLoginCommentForm);
+}))(NoLoginCommentForm)

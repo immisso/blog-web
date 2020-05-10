@@ -2,37 +2,43 @@
  * @Author: 柒叶
  * @Date: 2020-04-11 20:19:37
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 20:45:48
+ * @Last Modified time: 2020-05-04 15:47:44
  */
-import React, { useState, useEffect } from 'react';
-import { connect } from 'dva';
-import { Link } from 'umi';
-import { Comment, Divider, Tooltip, List } from 'antd';
-import moment from 'moment';
-import UserAvatar from '@/components/common/UserAvatar';
-import LoginCommentForm from '@/components/forms/LoginCommentForm';
-import NoLoginCommentForm from '@/components/forms/NoLoginCommentForm';
+import React, { useState, useEffect } from 'react'
+import { connect } from 'dva'
+import { Link } from 'umi'
+import { Comment, Divider, Tooltip, List, Card } from 'antd'
+import moment from 'moment'
+import UserAvatar from '@/components/UserAvatar'
+import LoginCommentForm from '@/components/Forms/LoginCommentForm'
+import NoLoginCommentForm from '@/components/Forms/NoLoginCommentForm'
 
-moment.locale('zh-cn');
-const Content = ({ content }) => <p>{content}</p>;
+moment.locale('zh-cn')
+const Content = ({ content }) => <p>{content}</p>
 
 const Datetime = ({ time }) => {
   return (
     <Tooltip title={time}>
       <span>{moment(time).fromNow()}</span>
     </Tooltip>
-  );
-};
+  )
+}
 
 const AddComment = props => {
-  const { user, dispatch, id, comments } = props;
+  const { user, dispatch, id, author, comments, loading } = props
   useEffect(() => {
     if (dispatch) {
-      dispatch({ type: 'article/comments', payload: { id } });
+      dispatch({ type: 'article/comments', payload: { id } })
     }
-  }, []);
+  }, [])
   return (
-    <>
+    <Card
+      title="评论"
+      bordered={false}
+      loading={loading}
+      className="mtb-20"
+      id="comment"
+    >
       <List
         className="comment-list"
         itemLayout="horizontal"
@@ -49,7 +55,7 @@ const AddComment = props => {
           </List.Item>
         )}
       />
-      <Divider orientation="left">我想说↓</Divider>
+      <Divider />
       {user && user.id ? (
         <Comment
           avatar={
@@ -62,13 +68,13 @@ const AddComment = props => {
           content={<LoginCommentForm />}
         />
       ) : (
-        <NoLoginCommentForm id={id} />
+        <NoLoginCommentForm id={id} author={author} />
       )}
-    </>
-  );
-};
+    </Card>
+  )
+}
 
 export default connect(({ article: { comments }, loading }) => ({
   comments,
-  loading,
-}))(AddComment);
+  loading: loading.effects['article/comments'],
+}))(AddComment)

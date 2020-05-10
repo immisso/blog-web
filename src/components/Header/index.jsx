@@ -2,19 +2,21 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 21:16:02
+ * @Last Modified time: 2020-05-08 20:33:21
  */
 
-import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Drawer, Button } from 'antd';
-import { connect } from 'dva';
-import Icon, { MenuOutlined } from '@ant-design/icons';
-import { Link } from 'umi';
+import React, { useState, useEffect } from 'react'
+import { Layout, Menu, Drawer, Button, Dropdown } from 'antd'
+import { connect } from 'dva'
+import Icon, { MenuOutlined } from '@ant-design/icons'
+import { Link } from 'umi'
+import UserAvatar from '@/components/UserAvatar'
+import storageHelper from '@/utils/storage'
 
-import styles from '../styles/Header.less';
+import styles from './index.less'
 
-const { Header } = Layout;
-const { SubMenu } = Menu;
+const { Header } = Layout
+const { SubMenu } = Menu
 
 const tabs = [
   {
@@ -37,26 +39,38 @@ const tabs = [
   //   icon: 'project',
   //   path: '/home/course/all'
   // }
-];
+]
 
 // const categories = null
 
 const MainHeader = props => {
-  const { dispatch, categories } = props;
-  useEffect(() => {
-    if (dispatch) {
-      dispatch({ type: 'article/categories' });
-    }
-  }, []);
+  const { dispatch, categories, account, pathname } = props
 
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const user = storageHelper.get('user')
+    if (user && user.exp * 1000 > new Date().getTime()) {
+      dispatch({ type: 'user/updateAccount', payload: user })
+    }
+    if (dispatch) {
+      dispatch({ type: 'article/categories' })
+    }
+  }, [])
+
   const showDrawer = () => {
-    setVisible(true);
-  };
+    setVisible(true)
+  }
   const onClose = () => {
-    setVisible(false);
-  };
-  const handleClick = () => {};
+    setVisible(false)
+  }
+  const logout = () => {
+    storageHelper.clear('user')
+    if (dispatch) {
+      dispatch({ type: 'user/logout' })
+    }
+  }
+  const handleClick = () => {}
   return (
     <Header>
       <div className={styles.homeHeader}>
@@ -77,10 +91,15 @@ const MainHeader = props => {
                 />
               </svg>
             </Link>
-            <Menu mode="horizontal">
+            <Menu
+              mode="horizontal"
+              style={{ height: '64px', borderBottom: 'none' }}
+              defaultSelectedKeys={['/home']}
+              selectedKeys={[pathname]}
+            >
               {tabs &&
                 tabs.map(item => (
-                  <Menu.Item key={item.key}>
+                  <Menu.Item key="/home">
                     <Link
                       to={{
                         pathname: item.path,
@@ -100,10 +119,10 @@ const MainHeader = props => {
                           {item.name}
                         </span>
                       }
-                      key={item.id}
+                      key={`/home/${item.en_name}`}
                     >
                       {item.tags.map(tag => (
-                        <Menu.Item key={`${item.id}-${tag.id}`}>
+                        <Menu.Item key={`/home/${item.en_name}/${tag.name}`}>
                           <Link
                             to={{
                               pathname: `/home/${item.en_name}/${tag.name}`,
@@ -116,7 +135,7 @@ const MainHeader = props => {
                       ))}
                     </SubMenu>
                   ) : (
-                    <Menu.Item key={item.id}>
+                    <Menu.Item key={`/home/${item.en_name}`}>
                       <Link
                         to={{
                           pathname: `/home/${item.en_name}`,
@@ -126,7 +145,7 @@ const MainHeader = props => {
                         {item.name}
                       </Link>
                     </Menu.Item>
-                  );
+                  )
                 })}
             </Menu>
           </div>
@@ -138,11 +157,47 @@ const MainHeader = props => {
           </div>
         </div>
         <div className={styles.homeHeaderRight}>
-          <span>
-            <Link to="/user/login">登录</Link>
-            <span className="pd-5">·</span>
-            <Link to="/user/register">注册</Link>
-          </span>
+          {account && account.email && account.id ? (
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item key="setting:1">
+                    <Link to="/write/draft/new">写文章</Link>
+                  </Menu.Item>
+                  <Menu.Item key="setting:2">写教程</Menu.Item>
+                  <Menu.Divider />
+                  {account.account_type === 'ADMIN' ? (
+                    <Menu.Item key="setting:4">
+                      <Link to="/admin">管理中心</Link>
+                    </Menu.Item>
+                  ) : (
+                    ''
+                  )}
+                  <Menu.Item key="setting:5">
+                    <Link to="/account">个人中心</Link>
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item key="setting:7" onClick={logout}>
+                    退出
+                  </Menu.Item>
+                </Menu>
+              }
+              trigger={['click']}
+            >
+              <a
+                className="ant-dropdown-link"
+                onClick={e => e.preventDefault()}
+              >
+                <UserAvatar src={account.avatar} size="large" />
+              </a>
+            </Dropdown>
+          ) : (
+            <span>
+              <Link to="/login">登录</Link>
+              <span className="pd-5">·</span>
+              <Link to="/register">注册</Link>
+            </span>
+          )}
         </div>
       </div>
       <Drawer
@@ -174,8 +229,9 @@ const MainHeader = props => {
       >
         <Menu
           onClick={handleClick}
-          defaultSelectedKeys={['home']}
+          selectedKeys={['home']}
           // defaultOpenKeys={['sub1']}
+          // selectedKeys={[this.state.current]}
           mode="inline"
         >
           {tabs &&
@@ -225,15 +281,18 @@ const MainHeader = props => {
                     {item.name}
                   </Link>
                 </Menu.Item>
-              );
+              )
             })}
         </Menu>
       </Drawer>
     </Header>
-  );
-};
+  )
+}
 
-export default connect(({ article: { categories }, loading }) => ({
-  categories,
-  loading: loading,
-}))(MainHeader);
+export default connect(
+  ({ article: { categories }, user: { account }, loading }) => ({
+    categories,
+    account,
+    loading: loading,
+  }),
+)(MainHeader)
