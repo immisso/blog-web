@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-11 20:19:37
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-04 15:47:44
+ * @Last Modified time: 2020-05-11 20:44:32
  */
 import React, { useState, useEffect } from 'react'
 import { connect } from 'dva'
@@ -25,7 +25,7 @@ const Datetime = ({ time }) => {
 }
 
 const AddComment = props => {
-  const { user, dispatch, id, author, comments, loading } = props
+  const { account, dispatch, id, author, comments, loading } = props
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/comments', payload: { id } })
@@ -56,16 +56,10 @@ const AddComment = props => {
         )}
       />
       <Divider />
-      {user && user.id ? (
+      {account && account.id ? (
         <Comment
-          avatar={
-            <UserAvatar
-              src={
-                'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/003.png'
-              }
-            />
-          }
-          content={<LoginCommentForm />}
+          avatar={<UserAvatar src={account.avatar} />}
+          content={<LoginCommentForm id={id} author={author} />}
         />
       ) : (
         <NoLoginCommentForm id={id} author={author} />
@@ -74,7 +68,10 @@ const AddComment = props => {
   )
 }
 
-export default connect(({ article: { comments }, loading }) => ({
-  comments,
-  loading: loading.effects['article/comments'],
-}))(AddComment)
+export default connect(
+  ({ article: { comments }, user: { account }, loading }) => ({
+    comments,
+    account,
+    loading: loading.effects['article/comments'],
+  }),
+)(AddComment)

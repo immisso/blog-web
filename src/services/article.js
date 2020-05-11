@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:58:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-10 20:37:48
+ * @Last Modified time: 2020-05-11 20:49:39
  */
 
 import { stringify } from 'qs'
@@ -42,6 +42,11 @@ export async function createNoLoginComment(data) {
   })
 }
 
+// 添加评论
+export async function createComment(data) {
+  return request('/api/create/comment', { method: 'POST', data })
+}
+
 // 获取tags
 export async function getTags() {
   return request('/api/tags')
@@ -50,4 +55,9 @@ export async function getTags() {
 // 文章点赞
 export async function updateFavorite(data) {
   return request('/api/update/favorite', { method: 'POST', data })
+}
+
+// 是否已点赞
+export async function getIsFavorite(params) {
+  return request(`/api/isFavorite?${stringify(params)}`)
 }

@@ -2,43 +2,49 @@
  * @Author: 柒叶
  * @Date: 2020-04-12 14:10:08
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-12 14:13:21
+ * @Last Modified time: 2020-05-11 20:48:12
  */
 
-import React, { useState } from 'react';
-import { Button, Input, Form, Comment } from 'antd';
+import React, { useState } from 'react'
+import { Button, Input, Form } from 'antd'
+import { connect } from 'dva'
 
-const LoginCommentForm = props => (
-  <>
-    <div className="mb-10">
-      <Input.TextArea
-        rows={3}
-        // onChange={onChange}
-        // value={value}
-      />
-    </div>
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: 20,
-      }}
-    >
-      <div style={{ opacity: 0 }}>
-        <span>表情</span>
-      </div>
-      <div>
-        <Button
-          htmlType="submit"
-          // loading={submitting}
-          // onClick={onSubmit}
-          type="primary"
+const LoginCommentForm = props => {
+  const { id, author, dispatch } = props
+  const [form] = Form.useForm()
+  const onFinish = values => {
+    if (dispatch) {
+      dispatch({
+        type: 'article/addComment',
+        payload: { ...values, article_id: id, author },
+      })
+    }
+    form.resetFields()
+  }
+  return (
+    <>
+      <Form form={form} onFinish={onFinish}>
+        <Form.Item
+          name="content"
+          rules={[
+            {
+              required: true,
+              message: '输入你的评论',
+            },
+          ]}
         >
-          评论
-        </Button>
-      </div>
-    </div>
-  </>
-);
+          <Input.TextArea rows={4} placeholder="发表您的看法" />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            评论
+          </Button>
+        </Form.Item>
+      </Form>
+    </>
+  )
+}
 
-export default LoginCommentForm;
+export default connect(({ loading }) => ({
+  loading,
+}))(LoginCommentForm)

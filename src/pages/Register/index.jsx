@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 07:16:03
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-06 13:08:46
+ * @Last Modified time: 2020-05-11 12:24:40
  */
 
 import React from 'react'
@@ -22,9 +22,9 @@ const Register = props => {
         callback(res) {
           if (res && res.status === 200) {
             message.success('注册成功')
-            history.push('/login')
+            history.push({ path: '/login', isRegister: true })
           } else {
-            message.warn('该用户已经存在')
+            message.warn('注册失败，请重新注册')
           }
         },
       })

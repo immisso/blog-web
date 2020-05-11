@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-05 14:52:52
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-08 13:46:00
+ * @Last Modified time: 2020-05-11 12:28:00
  */
 
 import React, { useEffect } from 'react'
@@ -14,7 +14,7 @@ import storageHelper from '@/utils/storage'
 
 const Login = props => {
   const [form] = Form.useForm()
-  const { dispatch, history } = props
+  const { dispatch, history, location } = props
   useEffect(() => {
     const user = storageHelper.get('user')
     if (user && user.id && user.exp * 1000 > new Date().getTime()) {
@@ -34,7 +34,11 @@ const Login = props => {
                 if (user.status === 200) {
                   storageHelper.set('user', user.data)
                   message.success('登录成功')
-                  history.push('/')
+                  if (location.isRegister) {
+                    history.push('/')
+                  } else {
+                    history.goBack()
+                  }
                 }
               },
             })

@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-10 20:39:45
+ * @Last Modified time: 2020-05-11 20:18:26
  */
 
 import React, { useEffect, useState } from 'react'
@@ -45,6 +45,8 @@ const Article = props => {
     detail,
     hots,
     history,
+    isFavorite,
+    favoriteCount,
     match: {
       params: { id },
     },
@@ -53,18 +55,22 @@ const Article = props => {
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/detail', payload: { id } })
+      dispatch({ type: 'article/isFavorite', payload: { id } })
       dispatch({ type: 'article/hot' })
     }
   }, [])
 
-  const handleLike = () => {
+  const handleFavorite = () => {
+    const type = isFavorite ? 'reduce' : 'plus'
     if (dispatch) {
       dispatch({
         type: 'article/favorite',
-        payload: { id, author: detail.user_id },
+        payload: { id, author: detail.user_id, type },
         callback(res) {
           if (res.status !== 200) {
             history.push('/login')
+          } else {
+            dispatch({ type: 'article/changeFavorite', payload: { type } })
           }
         },
       })
@@ -244,14 +250,13 @@ const Article = props => {
             <div className={styles.articlePanelItem}>
               <div className={styles.articlePanelIcon}>
                 <LikeOutlined
-                  style={{ color: '#007bff' }}
-                  onClick={handleLike}
+                  style={{ color: isFavorite ? '#007bff' : '#ccc' }}
+                  onClick={handleFavorite}
                 />
                 {/* <ThumbsUp color={islike ? '#007bff' : '#ccc'} onClick={this.handleLike} /> */}
               </div>
               <div className={styles.articlePanelCount}>
-                {/* <span>{likeNum}</span> */}
-                <span>{detail.favorite}</span>
+                <span>{favoriteCount}</span>
               </div>
             </div>
             <div className={styles.articlePanelItem}>
@@ -271,9 +276,13 @@ const Article = props => {
   )
 }
 
-export default connect(({ article: { detail, hots }, loading }) => ({
-  detail,
-  hots,
-  loading: loading.effects['article/detail'],
-  loading2: loading.effects['article/hot'],
-}))(Article)
+export default connect(
+  ({ article: { detail, hots, isFavorite, favoriteCount }, loading }) => ({
+    detail,
+    hots,
+    isFavorite,
+    favoriteCount,
+    loading: loading.effects['article/detail'],
+    loading2: loading.effects['article/hot'],
+  }),
+)(Article)

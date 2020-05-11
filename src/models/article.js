@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-10 20:38:22
+ * @Last Modified time: 2020-05-11 20:52:58
  */
 
 import {
@@ -13,7 +13,9 @@ import {
   getComments,
   getTags,
   createNoLoginComment,
+  createComment,
   updateFavorite,
+  getIsFavorite,
 } from '@/services/article'
 
 export default {
@@ -26,6 +28,8 @@ export default {
     tags: [],
     detail: {},
     articleCount: 0,
+    isFavorite: false,
+    favoriteCount: 0,
   },
   effects: {
     *categories({ payload }, { call, put }) {
@@ -73,7 +77,14 @@ export default {
     *addNoLoginComment({ payload }, { call, put }) {
       const response = yield call(createNoLoginComment, payload)
       yield put({
-        type: 'createNoLoginCommentHandle',
+        type: 'createCommentHandle',
+        payload: response,
+      })
+    },
+    *addComment({ payload }, { call, put }) {
+      const response = yield call(createComment, payload)
+      yield put({
+        type: 'createCommentHandle',
         payload: response,
       })
     },
@@ -81,8 +92,30 @@ export default {
       const response = yield call(updateFavorite, payload)
       if (callback) callback(response)
     },
+
+    *isFavorite({ payload, callback }, { call, put }) {
+      const response = yield call(getIsFavorite, payload)
+      yield put({
+        type: 'isFavoriteHandle',
+        payload: response,
+      })
+    },
   },
   reducers: {
+    changeFavorite(state, { payload }) {
+      let favoriteCount = state.favoriteCount
+      if (payload.type === 'plus') {
+        favoriteCount += 1
+      }
+      if (payload.type === 'reduce') {
+        favoriteCount -= 1
+      }
+      return {
+        ...state,
+        isFavorite: !state.isFavorite,
+        favoriteCount,
+      }
+    },
     categoriesHandle(state, { payload }) {
       return {
         ...state,
@@ -106,6 +139,8 @@ export default {
       return {
         ...state,
         detail: payload.status === 200 ? payload.data : {},
+        favoriteCount:
+          payload.status === 200 ? payload.data.favorite : state.favoriteCount,
       }
     },
     commentHandle(state, { payload }) {
@@ -120,13 +155,19 @@ export default {
         tags: payload.status === 200 ? payload.data : [],
       }
     },
-    createNoLoginCommentHandle(state, { payload }) {
+    createCommentHandle(state, { payload }) {
       return {
         ...state,
         comments:
           payload.status === 200
             ? [payload.data, ...state.comments]
             : [...state.comments],
+      }
+    },
+    isFavoriteHandle(state, { payload }) {
+      return {
+        ...state,
+        isFavorite: payload.status === 200 ? payload.data : false,
       }
     },
   },
