@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 20:59:56
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-09 13:13:10
+ * @Last Modified time: 2020-05-12 11:19:25
  */
 
 import React, { useEffect } from 'react'
@@ -12,20 +12,17 @@ import storageHelper from '@/utils/storage'
 
 const Me = props => {
   const { dispatch, account, history } = props
-
   const [form] = Form.useForm()
-  console.log('eeeeeeeeeeeeeeeeeeeeeee')
-  console.log(account)
   useEffect(() => {
-    if (!account.id) {
-      const user = storageHelper.get('user')
-      if (user && user.exp * 1000 > new Date().getTime()) {
-        dispatch({ type: 'user/updateAccount', payload: user })
-      } else {
-        history.push('/login')
-      }
-    }
     if (dispatch) {
+      if (!account.id) {
+        const user = storageHelper.get('user')
+        if (user && user.exp * 1000 > new Date().getTime()) {
+          dispatch({ type: 'user/updateAccount', payload: user })
+        } else {
+          history.push('/login')
+        }
+      }
       dispatch({
         type: 'user/account',
         callback(res) {
@@ -43,17 +40,10 @@ const Me = props => {
   }, [])
 
   const onFinish = values => {
-    // console.log('44444444444444444444444444')
-    // console.log(values)
     if (dispatch) {
       dispatch({
         type: 'user/setAccount',
         payload: values,
-        callback(res) {
-          if (res.status === 200) {
-            message.success('更新成功')
-          }
-        },
       })
     }
   }

@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-23 18:51:06
+ * @Last Modified time: 2020-05-11 21:16:01
  */
 
 import {
@@ -29,10 +29,6 @@ export default {
     *saveDraft({ payload, callback }, { call, put }) {
       const response = yield call(createDraft, payload)
       if (callback) callback(response)
-      // yield put({
-      //   type: 'createDraftHandle',
-      //   payload: response
-      // })
     },
     *draft({ payload }, { call, put }) {
       const response = yield call(getDraft, payload)
@@ -69,11 +65,6 @@ export default {
     },
   },
   reducers: {
-    // createDraftHandle (state, { payload }) {
-    //   return {
-    //     ...state
-    //   }
-    // }
     draftHandle(state, { payload }) {
       return {
         ...state,

@@ -2,11 +2,10 @@
  * @Author: 柒叶
  * @Date: 2020-04-27 17:56:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-29 13:00:57
+ * @Last Modified time: 2020-05-12 12:23:11
  */
 
-import React, { useState } from 'react'
-import { Menu } from 'antd'
+import React from 'react'
 import { Link } from 'umi'
 import ProLayout from '@ant-design/pro-layout'
 import {
@@ -58,11 +57,6 @@ const Admin = props => {
         fixSiderbar={true}
         fixedHeader={true}
         route={routes}
-        // menuDataRender={(routes) => {
-        //   console.log('44444444444444444444')
-        //   // console.log(a)
-        //   return routes
-        // }}
         menuItemRender={(menuItemProps, defaultDom) => {
           if (
             menuItemProps.isUrl ||
@@ -74,11 +68,6 @@ const Admin = props => {
 
           return <Link to={menuItemProps.path}>{defaultDom}</Link>
         }}
-        // menuRender={(a, b) => {
-        //   console.log('66666666666666666666666')
-        //   console.log(a)
-        //   console.log(b)
-        // }}
       >
         {children}
       </ProLayout>

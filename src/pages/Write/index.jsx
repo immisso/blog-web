@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-09 07:48:40
+ * @Last Modified time: 2020-05-12 11:11:17
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -320,8 +320,6 @@ const Write = props => {
   }
 
   const insertImageValueChange = e => {
-    console.log('1111111111111111111111111')
-    console.log(e.target.value)
     setInsertImageValue(e.target.value)
   }
 

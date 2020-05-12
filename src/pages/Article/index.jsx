@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-11 20:18:26
+ * @Last Modified time: 2020-05-12 11:08:35
  */
 
 import React, { useEffect, useState } from 'react'
@@ -27,10 +27,7 @@ import AddComment from '@/components/Comment'
 import Markdown from '@/components/Markdown'
 
 import styles from './index.less'
-// import './markdown-github.css'
-// import './misty-light-macos.css'
 import './markdown.css'
-// import './vue.css'
 
 const { Content } = Layout
 const IconFont = createFromIconfontCN({
@@ -44,7 +41,6 @@ const Article = props => {
     loading2,
     detail,
     hots,
-    history,
     isFavorite,
     favoriteCount,
     match: {
@@ -61,18 +57,10 @@ const Article = props => {
   }, [])
 
   const handleFavorite = () => {
-    const type = isFavorite ? 'reduce' : 'plus'
     if (dispatch) {
       dispatch({
         type: 'article/favorite',
-        payload: { id, author: detail.user_id, type },
-        callback(res) {
-          if (res.status !== 200) {
-            history.push('/login')
-          } else {
-            dispatch({ type: 'article/changeFavorite', payload: { type } })
-          }
-        },
+        payload: { id, author: detail.user_id },
       })
     }
   }
@@ -253,7 +241,6 @@ const Article = props => {
                   style={{ color: isFavorite ? '#007bff' : '#ccc' }}
                   onClick={handleFavorite}
                 />
-                {/* <ThumbsUp color={islike ? '#007bff' : '#ccc'} onClick={this.handleLike} /> */}
               </div>
               <div className={styles.articlePanelCount}>
                 <span>{favoriteCount}</span>
@@ -262,10 +249,8 @@ const Article = props => {
             <div className={styles.articlePanelItem}>
               <div className={styles.articlePanelIcon}>
                 <MessageOutlined style={{ color: '#ccc' }} />
-                {/* <MessageSquare color="#ccc" onClick={this.handleMessage} /> */}
               </div>
               <div className={styles.articlePanelCount}>
-                {/* <span>{commentNum}</span> */}
                 <span>{detail.comment}</span>
               </div>
             </div>

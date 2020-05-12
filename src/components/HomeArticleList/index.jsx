@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 07:58:49
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-03 11:02:10
+ * @Last Modified time: 2020-05-12 10:56:28
  */
 
 import React, { useState, useEffect } from 'react'
@@ -83,16 +83,9 @@ const HomeArticleList = props => {
                     key="list-vertical-message"
                   />,
                 ]}
-                // https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png
                 extra={
                   item.cover ? (
-                    <img
-                      width={150}
-                      height={92}
-                      // className="mt-20"
-                      alt="logo"
-                      src={item.cover}
-                    />
+                    <img width={150} height={92} alt="logo" src={item.cover} />
                   ) : null
                 }
               >
@@ -115,7 +108,6 @@ const HomeArticleList = props => {
                     </span>
                   }
                 />
-                {/* <div className="ft-13">{item.abstract}</div> */}
               </List.Item>
             </Skeleton>
           )}

@@ -2,8 +2,10 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 09:25:04
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-09 12:44:39
+ * @Last Modified time: 2020-05-12 11:24:34
  */
+import { message } from 'antd'
+import { history } from 'umi'
 import {
   registerAccount,
   loginAccount,
@@ -12,15 +14,24 @@ import {
   modifyAccount,
 } from '@/services/user'
 
+const rv = (s, d, f = []) => {
+  return s === 200 ? d : f
+}
+
 export default {
   namespace: 'user',
   state: {
     account: {},
   },
   effects: {
-    *register({ payload, callback }, { call, put }) {
-      const response = yield call(registerAccount, payload)
-      if (callback) callback(response)
+    *register({ payload }, { call, put }) {
+      const { status } = yield call(registerAccount, payload)
+      if (status === 200) {
+        message.success('注册成功')
+        history.push({ path: '/login', isRegister: true })
+      } else {
+        message.warn('注册失败，请重新注册')
+      }
     },
     *login({ payload, callback }, { call, put }) {
       const response = yield call(loginAccount, payload)
@@ -31,8 +42,10 @@ export default {
       const response = yield call(getAccount, payload)
       if (callback) callback(response)
       yield put({
-        type: 'accountHandle',
-        payload: response,
+        type: 'handle',
+        payload: {
+          account: rv(response.status, response.data, {}),
+        },
       })
     },
 
@@ -45,12 +58,16 @@ export default {
     },
 
     *setAccount({ payload, callback }, { call, put }) {
-      const response = yield call(modifyAccount, payload)
-      if (callback) callback(response)
+      const { status, data } = yield call(modifyAccount, payload)
       yield put({
-        type: 'accountHandle',
-        payload: response,
+        type: 'handle',
+        payload: {
+          account: rv(status, data, {}),
+        },
       })
+      if (status === 200) {
+        message.success('更新成功')
+      }
     },
   },
   reducers: {
@@ -59,10 +76,8 @@ export default {
         account: payload,
       }
     },
-    accountHandle(state, { payload }) {
-      return {
-        account: payload.status === 200 ? payload.data : {},
-      }
+    handle(state, { payload }) {
+      return { ...state, ...payload }
     },
   },
 }

@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-29 18:05:19
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-02 19:33:35
+ * @Last Modified time: 2020-05-12 09:41:04
  */
 
 import {
@@ -18,6 +18,10 @@ import {
   getArticles,
 } from '@/services/admin'
 
+const rv = (s, d, f = []) => {
+  return s === 200 ? d : f
+}
+
 export default {
   namespace: 'admin',
   state: {
@@ -29,17 +33,21 @@ export default {
   },
   effects: {
     *comments({ payload }, { call, put }) {
-      const response = yield call(getComments, payload)
+      const { status, data } = yield call(getComments, payload)
       yield put({
-        type: 'commentHandle',
-        payload: response,
+        type: 'handle',
+        payload: {
+          comments: rv(status, data),
+        },
       })
     },
     *categories({ payload }, { call, put }) {
-      const response = yield call(getCategories, payload)
+      const { status, data } = yield call(getCategories, payload)
       yield put({
-        type: 'categoriesHandle',
-        payload: response,
+        type: 'handle',
+        payload: {
+          categories: rv(status, data),
+        },
       })
     },
     *deleteCategory({ payload }, { call, put }) {
@@ -57,10 +65,12 @@ export default {
       })
     },
     *tags({ payload }, { call, put }) {
-      const response = yield call(getTags, payload)
+      const { status, data } = yield call(getTags, payload)
       yield put({
-        type: 'getTagsHandle',
-        payload: response,
+        type: 'handle',
+        payload: {
+          tags: rv(status, data),
+        },
       })
     },
     *deleteTag({ payload }, { call, put }) {
@@ -92,25 +102,19 @@ export default {
       })
     },
     *articles({ payload }, { call, put }) {
-      const response = yield call(getArticles, payload)
+      const { status, data } = yield call(getArticles, payload)
       yield put({
-        type: 'articlesHandle',
-        payload: response,
+        type: 'handle',
+        payload: {
+          articles: rv(status, data.articles),
+          articleCount: rv(status, data.count, 0),
+        },
       })
     },
   },
   reducers: {
-    commentHandle(state, { payload }) {
-      return {
-        ...state,
-        comments: payload.status === 200 ? payload.data : [],
-      }
-    },
-    categoriesHandle(state, { payload }) {
-      return {
-        ...state,
-        categories: payload.status === 200 ? payload.data : [],
-      }
+    handle(state, { payload }) {
+      return { ...state, ...payload }
     },
     deleteCategoryHandle(state, { payload }) {
       return {
@@ -128,12 +132,6 @@ export default {
           payload.status === 200
             ? [...state.categories, payload.data]
             : [...state.categories],
-      }
-    },
-    getTagsHandle(state, { payload }) {
-      return {
-        ...state,
-        tags: payload.status === 200 ? payload.data : [],
       }
     },
     deleteTagHandle(state, { payload }) {
@@ -170,13 +168,6 @@ export default {
           payload.status === 200
             ? [...state.comments].filter(item => item.id !== payload.data.id)
             : [...state.comments],
-      }
-    },
-    articlesHandle(state, { payload }) {
-      return {
-        ...state,
-        articles: payload.status === 200 ? payload.data.articles : [],
-        articleCount: payload.status === 200 ? payload.data.count : 0,
       }
     },
   },

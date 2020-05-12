@@ -2,31 +2,23 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 07:16:03
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-11 12:24:40
+ * @Last Modified time: 2020-05-12 11:25:09
  */
 
 import React from 'react'
-import { Button, Row, Form, Input, message } from 'antd'
+import { Button, Row, Form, Input } from 'antd'
 import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'umi'
 import { connect } from 'dva'
 
 const Register = props => {
-  const { dispatch, history } = props
+  const { dispatch } = props
   const [form] = Form.useForm()
   const onFinish = values => {
     if (dispatch) {
       dispatch({
         type: 'user/register',
         payload: values,
-        callback(res) {
-          if (res && res.status === 200) {
-            message.success('注册成功')
-            history.push({ path: '/login', isRegister: true })
-          } else {
-            message.warn('注册失败，请重新注册')
-          }
-        },
       })
     }
   }

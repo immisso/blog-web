@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-08 07:37:50
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-13 07:28:58
+ * @Last Modified time: 2020-05-12 10:57:44
  */
 
 import React from 'react'
@@ -11,13 +11,11 @@ import { Link } from 'umi'
 import { EyeOutlined, LikeOutlined } from '@ant-design/icons'
 
 const SiderList = props => {
-  // eslint-disable-next-line react/prop-types
-  const { dataSource, bordered, size, split } = props
+  const { dataSource, size, split } = props
   return (
     <List
       itemLayout="vertical"
       dataSource={dataSource}
-      // bordered={bordered}
       size={size}
       split={split}
       renderItem={item => (
