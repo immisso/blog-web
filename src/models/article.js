@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 11:08:19
+ * @Last Modified time: 2020-05-12 14:58:18
  */
 import { history } from 'umi'
 import {
@@ -17,10 +17,6 @@ import {
   updateFavorite,
   getIsFavorite,
 } from '@/services/article'
-
-const rv = (s, d, f = []) => {
-  return s === 200 ? d : f
-}
 
 export default {
   namespace: 'article',
@@ -38,71 +34,98 @@ export default {
   effects: {
     *categories({ payload }, { call, put }) {
       const { status, data } = yield call(getCategories, payload)
-      yield put({
-        type: 'handle',
-        payload: {
-          categories: rv(status, data, []),
-        },
-      })
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            categories: data,
+          },
+        })
+      }
     },
+
     *articles({ payload }, { call, put }) {
       const { status, data } = yield call(getArticles, payload)
-      yield put({
-        type: 'handle',
-        payload: {
-          articles: rv(status, data.articles, []),
-          articleCount: rv(status, data.count, 0),
-        },
-      })
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            articles: data.articles,
+            articleCount: data.count,
+          },
+        })
+      }
     },
+
     *hot({ payload }, { call, put }) {
       const { status, data } = yield call(getHotArticles, payload)
-      yield put({
-        type: 'handle',
-        payload: {
-          hots: rv(status, data, []),
-        },
-      })
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            hots: data,
+          },
+        })
+      }
     },
+
     *detail({ payload }, { call, put }) {
-      const response = yield call(getArticleDetail, payload)
-      yield put({
-        type: 'detailHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getArticleDetail, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            detail: data,
+            favoriteCount: data.favorite,
+          },
+        })
+      }
     },
+
     *comments({ payload }, { call, put }) {
       const { status, data } = yield call(getComments, payload)
-      yield put({
-        type: 'handle',
-        payload: {
-          comments: rv(status, data),
-        },
-      })
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            comments: data,
+          },
+        })
+      }
     },
+
     *tags({ payload }, { call, put }) {
       const { status, data } = yield call(getTags, payload)
-      yield put({
-        type: 'handle',
-        payload: {
-          tags: rv(status, data),
-        },
-      })
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            tags: data,
+          },
+        })
+      }
     },
+
     *addNoLoginComment({ payload }, { call, put }) {
-      const response = yield call(createNoLoginComment, payload)
-      yield put({
-        type: 'createCommentHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(createNoLoginComment, payload)
+      if (status === 200) {
+        yield put({
+          type: 'createCommentHandle',
+          payload: data,
+        })
+      }
     },
+
     *addComment({ payload }, { call, put }) {
-      const response = yield call(createComment, payload)
-      yield put({
-        type: 'createCommentHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(createComment, payload)
+      if (status === 200) {
+        yield put({
+          type: 'createCommentHandle',
+          payload: data,
+        })
+      }
     },
+
     *favorite({ payload }, { call, put }) {
       const { status } = yield call(updateFavorite, payload)
       if (status === 200) {
@@ -114,12 +137,14 @@ export default {
 
     *isFavorite({ payload, callback }, { call, put }) {
       const { status, data } = yield call(getIsFavorite, payload)
-      yield put({
-        type: 'handle',
-        payload: {
-          isFavorite: rv(status, data, false),
-        },
-      })
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            isFavorite: data,
+          },
+        })
+      }
     },
   },
   reducers: {
@@ -141,25 +166,10 @@ export default {
     handle(state, { payload }) {
       return { ...state, ...payload }
     },
-    detailHandle(state, { payload }) {
-      return {
-        ...state,
-        detail: rv(payload.status, payload.data, {}),
-        favoriteCount: rv(
-          payload.status,
-          payload.data.favorite,
-          state.favoriteCount,
-        ),
-      }
-    },
     createCommentHandle(state, { payload }) {
       return {
         ...state,
-        comments: rv(
-          payload.status,
-          [payload.data, ...state.comments],
-          [...state.comments],
-        ),
+        comments: [payload, ...state.comments],
       }
     },
   },

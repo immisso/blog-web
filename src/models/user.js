@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 09:25:04
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 11:24:34
+ * @Last Modified time: 2020-05-12 15:00:16
  */
 import { message } from 'antd'
 import { history } from 'umi'
@@ -13,10 +13,6 @@ import {
   logoutAccount,
   modifyAccount,
 } from '@/services/user'
-
-const rv = (s, d, f = []) => {
-  return s === 200 ? d : f
-}
 
 export default {
   namespace: 'user',
@@ -33,6 +29,7 @@ export default {
         message.warn('注册失败，请重新注册')
       }
     },
+
     *login({ payload, callback }, { call, put }) {
       const response = yield call(loginAccount, payload)
       if (callback) callback(response)
@@ -41,12 +38,14 @@ export default {
     *account({ payload, callback }, { call, put }) {
       const response = yield call(getAccount, payload)
       if (callback) callback(response)
-      yield put({
-        type: 'handle',
-        payload: {
-          account: rv(response.status, response.data, {}),
-        },
-      })
+      if (response.status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            account: response.data,
+          },
+        })
+      }
     },
 
     *logout({ payload }, { call, put }) {
@@ -59,13 +58,13 @@ export default {
 
     *setAccount({ payload, callback }, { call, put }) {
       const { status, data } = yield call(modifyAccount, payload)
-      yield put({
-        type: 'handle',
-        payload: {
-          account: rv(status, data, {}),
-        },
-      })
       if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            account: data,
+          },
+        })
         message.success('更新成功')
       }
     },

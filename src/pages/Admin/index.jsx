@@ -2,11 +2,12 @@
  * @Author: 柒叶
  * @Date: 2020-04-27 17:56:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 12:23:11
+ * @Last Modified time: 2020-05-12 17:40:12
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'umi'
+import { connect } from 'dva'
 import ProLayout from '@ant-design/pro-layout'
 import {
   FileTextOutlined,
@@ -14,6 +15,7 @@ import {
   CommentOutlined,
   ClusterOutlined,
 } from '@ant-design/icons'
+import withAuth from '@/components/WithAuth'
 
 const routes = {
   routes: [
@@ -45,7 +47,14 @@ const routes = {
 }
 
 const Admin = props => {
-  const { children } = props
+  const { children, dispatch, account, history } = props
+  useEffect(() => {
+    if (account && account.id) {
+      dispatch({ type: 'user/updateAccount', payload: account })
+    } else {
+      history.push('/login')
+    }
+  }, [])
   return (
     <div>
       <ProLayout
@@ -75,4 +84,6 @@ const Admin = props => {
   )
 }
 
-export default Admin
+export default connect(({ loading }) => ({
+  loading,
+}))(withAuth(Admin))

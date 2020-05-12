@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 11:11:17
+ * @Last Modified time: 2020-05-12 16:55:45
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -119,22 +119,6 @@ const ImageModal = props => {
     insertImageValueChange,
   } = props
 
-  // const a = {
-  //   name: 'file',
-  //   multiple: true,
-  //   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  //   onChange (info) {
-  //     const { status } = info.file
-  //     if (status !== 'uploading') {
-  //       console.log(info.file, info.fileList)
-  //     }
-  //     if (status === 'done') {
-  //       message.success(`${info.file.name} file uploaded successfully.`)
-  //     } else if (status === 'error') {
-  //       message.error(`${info.file.name} file upload failed.`)
-  //     }
-  //   }
-  // }
   return (
     <Modal
       title="插入图片"
@@ -185,21 +169,18 @@ const Write = props => {
   const [insertImages, setInsertImages] = useState([])
   const [insertImageValue, setInsertImageValue] = useState(null)
   const inputEl = useRef(null)
-  // const [selectedCategory, setSelectedCategory] = useState(null)
-  // const [selectedTag, setSelectedTag] = useState(null)
 
   useEffect(() => {
-    if (!account.id) {
-      const user = storageHelper.get('user')
-      if (user && user.exp * 1000 > new Date().getTime()) {
-        dispatch({ type: 'user/updateAccount', payload: user })
-      } else {
-        history.push('/login')
-      }
-    }
     if (dispatch) {
+      if (!account.id) {
+        const user = storageHelper.get('user')
+        if (user && user.exp * 1000 > new Date().getTime()) {
+          dispatch({ type: 'user/updateAccount', payload: user })
+        } else {
+          history.push('/login')
+        }
+      }
       dispatch({ type: 'write/categories' })
-      // dispatch({ type: 'article/tags' })
       if (key !== 'new' && /^\d+$/.test(key)) {
         dispatch({ type: 'write/draft', payload: { id: key } })
       }
@@ -235,11 +216,6 @@ const Write = props => {
         dispatch({
           type: 'write/saveDraft',
           payload: { markdown, title },
-          callback: res => {
-            if (res.status === 200) {
-              history.push(`/write/draft/${res.data.id}`)
-            }
-          },
         })
       }
     }
@@ -309,11 +285,6 @@ const Write = props => {
               <Markdown markdown={markdown} />
             </MathJax.Provider>,
           ),
-        },
-        callback: res => {
-          if (res.status === 200) {
-            history.push('/')
-          }
         },
       })
     }
@@ -417,8 +388,6 @@ const Write = props => {
   }
   const onKeyEvent = (key, e) => {
     e.preventDefault()
-    console.log('444444444444444444444444')
-    console.log(key)
     switch (key) {
       case 'ctrl+b':
         addBold()

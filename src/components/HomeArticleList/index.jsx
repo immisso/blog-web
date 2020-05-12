@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 07:58:49
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 10:56:28
+ * @Last Modified time: 2020-05-12 16:48:00
  */
 
 import React, { useState, useEffect } from 'react'
@@ -53,7 +53,7 @@ const HomeArticleList = props => {
     <div>
       <Card bordered={false}>
         <List
-          className="demo-loadmore-list"
+          // className="demo-loadmore-list"
           loading={loading}
           itemLayout="vertical"
           dataSource={articles}
