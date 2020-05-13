@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-27 17:56:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 17:40:12
+ * @Last Modified time: 2020-05-13 06:23:06
  */
 
 import React, { useEffect } from 'react'
@@ -15,7 +15,7 @@ import {
   CommentOutlined,
   ClusterOutlined,
 } from '@ant-design/icons'
-import withAuth from '@/components/WithAuth'
+import withAuth from '@/components/withAuth'
 
 const routes = {
   routes: [
@@ -84,6 +84,7 @@ const Admin = props => {
   )
 }
 
-export default connect(({ loading }) => ({
+export default connect(({ user, loading }) => ({
+  user,
   loading,
 }))(withAuth(Admin))

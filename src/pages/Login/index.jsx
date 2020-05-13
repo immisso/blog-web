@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-05 14:52:52
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 11:26:00
+ * @Last Modified time: 2020-05-13 09:12:19
  */
 
 import React, { useEffect } from 'react'
@@ -11,13 +11,14 @@ import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'umi'
 import { connect } from 'dva'
 import storageHelper from '@/utils/storage'
+import withAuth from '@/components/withAuth'
 
 const Login = props => {
   const [form] = Form.useForm()
-  const { dispatch, history, location } = props
+  const { dispatch, history, location, account } = props
+
   useEffect(() => {
-    const user = storageHelper.get('user')
-    if (user && user.id && user.exp * 1000 > new Date().getTime()) {
+    if (account && account.id) {
       history.push('/')
     }
   }, [])
@@ -110,4 +111,4 @@ const Login = props => {
 export default connect(({ user, loading }) => ({
   user,
   loading,
-}))(Login)
+}))(withAuth(Login))

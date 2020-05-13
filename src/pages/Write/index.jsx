@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 16:55:45
+ * @Last Modified time: 2020-05-13 09:06:42
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -49,6 +49,7 @@ import UserAvatar from '@/components/UserAvatar'
 import Markdown from '@/components/Markdown'
 import AliOssUpload from '@/components/AliOssUpload'
 import storageHelper from '@/utils/storage'
+import withAuth from '@/components/withAuth'
 
 // import './vue.css'
 import './markdown.css'
@@ -172,13 +173,10 @@ const Write = props => {
 
   useEffect(() => {
     if (dispatch) {
-      if (!account.id) {
-        const user = storageHelper.get('user')
-        if (user && user.exp * 1000 > new Date().getTime()) {
-          dispatch({ type: 'user/updateAccount', payload: user })
-        } else {
-          history.push('/login')
-        }
+      if (account && account.id) {
+        dispatch({ type: 'user/updateAccount', payload: account })
+      } else {
+        history.push('/login')
       }
       dispatch({ type: 'write/categories' })
       if (key !== 'new' && /^\d+$/.test(key)) {
@@ -188,7 +186,7 @@ const Write = props => {
     if (inputEl) {
       inputEl.current.focus()
     }
-  }, [key])
+  }, [])
 
   const onChangeMarkdown = e => {
     if (dispatch) {
@@ -642,7 +640,7 @@ export default connect(
       selectedCategory,
       selectedTag,
     },
-    user: { account },
+    user,
     loading,
   }) => ({
     categories,
@@ -652,7 +650,7 @@ export default connect(
     drafts,
     selectedCategory,
     selectedTag,
-    account,
+    user,
     loading: loading.effects['write/updateDraft'],
   }),
-)(Write)
+)(withAuth(Write))

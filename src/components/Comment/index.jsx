@@ -2,11 +2,10 @@
  * @Author: 柒叶
  * @Date: 2020-04-11 20:19:37
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-11 20:44:32
+ * @Last Modified time: 2020-05-13 16:38:45
  */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'dva'
-import { Link } from 'umi'
 import { Comment, Divider, Tooltip, List, Card } from 'antd'
 import moment from 'moment'
 import UserAvatar from '@/components/UserAvatar'

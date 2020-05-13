@@ -44,6 +44,7 @@ export default defineConfig({
         {
           path: '/home',
           component: '@/components/HomeArticleList',
+          exact: true,
         },
         {
           path: '/home/:category',

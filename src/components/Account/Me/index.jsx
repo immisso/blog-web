@@ -2,48 +2,55 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 20:59:56
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 11:19:25
+ * @Last Modified time: 2020-05-13 15:16:45
  */
 
 import React, { useEffect } from 'react'
 import { Form, Input, Row, Col, Avatar, Button, Tag, message } from 'antd'
 import { connect } from 'dva'
-import storageHelper from '@/utils/storage'
+import withAuth from '@/components/withAuth'
 
 const Me = props => {
-  const { dispatch, account, history } = props
+  const { dispatch, account, history, avatar } = props
   const [form] = Form.useForm()
   useEffect(() => {
-    if (dispatch) {
-      if (!account.id) {
-        const user = storageHelper.get('user')
-        if (user && user.exp * 1000 > new Date().getTime()) {
-          dispatch({ type: 'user/updateAccount', payload: user })
-        } else {
-          history.push('/login')
-        }
-      }
-      dispatch({
-        type: 'user/account',
-        callback(res) {
-          if (res.status === 200) {
-            const account = res.data
-            Object.keys(form.getFieldsValue()).forEach(key => {
-              const obj = {}
-              obj[key] = account[key] || null
-              form.setFieldsValue(obj)
-            })
-          }
-        },
-      })
+    // if (!account.id) {
+    //   const user = storageHelper.get('user')
+    //   if (user && user.exp * 1000 > new Date().getTime()) {
+    //     dispatch({ type: 'user/updateAccount', payload: user })
+    //   } else {
+    //     history.push('/login')
+    //   }
+    // }
+    if (account && account.id) {
+      dispatch({ type: 'user/updateAccount', payload: account })
+    } else {
+      history.push('/login')
     }
+    dispatch({
+      type: 'user/account',
+      callback(res) {
+        if (res.status === 200) {
+          const account = res.data
+          Object.keys(form.getFieldsValue()).forEach(key => {
+            const obj = {}
+            obj[key] = account[key] || null
+            form.setFieldsValue(obj)
+          })
+        }
+      },
+    })
   }, [])
+
+  const changeAvatar = () => {
+    dispatch({ type: 'user/changeAvatar' })
+  }
 
   const onFinish = values => {
     if (dispatch) {
       dispatch({
         type: 'user/setAccount',
-        payload: values,
+        payload: { ...values, avatar },
       })
     }
   }
@@ -64,7 +71,7 @@ const Me = props => {
                 },
               ]}
             >
-              <Input placeholder="输入您的电子邮箱" />
+              <Input disabled placeholder="输入您的电子邮箱" />
             </Form.Item>
             <Form.Item name="nickname" label="昵称">
               <Input placeholder="输入您的昵称" />
@@ -78,45 +85,21 @@ const Me = props => {
             <Form.Item
               name="website"
               label="个人网站"
-              rules={[
-                {
-                  type: 'url',
-                },
-              ]}
+              rules={[{ type: 'url' }]}
             >
               <Input placeholder="个人网站地址" />
             </Form.Item>
             <Form.Item
               name="github"
               label="Github地址"
-              rules={[
-                {
-                  type: 'url',
-                },
-              ]}
+              rules={[{ type: 'url' }]}
             >
               <Input placeholder="Github地址" />
             </Form.Item>
-            <Form.Item
-              name="gitee"
-              label="码云地址"
-              rules={[
-                {
-                  type: 'url',
-                },
-              ]}
-            >
+            <Form.Item name="gitee" label="码云地址" rules={[{ type: 'url' }]}>
               <Input placeholder="gitee地址" />
             </Form.Item>
-            <Form.Item
-              name="weibo"
-              label="微博地址"
-              rules={[
-                {
-                  type: 'url',
-                },
-              ]}
-            >
+            <Form.Item name="weibo" label="微博地址" rules={[{ type: 'url' }]}>
               <Input placeholder="微博地址" />
             </Form.Item>
             <Form.Item>
@@ -128,13 +111,10 @@ const Me = props => {
         </Col>
         <Col span={12}>
           <div className="tc">
-            <Avatar
-              size={128}
-              src="https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/003.png"
-            />
+            <Avatar size={128} src={avatar} />
           </div>
           <div className="tc mt-10">
-            <Button>切换图片</Button>
+            <Button onClick={changeAvatar}>切换图片</Button>
           </div>
           <div className="tc mt-10">
             <span>
@@ -147,7 +127,7 @@ const Me = props => {
   )
 }
 
-export default connect(({ user: { account }, loading }) => ({
-  account,
+export default connect(({ user: { avatar }, loading }) => ({
+  avatar,
   loading,
-}))(Me)
+}))(withAuth(Me))
