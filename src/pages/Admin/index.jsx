@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-27 17:56:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-13 06:23:06
+ * @Last Modified time: 2020-05-13 20:43:00
  */
 
 import React, { useEffect } from 'react'
@@ -15,7 +15,6 @@ import {
   CommentOutlined,
   ClusterOutlined,
 } from '@ant-design/icons'
-import withAuth from '@/components/withAuth'
 
 const routes = {
   routes: [
@@ -47,11 +46,9 @@ const routes = {
 }
 
 const Admin = props => {
-  const { children, dispatch, account, history } = props
+  const { children, account, history } = props
   useEffect(() => {
-    if (account && account.id) {
-      dispatch({ type: 'user/updateAccount', payload: account })
-    } else {
+    if (!account || !account.id) {
       history.push('/login')
     }
   }, [])
@@ -84,7 +81,7 @@ const Admin = props => {
   )
 }
 
-export default connect(({ user, loading }) => ({
-  user,
+export default connect(({ user: { account }, loading }) => ({
+  account,
   loading,
-}))(withAuth(Admin))
+}))(Admin)

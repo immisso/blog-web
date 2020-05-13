@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-13 09:06:42
+ * @Last Modified time: 2020-05-13 20:46:53
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -48,8 +48,6 @@ import KeyboardEventHandler from 'react-keyboard-event-handler'
 import UserAvatar from '@/components/UserAvatar'
 import Markdown from '@/components/Markdown'
 import AliOssUpload from '@/components/AliOssUpload'
-import storageHelper from '@/utils/storage'
-import withAuth from '@/components/withAuth'
 
 // import './vue.css'
 import './markdown.css'
@@ -172,12 +170,10 @@ const Write = props => {
   const inputEl = useRef(null)
 
   useEffect(() => {
+    if (!account || !account.id) {
+      history.push('/login')
+    }
     if (dispatch) {
-      if (account && account.id) {
-        dispatch({ type: 'user/updateAccount', payload: account })
-      } else {
-        history.push('/login')
-      }
       dispatch({ type: 'write/categories' })
       if (key !== 'new' && /^\d+$/.test(key)) {
         dispatch({ type: 'write/draft', payload: { id: key } })
@@ -640,7 +636,7 @@ export default connect(
       selectedCategory,
       selectedTag,
     },
-    user,
+    user: { account },
     loading,
   }) => ({
     categories,
@@ -650,7 +646,7 @@ export default connect(
     drafts,
     selectedCategory,
     selectedTag,
-    user,
+    account,
     loading: loading.effects['write/updateDraft'],
   }),
-)(withAuth(Write))
+)(Write)

@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 09:25:04
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-13 15:14:54
+ * @Last Modified time: 2020-05-13 20:43:52
  */
 import { message } from 'antd'
 import { history } from 'umi'
@@ -13,6 +13,7 @@ import {
   logoutAccount,
   modifyAccount,
 } from '@/services/user'
+import storageHelper from '@/utils/storage'
 
 const avatars = [
   'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/001.png',
@@ -21,10 +22,18 @@ const avatars = [
   'https://immisso.oss-cn-hangzhou.aliyuncs.com/avatar/004.png',
 ]
 
+const initAccount = () => {
+  const user = storageHelper.get('user')
+  if (!user || user.exp * 1000 < new Date().getTime()) {
+    return {}
+  }
+  return user
+}
+
 export default {
   namespace: 'user',
   state: {
-    account: {},
+    account: initAccount(),
     avatar: null,
   },
   effects: {
@@ -60,8 +69,10 @@ export default {
     *logout({ payload }, { call, put }) {
       yield call(logoutAccount, payload)
       yield put({
-        type: 'updateAccount',
-        payload: {},
+        type: 'handle',
+        payload: {
+          account: {},
+        },
       })
     },
 
@@ -79,12 +90,6 @@ export default {
     },
   },
   reducers: {
-    updateAccount(state, { payload }) {
-      return {
-        ...state,
-        account: payload,
-      }
-    },
     handle(state, { payload }) {
       return { ...state, ...payload }
     },

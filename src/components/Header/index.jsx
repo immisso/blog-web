@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-13 13:28:13
+ * @Last Modified time: 2020-05-13 20:42:52
  */
 
 import React, { useState, useEffect } from 'react'
@@ -49,11 +49,6 @@ const MainHeader = props => {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const user = storageHelper.get('user')
-    if (user && user.exp * 1000 > new Date().getTime()) {
-      dispatch({ type: 'user/updateAccount', payload: user })
-    }
-
     if (dispatch) {
       dispatch({ type: 'article/categories' })
     }

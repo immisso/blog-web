@@ -2,29 +2,18 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 20:59:56
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-13 15:16:45
+ * @Last Modified time: 2020-05-13 20:41:23
  */
 
 import React, { useEffect } from 'react'
-import { Form, Input, Row, Col, Avatar, Button, Tag, message } from 'antd'
+import { Form, Input, Row, Col, Avatar, Button, Tag } from 'antd'
 import { connect } from 'dva'
-import withAuth from '@/components/withAuth'
 
 const Me = props => {
   const { dispatch, account, history, avatar } = props
   const [form] = Form.useForm()
   useEffect(() => {
-    // if (!account.id) {
-    //   const user = storageHelper.get('user')
-    //   if (user && user.exp * 1000 > new Date().getTime()) {
-    //     dispatch({ type: 'user/updateAccount', payload: user })
-    //   } else {
-    //     history.push('/login')
-    //   }
-    // }
-    if (account && account.id) {
-      dispatch({ type: 'user/updateAccount', payload: account })
-    } else {
+    if (!account || !account.id) {
       history.push('/login')
     }
     dispatch({
@@ -127,7 +116,8 @@ const Me = props => {
   )
 }
 
-export default connect(({ user: { avatar }, loading }) => ({
+export default connect(({ user: { avatar, account }, loading }) => ({
   avatar,
+  account,
   loading,
-}))(withAuth(Me))
+}))(Me)

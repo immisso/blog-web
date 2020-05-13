@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-05 14:52:52
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-13 09:12:19
+ * @Last Modified time: 2020-05-13 20:46:00
  */
 
 import React, { useEffect } from 'react'
@@ -11,12 +11,11 @@ import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'umi'
 import { connect } from 'dva'
 import storageHelper from '@/utils/storage'
-import withAuth from '@/components/withAuth'
+// import WithAuth from '@/components/WithAuth'
 
 const Login = props => {
   const [form] = Form.useForm()
   const { dispatch, history, location, account } = props
-
   useEffect(() => {
     if (account && account.id) {
       history.push('/')
@@ -108,7 +107,7 @@ const Login = props => {
   )
 }
 
-export default connect(({ user, loading }) => ({
-  user,
+export default connect(({ user: { account }, loading }) => ({
+  account,
   loading,
-}))(withAuth(Login))
+}))(Login)
