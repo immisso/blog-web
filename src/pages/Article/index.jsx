@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-12 11:08:35
+ * @Last Modified time: 2020-05-15 10:54:50
  */
 
 import React, { useEffect, useState } from 'react'
@@ -60,7 +60,7 @@ const Article = props => {
     if (dispatch) {
       dispatch({
         type: 'article/favorite',
-        payload: { id, author: detail.user_id },
+        payload: { id, author: detail.uid },
       })
     }
   }
@@ -112,12 +112,12 @@ const Article = props => {
                 <h1 className="mt-15m fw-700 mb-15m">{detail.title}</h1>
                 <div className="markdown-body ft-16">
                   <MathJax.Provider>
-                    <Markdown markdown={detail.content_mark} />
+                    <Markdown markdown={detail.markdown} />
                   </MathJax.Provider>
                 </div>
               </div>
             </Card>
-            <AddComment id={id} author={detail.user_id} />
+            <AddComment id={id} author={detail.uid} />
           </div>
           <div className={styles.articleContainerSider}>
             <Card

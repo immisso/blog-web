@@ -50,7 +50,7 @@ import Markdown from '@/components/Markdown'
 import AliOssUpload from '@/components/AliOssUpload'
 
 // import './vue.css'
-import './markdown.css'
+// import './markdown.css'
 import styles from './index.less'
 
 const { CheckableTag } = Tag
@@ -182,7 +182,7 @@ const Write = props => {
     if (inputEl) {
       inputEl.current.focus()
     }
-  }, [])
+  }, [key])
 
   const onChangeMarkdown = e => {
     if (dispatch) {
@@ -261,7 +261,6 @@ const Write = props => {
       })
       dispatch({ type: 'write/setTags', payload: { tags: category.tags } })
     }
-    // setSelectedCategory(category.id)
   }
 
   const onPublish = () => {
@@ -289,9 +288,9 @@ const Write = props => {
   }
 
   const insertImageOk = () => {
-    let images = []
+    let images = [...insertImages]
     if (insertImageValue) {
-      images = [...insertImages, insertImageValue]
+      images = [...images, insertImageValue]
     }
 
     if (images.length > 0) {
