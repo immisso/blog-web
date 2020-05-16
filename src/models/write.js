@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-14 20:03:22
+ * @Last Modified time: 2020-05-15 16:22:08
  */
 import { message } from 'antd'
 import { history } from 'umi'
@@ -87,6 +87,10 @@ export default {
       const { status } = yield call(createPublish, payload)
       if (status === 200) {
         message.success('发布文章成功')
+        yield put({
+          type: 'setMarkdown',
+          payload: { markdown: '' },
+        })
         history.push('/')
       }
     },

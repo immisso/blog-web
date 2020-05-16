@@ -1,6 +1,8 @@
 import { defineConfig } from 'umi'
 
 export default defineConfig({
+  title: '这是个人网站首页',
+  favicon: '/public/favicon.png',
   scripts: [
     // {
     //   content:`MathJax = {

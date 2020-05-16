@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-13 20:46:53
+ * @Last Modified time: 2020-05-16 15:20:57
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -16,28 +16,19 @@ import {
   Button,
   Popover,
   Tag,
-  Upload,
   Dropdown,
   Menu,
   Drawer,
   List,
-  Affix,
   Modal,
-  message,
   Tooltip,
 } from 'antd'
 import {
   CaretDownOutlined,
-  PlusOutlined,
   EllipsisOutlined,
   PictureOutlined,
   BoldOutlined,
   ItalicOutlined,
-  UnderlineOutlined,
-  StrikethroughOutlined,
-  FullscreenOutlined,
-  UploadOutlined,
-  InboxOutlined,
   TableOutlined,
   LinkOutlined,
 } from '@ant-design/icons'
@@ -167,7 +158,8 @@ const Write = props => {
   const [coverImageUrl, setCoverImageUrl] = useState(null)
   const [insertImages, setInsertImages] = useState([])
   const [insertImageValue, setInsertImageValue] = useState(null)
-  const inputEl = useRef(null)
+  const inputRef = useRef()
+  const textAreaRef = useRef()
 
   useEffect(() => {
     if (!account || !account.id) {
@@ -179,8 +171,8 @@ const Write = props => {
         dispatch({ type: 'write/draft', payload: { id: key } })
       }
     }
-    if (inputEl) {
-      inputEl.current.focus()
+    if (inputRef) {
+      inputRef.current.focus()
     }
   }, [key])
 
@@ -294,17 +286,8 @@ const Write = props => {
     }
 
     if (images.length > 0) {
-      let str = ''
-      images.length > 0 &&
-        images.map(image => {
-          str += `![](${image})`
-        })
-      if (dispatch) {
-        dispatch({
-          type: 'write/setMarkdown',
-          payload: { markdown: markdown + str },
-        })
-      }
+      const str = images.map(image => `![](${image})`).join('\n')
+      setMarkdown(textAreaRef.current.resizableTextArea.textArea, str)
     }
   }
 
@@ -330,75 +313,84 @@ const Write = props => {
       </Menu.Item>
     </Menu>
   )
-  const addBold = () => {
-    if (dispatch) {
-      dispatch({
-        type: 'write/setMarkdown',
-        payload: { markdown: markdown + '**加粗**' },
-      })
-    }
-  }
 
-  const addItalic = () => {
+  const setMarkdown = (el, data) => {
     if (dispatch) {
-      dispatch({
-        type: 'write/setMarkdown',
-        payload: { markdown: markdown + '*斜体*' },
-      })
-    }
-  }
-
-  const addTable = () => {
-    if (dispatch) {
+      const { selectionStart, selectionEnd } = el
       dispatch({
         type: 'write/setMarkdown',
         payload: {
-          markdown:
-            markdown +
-            '\n| Col1 | Col2 | Col3 |\n| :----: | :----: | :----: |\n| field1 | field2 | field3 |',
+          markdown: [
+            markdown.substring(0, selectionStart),
+            data,
+            markdown.substring(selectionEnd),
+          ].join(''),
         },
       })
-    }
-  }
-  const addLink = () => {
-    if (dispatch) {
-      dispatch({
-        type: 'write/setMarkdown',
-        payload: { markdown: markdown + '[描述](链接)' },
-      })
+      console.log('eeeeeeeeeeeessssssssssssssssss')
+      console.log(el)
+      console.log(selectionStart)
+      console.log(selectionEnd)
+      // console.log(data.length)
+      console.log(textAreaRef.current)
+      console.log(el.selectionStart)
+      console.log(el.selectionEnd)
+      // el.setSelectionRange(selectionStart + data.length, selectionStart + data.length)
+      // el.focus()
+      // el.selectionStart = 2
+      // el.selectionEnd = 5
+      textAreaRef.current.setSelectionRange(2, 5)
+      console.log(el.selectionStart)
+      console.log(el.selectionEnd)
+
+      console.log(textAreaRef)
+      // textAreaRef.current.resizableTextArea.textArea.selectionStart = 2
+      // textAreaRef.current.resizableTextArea.textArea.selectionEnd = 5
+      // console.log(el.setSelectionRange)
+      // textAreaRef.current.focus()
+      // console.log()
     }
   }
 
-  const addHeading = () => {
-    if (dispatch) {
-      dispatch({
-        type: 'write/setMarkdown',
-        payload: {
-          markdown: markdown ? `${markdown}\n## 标题` : markdown + '## 标题',
-        },
-      })
-    }
+  const addBold = el => {
+    setMarkdown(el, '**加粗**')
   }
+  const addItalic = el => {
+    setMarkdown(el, '*斜体*')
+  }
+  const addTable = el => {
+    setMarkdown(
+      el,
+      '\n| Col1 | Col2 | Col3 |\n| :----: | :----: | :----: |\n| field1 | field2 | field3 |',
+    )
+  }
+  const addLink = el => {
+    setMarkdown(el, '[描述](链接)')
+  }
+  const addHeading = el => {
+    setMarkdown(el, markdown ? '\n## 标题' : '## 标题')
+  }
+
   const onKeyEvent = (key, e) => {
     e.preventDefault()
     switch (key) {
       case 'ctrl+b':
-        addBold()
+        addBold(e.target)
         break
       case 'ctrl+h':
-        addHeading()
+        addHeading(e.target)
         break
       case 'ctrl+l':
-        addLink()
+        addLink(e.target)
         break
       case 'ctrl+alt+t':
-        addTable()
+        addTable(e.target)
         break
       case 'ctrl+i':
-        showImageModal()
+        showImageModal(e.target)
         break
       case 'ctrl+alt+i':
-        addItalic()
+        addItalic(e.target)
         break
       default:
         break
@@ -415,7 +407,7 @@ const Write = props => {
         </a>
       </Menu.Item>
       <Menu.Item key="bold">
-        <a onClick={addBold}>
+        <a onClick={() => addBold(textAreaRef.current)}>
           <Tooltip title="加粗" placement="left">
             <BoldOutlined />
           </Tooltip>
@@ -423,14 +415,22 @@ const Write = props => {
       </Menu.Item>
       {/* <Menu.Divider /> */}
       <Menu.Item key="italic">
-        <a onClick={addItalic}>
+        <a
+          onClick={() =>
+            addItalic(textAreaRef.current.resizableTextArea.textArea)
+          }
+        >
           <Tooltip title="斜体" placement="left">
             <ItalicOutlined />
           </Tooltip>
         </a>
       </Menu.Item>
       <Menu.Item key="table">
-        <a onClick={addTable}>
+        <a
+          onClick={() =>
+            addTable(textAreaRef.current.resizableTextArea.textArea)
+          }
+        >
           <Tooltip title="表格" placement="left">
             <TableOutlined />
           </Tooltip>
@@ -438,14 +438,22 @@ const Write = props => {
       </Menu.Item>
 
       <Menu.Item key="link">
-        <a onClick={addLink}>
+        <a
+          onClick={() =>
+            addLink(textAreaRef.current.resizableTextArea.textArea)
+          }
+        >
           <Tooltip title="链接" placement="left">
             <LinkOutlined />
           </Tooltip>
         </a>
       </Menu.Item>
       <Menu.Item key="heading">
-        <a onClick={addHeading}>
+        <a
+          onClick={() =>
+            addHeading(textAreaRef.current.resizableTextArea.textArea)
+          }
+        >
           <Tooltip title="标题" placement="left">
             <svg
               t="1587646200731"
@@ -479,7 +487,7 @@ const Write = props => {
               onChange={onChangeTitle}
               size="large"
               placeholder="请输入标题"
-              ref={inputEl}
+              ref={inputRef}
             />
           </div>
         </Col>
@@ -579,7 +587,7 @@ const Write = props => {
               ]}
               onKeyEvent={onKeyEvent}
             >
-              <Input.TextArea
+              <textarea
                 style={{
                   // minHeight: 'calc(100vh - 60px)',
                   border: 'none',
@@ -594,9 +602,18 @@ const Write = props => {
                 onChange={onChangeMarkdown}
                 value={markdown}
                 spellCheck="false"
-                autoComplete="off"
-                autoCapitalize="off"
-                autoCorrect="off"
+                ref={textAreaRef}
+                // autoComplete="off"
+                // autoCapitalize="off"
+                // autoCorrect="off"
+                // ref={textAreaRef}
+                // onKeyDown={e => {
+                //   const { selectionStart, selectionEnd } = e.target
+
+                //   console.log('44444444444444444444444444444')
+                //   console.log(e.target.selectionStart)
+                //   console.log(e.target.selectionEnd)
+                // }}
                 autoSize
               />
             </KeyboardEventHandler>
