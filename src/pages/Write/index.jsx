@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-16 15:20:57
+ * @Last Modified time: 2020-05-17 12:11:34
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -21,16 +21,12 @@ import {
   Drawer,
   List,
   Modal,
-  Tooltip,
+  Table,
 } from 'antd'
 import {
   CaretDownOutlined,
-  EllipsisOutlined,
   PictureOutlined,
-  BoldOutlined,
-  ItalicOutlined,
-  TableOutlined,
-  LinkOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons'
 import { history, Link } from 'umi'
 import MathJax from 'react-mathjax'
@@ -40,11 +36,10 @@ import UserAvatar from '@/components/UserAvatar'
 import Markdown from '@/components/Markdown'
 import AliOssUpload from '@/components/AliOssUpload'
 
-// import './vue.css'
-// import './markdown.css'
 import styles from './index.less'
 
 const { CheckableTag } = Tag
+const { TextArea } = Input
 
 const Content = props => {
   const {
@@ -99,6 +94,81 @@ const Content = props => {
   )
 }
 
+const ShortCutKey = () => {
+  const columns = [
+    {
+      title: 'Markdown',
+      dataIndex: 'markdown',
+      key: 'markdown',
+    },
+    {
+      title: '说明',
+      dataIndex: 'explain',
+      key: 'explain',
+    },
+    {
+      title: '快捷键',
+      dataIndex: 'keybord',
+      key: 'keybord',
+    },
+  ]
+  const dataSource = [
+    {
+      markdown: '## 标题',
+      explain: 'H2',
+      keybord: 'Ctrl / ⌘ + H',
+    },
+    {
+      markdown: '**文本**',
+      explain: '加粗',
+      keybord: 'Ctrl / ⌘ + B',
+    },
+    {
+      markdown: '*文本*',
+      explain: '斜体',
+      keybord: 'Ctrl / ⌘ + Alt + I',
+    },
+    {
+      markdown: '[描述](链接)',
+      explain: '链接',
+      keybord: 'Ctrl / ⌘ + L',
+    },
+    {
+      markdown: '![描述](链接)',
+      explain: '插入图片',
+      keybord: 'Ctrl / ⌘ + I',
+    },
+    {
+      markdown: '> 引用',
+      explain: '引用',
+      keybord: 'Ctrl / ⌘ + Q',
+    },
+    {
+      markdown: '```code```',
+      explain: '代码块',
+      keybord: 'Ctrl / ⌘ + Alt + C',
+    },
+    {
+      markdown: '`code`',
+      explain: '行代码块',
+      keybord: 'Ctrl / ⌘ + Alt + K',
+    },
+    {
+      markdown: '省略',
+      explain: '表格',
+      keybord: 'Ctrl / ⌘ + Alt + T',
+    },
+  ]
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      size="small"
+    />
+  )
+}
+
 const ImageModal = props => {
   const {
     imageModalVisible,
@@ -120,7 +190,6 @@ const ImageModal = props => {
       onCancel={closeImageModal}
       visible={imageModalVisible}
       onOk={insertImageOk}
-      // footer={null}
     >
       <AliOssUpload type="drag" returnImageUrl={returnImage} />
       <p className="tc mt-10">或</p>
@@ -314,7 +383,7 @@ const Write = props => {
     </Menu>
   )
 
-  const setMarkdown = (el, data) => {
+  const setMarkdown = (el, data, start, num) => {
     if (dispatch) {
       const { selectionStart, selectionEnd } = el
       dispatch({
@@ -327,48 +396,48 @@ const Write = props => {
           ].join(''),
         },
       })
-      console.log('eeeeeeeeeeeessssssssssssssssss')
-      console.log(el)
-      console.log(selectionStart)
-      console.log(selectionEnd)
-      // console.log(data.length)
-      console.log(textAreaRef.current)
-      console.log(el.selectionStart)
-      console.log(el.selectionEnd)
-      // el.setSelectionRange(selectionStart + data.length, selectionStart + data.length)
-      // el.focus()
-      // el.selectionStart = 2
-      // el.selectionEnd = 5
-      textAreaRef.current.setSelectionRange(2, 5)
-      console.log(el.selectionStart)
-      console.log(el.selectionEnd)
-
-      console.log(textAreaRef)
-      // textAreaRef.current.resizableTextArea.textArea.selectionStart = 2
-      // textAreaRef.current.resizableTextArea.textArea.selectionEnd = 5
-      // console.log(el.setSelectionRange)
-      // textAreaRef.current.focus()
-      // console.log()
+      el.focus()
+      el.setSelectionRange(selectionStart + start, selectionStart + start + num)
     }
   }
 
   const addBold = el => {
-    setMarkdown(el, '**加粗**')
+    setMarkdown(el, '**加粗**', 2, 2)
   }
   const addItalic = el => {
-    setMarkdown(el, '*斜体*')
+    setMarkdown(el, '*斜体*', 1, 2)
+  }
+  const addImage = el => {
+    setMarkdown(el, '![描述](链接)', 6, 2)
+  }
+  const addLink = el => {
+    setMarkdown(el, '[描述](链接)', 5, 2)
+  }
+  const addCode = el => {
+    setMarkdown(el, '\n```\n```', 4, 0)
+  }
+  const addLineCode = el => {
+    setMarkdown(el, '``', 1, 0)
+  }
+  const addQuote = el => {
+    setMarkdown(el, '\n> 引用', 3, 2)
   }
   const addTable = el => {
     setMarkdown(
       el,
-      '\n| Col1 | Col2 | Col3 |\n| :----: | :----: | :----: |\n| field1 | field2 | field3 |',
+      '\n\n| Col1 | Col2 | Col3 |\n| :----: | :----: | :----: |\n| field1 | field2 | field3 |\n',
+      4,
+      4,
     )
   }
-  const addLink = el => {
-    setMarkdown(el, '[描述](链接)')
-  }
   const addHeading = el => {
-    setMarkdown(el, markdown ? '\n## 标题' : '## 标题')
+    let title = '## 标题'
+    let start = 3
+    if (markdown) {
+      title = '\n## 标题'
+      start = 4
+    }
+    setMarkdown(el, title, start, 2)
   }
 
   const onKeyEvent = (key, e) => {
@@ -387,95 +456,25 @@ const Write = props => {
         addTable(e.target)
         break
       case 'ctrl+i':
-        showImageModal(e.target)
+        addImage(e.target)
+        break
+      case 'ctrl+q':
+        addQuote(e.target)
         break
       case 'ctrl+alt+i':
         addItalic(e.target)
+        break
+      case 'ctrl+alt+c':
+        addCode(e.target)
+        break
+      case 'ctrl+alt+k':
+        addLineCode(e.target)
         break
       default:
         break
     }
   }
 
-  const fastMenu = (
-    <Menu>
-      <Menu.Item key="0">
-        <a onClick={showImageModal}>
-          <Tooltip title="图片" placement="left">
-            <PictureOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-      <Menu.Item key="bold">
-        <a onClick={() => addBold(textAreaRef.current)}>
-          <Tooltip title="加粗" placement="left">
-            <BoldOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-      {/* <Menu.Divider /> */}
-      <Menu.Item key="italic">
-        <a
-          onClick={() =>
-            addItalic(textAreaRef.current.resizableTextArea.textArea)
-          }
-        >
-          <Tooltip title="斜体" placement="left">
-            <ItalicOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-      <Menu.Item key="table">
-        <a
-          onClick={() =>
-            addTable(textAreaRef.current.resizableTextArea.textArea)
-          }
-        >
-          <Tooltip title="表格" placement="left">
-            <TableOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-
-      <Menu.Item key="link">
-        <a
-          onClick={() =>
-            addLink(textAreaRef.current.resizableTextArea.textArea)
-          }
-        >
-          <Tooltip title="链接" placement="left">
-            <LinkOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-      <Menu.Item key="heading">
-        <a
-          onClick={() =>
-            addHeading(textAreaRef.current.resizableTextArea.textArea)
-          }
-        >
-          <Tooltip title="标题" placement="left">
-            <svg
-              t="1587646200731"
-              className="icon"
-              viewBox="0 0 1024 1024"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              p-id="18237"
-              width="1em"
-              height="1em"
-            >
-              <path
-                d="M235.5 871.691v-740h98v304h385v-304h98v740h-98v-349h-385v349h-98z"
-                p-id="18238"
-                fill="#515151"
-              ></path>
-            </svg>
-          </Tooltip>
-        </a>
-      </Menu.Item>
-    </Menu>
-  )
   return (
     <>
       <Row>
@@ -492,10 +491,17 @@ const Write = props => {
           </div>
         </Col>
         <Col span={5} style={{ background: '#fff' }}>
-          {/* <FullscreenOutlined /> */}
           <Popover
             placement="bottom"
-            // title={<strong>发布文章</strong>}
+            title={<strong>快捷键</strong>}
+            overlayStyle={{ width: 350 }}
+            content={<ShortCutKey />}
+          >
+            <QuestionCircleOutlined />
+          </Popover>
+          <Popover
+            placement="bottom"
+            title={<strong>发布文章</strong>}
             content={
               <Content
                 categories={categories}
@@ -560,11 +566,10 @@ const Write = props => {
       </Row>
       <Row style={{ borderTop: '1px solid #ccc' }}>
         <Col span={12}>
-          <div style={{ position: 'absolute', right: 20, top: 10, zIndex: 10 }}>
-            <Dropdown overlay={fastMenu} placement="bottomCenter" overlayStyle>
-              <EllipsisOutlined style={{ fontSize: 25 }} />
-            </Dropdown>
-            {/* <span className="ml-10"><FullscreenOutlined style={{ fontSize: 20 }} /></span> */}
+          <div style={{ position: 'absolute', right: 0, top: 0, zIndex: 10 }}>
+            <Button type="link" onClick={showImageModal}>
+              <PictureOutlined className="ft-20" />
+            </Button>
           </div>
           <div
             style={{
@@ -584,10 +589,13 @@ const Write = props => {
                 'ctrl+alt+t',
                 'ctrl+i',
                 'ctrl+alt+i',
+                'ctrl+alt+c',
+                'ctrl+alt+k',
+                'ctrl+q',
               ]}
               onKeyEvent={onKeyEvent}
             >
-              <textarea
+              <TextArea
                 style={{
                   // minHeight: 'calc(100vh - 60px)',
                   border: 'none',
@@ -598,22 +606,14 @@ const Write = props => {
                 className={styles.textareScroll}
                 selectiontext="我们"
                 placeholder="请输入Markdown"
-                rows={27}
+                rows={3}
                 onChange={onChangeMarkdown}
                 value={markdown}
-                spellCheck="false"
                 ref={textAreaRef}
-                // autoComplete="off"
-                // autoCapitalize="off"
-                // autoCorrect="off"
-                // ref={textAreaRef}
-                // onKeyDown={e => {
-                //   const { selectionStart, selectionEnd } = e.target
-
-                //   console.log('44444444444444444444444444444')
-                //   console.log(e.target.selectionStart)
-                //   console.log(e.target.selectionEnd)
-                // }}
+                spellCheck="false"
+                autoComplete="off"
+                autoCapitalize="off"
+                autoCorrect="off"
                 autoSize
               />
             </KeyboardEventHandler>
