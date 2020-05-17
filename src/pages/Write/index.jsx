@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-17 12:31:42
+ * @Last Modified time: 2020-05-17 17:33:19
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -551,11 +551,11 @@ const Write = props => {
                           }}
                         >
                           {item.title}
-                          {item.is_publish && (
+                          {item.is_publish ? (
                             <Tag color="success" className="ml-10">
                               已发表
                             </Tag>
-                          )}
+                          ) : null}
                         </a>
                       }
                       description={`${moment(item.updatedAt).format(

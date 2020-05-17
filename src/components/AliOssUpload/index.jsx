@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-21 20:46:32
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-27 08:05:18
+ * @Last Modified time: 2020-05-17 17:22:01
  */
 
 import React, { useState } from 'react'
@@ -54,7 +54,10 @@ const AliOssUpload = props => {
   const beforeUpload = file => {
     console.log('eeeeeeeeeeeeeeeeeeeeee')
     console.log(file)
-    const isJpgOrPng = file.type === 'image/png' || file.type === 'image/jpeg'
+    const isJpgOrPng =
+      file.type === 'image/png' ||
+      file.type === 'image/jpeg' ||
+      file.type === 'image/gif'
     if (!isJpgOrPng) {
       message.error('你只能上传JPG/PNG格式的图片')
     }
