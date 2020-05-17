@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-27 17:56:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-13 20:43:00
+ * @Last Modified time: 2020-05-17 19:37:23
  */
 
 import React, { useEffect } from 'react'
@@ -50,6 +50,9 @@ const Admin = props => {
   useEffect(() => {
     if (!account || !account.id) {
       history.push('/login')
+    }
+    if (account.account_type !== 'AMDIN') {
+      history.push('/404')
     }
   }, [])
   return (

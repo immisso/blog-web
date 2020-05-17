@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-17 17:33:19
+ * @Last Modified time: 2020-05-17 19:25:16
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -238,6 +238,9 @@ const Write = props => {
       dispatch({ type: 'write/categories' })
       if (key !== 'new' && /^\d+$/.test(key)) {
         dispatch({ type: 'write/draft', payload: { id: key } })
+      } else {
+        dispatch({ type: 'write/setMarkdown', payload: { markdown: null } })
+        dispatch({ type: 'write/setTitle', payload: { title: null } })
       }
     }
     if (inputRef) {
@@ -297,10 +300,7 @@ const Write = props => {
   }
 
   const writeNew = () => {
-    dispatch({
-      type: 'write/setMarkdown',
-      payload: { markdown: null },
-    })
+    dispatch({ type: 'write/setMarkdown', payload: { markdown: null } })
     dispatch({ type: 'write/setTitle', payload: { title: null } })
     history.push('/write/draft/new')
   }
@@ -358,6 +358,7 @@ const Write = props => {
       const str = images.map(image => `![](${image})`).join('\n')
       setMarkdown(textAreaRef.current.resizableTextArea.textArea, str)
     }
+    setImageModalVisible(false)
   }
 
   const returnImage = imageUrl => {
