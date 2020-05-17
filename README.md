@@ -11,13 +11,13 @@
 下面是一些主要功能的效果图。请君参考。
 
 首页详情页
-![](https://immisso-upload.oss-cn-hangzhou.aliyuncs.com/20200517/rc-upload-1589705083563-2.gif)
+![](https://github.com/immisso/blog-web/blob/feature/public/images/%E9%A6%96%E9%A1%B5%E8%AF%A6%E6%83%85%E9%A1%B5001.gif)
 
 写文章
-![](https://immisso-upload.oss-cn-hangzhou.aliyuncs.com/20200517/rc-upload-1589707610125-2.gif)
+![](https://github.com/immisso/blog-web/blob/feature/public/images/%E7%BC%96%E8%BE%91%E5%99%A8%E9%A1%B5%E9%9D%A2002.gif)
 
 管理页
-![](https://immisso-upload.oss-cn-hangzhou.aliyuncs.com/20200517/rc-upload-1589709593652-2.gif)
+![](https://github.com/immisso/blog-web/blob/feature/public/images/%E7%AE%A1%E7%90%86%E9%A1%B5003.gif)
 
 ## 如何开始
 
