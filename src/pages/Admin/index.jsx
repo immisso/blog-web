@@ -51,7 +51,7 @@ const Admin = props => {
     if (!account || !account.id) {
       history.push('/login')
     }
-    if (account.account_type !== 'AMDIN') {
+    if (account.account_type !== 'ADMIN') {
       history.push('/404')
     }
   }, [])
