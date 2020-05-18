@@ -2,9 +2,10 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-23 18:51:06
+ * @Last Modified time: 2020-05-15 16:22:08
  */
-
+import { message } from 'antd'
+import { history } from 'umi'
 import {
   getDraft,
   createDraft,
@@ -27,106 +28,95 @@ export default {
   },
   effects: {
     *saveDraft({ payload, callback }, { call, put }) {
-      const response = yield call(createDraft, payload)
-      if (callback) callback(response)
-      // yield put({
-      //   type: 'createDraftHandle',
-      //   payload: response
-      // })
+      const { status, data } = yield call(createDraft, payload)
+      if (status === 200) {
+        history.push(`/write/draft/${data.id}`)
+        message.success('保存草稿成功')
+      }
     },
+
     *draft({ payload }, { call, put }) {
-      const response = yield call(getDraft, payload)
-      yield put({
-        type: 'draftHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getDraft, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            markdown: data.markdown,
+            title: data.title,
+          },
+        })
+      }
     },
+
     *drafts({ payload }, { call, put }) {
-      const response = yield call(getDrafts, payload)
-      yield put({
-        type: 'draftsHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getDrafts, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            drafts: data,
+          },
+        })
+      }
     },
+
     *categories({ payload }, { call, put }) {
-      const response = yield call(getCategories, payload)
-      yield put({
-        type: 'categoriesHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getCategories, payload)
+      if (status === 200) {
+        yield put({
+          type: 'categoriesHandle',
+          payload: {
+            categories: data,
+            selectedCategory: data.length > 0 && data[0].id,
+            tags: data.length > 0 && data[0].tags,
+            selectedTag:
+              data.length > 0 && data[0].tags.length > 0 && data[0].tags[0].id,
+          },
+        })
+      }
     },
+
     *updateDraft({ payload }, { call, put }) {
-      const response = yield call(updateDraft, payload)
-      yield put({
-        type: 'updateDraftHandle',
-        payload: response,
-      })
+      const { status } = yield call(updateDraft, payload)
+      if (status === 200) {
+        message.success('保存草稿成功')
+      }
     },
 
     *publish({ payload, callback }, { call, put }) {
-      const response = yield call(createPublish, payload)
-      if (callback) callback(response)
+      const { status } = yield call(createPublish, payload)
+      if (status === 200) {
+        message.success('发布文章成功')
+        yield put({
+          type: 'setMarkdown',
+          payload: { markdown: '' },
+        })
+        history.push('/')
+      }
     },
   },
   reducers: {
-    // createDraftHandle (state, { payload }) {
-    //   return {
-    //     ...state
-    //   }
-    // }
-    draftHandle(state, { payload }) {
-      return {
-        ...state,
-        markdown:
-          payload.status === 200 ? payload.data.markdown : state.markdown,
-        title: payload.status === 200 ? payload.data.title : state.title,
-      }
-    },
-    draftsHandle(state, { payload }) {
-      return {
-        ...state,
-        drafts: payload.status === 200 ? payload.data : [],
-      }
-    },
-    updateDraftHandle(state, { payload }) {
-      return {
-        ...state,
-        // markdown:
-        //   payload.status === 200 ? payload.data.markdown : state.markdown,
-        // title: payload.status === 200 ? payload.data.title : state.title,
-      }
+    handle(state, { payload }) {
+      return { ...state, ...payload }
     },
 
     categoriesHandle(state, { payload }) {
       return {
         ...state,
-        categories: payload.status === 200 ? payload.data : [],
-        selectedCategory:
-          payload.status === 200 &&
-          payload.data.length > 0 &&
-          !state.selectedCategory
-            ? payload.data[0].id
-            : state.selectedCategory,
-        tags:
-          payload.status === 200 && payload.data.length > 0
-            ? payload.data[0].tags
-            : [],
-        selectedTag:
-          payload.status === 200 &&
-          payload.data.length > 0 &&
-          payload.data[0].tags.length > 0 &&
-          !state.selectedTag
-            ? payload.data[0].tags[0].id
-            : state.selectedTag,
+        ...payload,
+        selectedCategory: state.selectedCategory || payload.selectedCategory,
+        selectedTag: state.selectedTag || payload.selectedTag,
       }
     },
 
     setSelecteCategory(state, { payload }) {
       return { ...state, selectedCategory: payload.selectedCategory }
     },
+
     setSelecteTag(state, { payload }) {
       return { ...state, selectedTag: payload.selectedTag }
     },
+
     setTags(state, { payload }) {
       return {
         ...state,
@@ -134,9 +124,11 @@ export default {
         selectedTag: payload.tags.length > 0 ? payload.tags[0].id : null,
       }
     },
+
     setMarkdown(state, { payload }) {
       return { ...state, markdown: payload.markdown }
     },
+
     setTitle(state, { payload }) {
       return { ...state, title: payload.title }
     },

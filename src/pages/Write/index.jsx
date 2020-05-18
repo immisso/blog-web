@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-13 21:20:12
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-09 07:48:40
+ * @Last Modified time: 2020-05-17 19:25:16
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -16,30 +16,17 @@ import {
   Button,
   Popover,
   Tag,
-  Upload,
   Dropdown,
   Menu,
   Drawer,
   List,
-  Affix,
   Modal,
-  message,
-  Tooltip,
+  Table,
 } from 'antd'
 import {
   CaretDownOutlined,
-  PlusOutlined,
-  EllipsisOutlined,
   PictureOutlined,
-  BoldOutlined,
-  ItalicOutlined,
-  UnderlineOutlined,
-  StrikethroughOutlined,
-  FullscreenOutlined,
-  UploadOutlined,
-  InboxOutlined,
-  TableOutlined,
-  LinkOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons'
 import { history, Link } from 'umi'
 import MathJax from 'react-mathjax'
@@ -48,13 +35,11 @@ import KeyboardEventHandler from 'react-keyboard-event-handler'
 import UserAvatar from '@/components/UserAvatar'
 import Markdown from '@/components/Markdown'
 import AliOssUpload from '@/components/AliOssUpload'
-import storageHelper from '@/utils/storage'
 
-// import './vue.css'
-import './markdown.css'
 import styles from './index.less'
 
 const { CheckableTag } = Tag
+const { TextArea } = Input
 
 const Content = props => {
   const {
@@ -109,6 +94,81 @@ const Content = props => {
   )
 }
 
+const ShortCutKey = () => {
+  const columns = [
+    {
+      title: 'Markdown',
+      dataIndex: 'markdown',
+      key: 'markdown',
+    },
+    {
+      title: '说明',
+      dataIndex: 'explain',
+      key: 'explain',
+    },
+    {
+      title: '快捷键',
+      dataIndex: 'keybord',
+      key: 'keybord',
+    },
+  ]
+  const dataSource = [
+    {
+      markdown: '## 标题',
+      explain: 'H2',
+      keybord: 'Ctrl / ⌘ + H',
+    },
+    {
+      markdown: '**文本**',
+      explain: '加粗',
+      keybord: 'Ctrl / ⌘ + B',
+    },
+    {
+      markdown: '*文本*',
+      explain: '斜体',
+      keybord: 'Ctrl / ⌘ + Alt + I',
+    },
+    {
+      markdown: '[描述](链接)',
+      explain: '链接',
+      keybord: 'Ctrl / ⌘ + L',
+    },
+    {
+      markdown: '![描述](链接)',
+      explain: '插入图片',
+      keybord: 'Ctrl / ⌘ + I',
+    },
+    {
+      markdown: '> 引用',
+      explain: '引用',
+      keybord: 'Ctrl / ⌘ + Q',
+    },
+    {
+      markdown: '```code```',
+      explain: '代码块',
+      keybord: 'Ctrl / ⌘ + Alt + C',
+    },
+    {
+      markdown: '`code`',
+      explain: '行代码块',
+      keybord: 'Ctrl / ⌘ + Alt + K',
+    },
+    {
+      markdown: '省略',
+      explain: '表格',
+      keybord: 'Ctrl / ⌘ + Alt + T',
+    },
+  ]
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      size="small"
+    />
+  )
+}
+
 const ImageModal = props => {
   const {
     imageModalVisible,
@@ -119,22 +179,6 @@ const ImageModal = props => {
     insertImageValueChange,
   } = props
 
-  // const a = {
-  //   name: 'file',
-  //   multiple: true,
-  //   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  //   onChange (info) {
-  //     const { status } = info.file
-  //     if (status !== 'uploading') {
-  //       console.log(info.file, info.fileList)
-  //     }
-  //     if (status === 'done') {
-  //       message.success(`${info.file.name} file uploaded successfully.`)
-  //     } else if (status === 'error') {
-  //       message.error(`${info.file.name} file upload failed.`)
-  //     }
-  //   }
-  // }
   return (
     <Modal
       title="插入图片"
@@ -146,7 +190,6 @@ const ImageModal = props => {
       onCancel={closeImageModal}
       visible={imageModalVisible}
       onOk={insertImageOk}
-      // footer={null}
     >
       <AliOssUpload type="drag" returnImageUrl={returnImage} />
       <p className="tc mt-10">或</p>
@@ -184,28 +227,24 @@ const Write = props => {
   const [coverImageUrl, setCoverImageUrl] = useState(null)
   const [insertImages, setInsertImages] = useState([])
   const [insertImageValue, setInsertImageValue] = useState(null)
-  const inputEl = useRef(null)
-  // const [selectedCategory, setSelectedCategory] = useState(null)
-  // const [selectedTag, setSelectedTag] = useState(null)
+  const inputRef = useRef()
+  const textAreaRef = useRef()
 
   useEffect(() => {
-    if (!account.id) {
-      const user = storageHelper.get('user')
-      if (user && user.exp * 1000 > new Date().getTime()) {
-        dispatch({ type: 'user/updateAccount', payload: user })
-      } else {
-        history.push('/login')
-      }
+    if (!account || !account.id) {
+      history.push('/login')
     }
     if (dispatch) {
       dispatch({ type: 'write/categories' })
-      // dispatch({ type: 'article/tags' })
       if (key !== 'new' && /^\d+$/.test(key)) {
         dispatch({ type: 'write/draft', payload: { id: key } })
+      } else {
+        dispatch({ type: 'write/setMarkdown', payload: { markdown: null } })
+        dispatch({ type: 'write/setTitle', payload: { title: null } })
       }
     }
-    if (inputEl) {
-      inputEl.current.focus()
+    if (inputRef) {
+      inputRef.current.focus()
     }
   }, [key])
 
@@ -235,11 +274,6 @@ const Write = props => {
         dispatch({
           type: 'write/saveDraft',
           payload: { markdown, title },
-          callback: res => {
-            if (res.status === 200) {
-              history.push(`/write/draft/${res.data.id}`)
-            }
-          },
         })
       }
     }
@@ -266,10 +300,7 @@ const Write = props => {
   }
 
   const writeNew = () => {
-    dispatch({
-      type: 'write/setMarkdown',
-      payload: { markdown: null },
-    })
+    dispatch({ type: 'write/setMarkdown', payload: { markdown: null } })
     dispatch({ type: 'write/setTitle', payload: { title: null } })
     history.push('/write/draft/new')
   }
@@ -291,7 +322,6 @@ const Write = props => {
       })
       dispatch({ type: 'write/setTags', payload: { tags: category.tags } })
     }
-    // setSelectedCategory(category.id)
   }
 
   const onPublish = () => {
@@ -310,40 +340,25 @@ const Write = props => {
             </MathJax.Provider>,
           ),
         },
-        callback: res => {
-          if (res.status === 200) {
-            history.push('/')
-          }
-        },
       })
     }
   }
 
   const insertImageValueChange = e => {
-    console.log('1111111111111111111111111')
-    console.log(e.target.value)
     setInsertImageValue(e.target.value)
   }
 
   const insertImageOk = () => {
-    let images = []
+    let images = [...insertImages]
     if (insertImageValue) {
-      images = [...insertImages, insertImageValue]
+      images = [...images, insertImageValue]
     }
 
     if (images.length > 0) {
-      let str = ''
-      images.length > 0 &&
-        images.map(image => {
-          str += `![](${image})`
-        })
-      if (dispatch) {
-        dispatch({
-          type: 'write/setMarkdown',
-          payload: { markdown: markdown + str },
-        })
-      }
+      const str = images.map(image => `![](${image})`).join('\n')
+      setMarkdown(textAreaRef.current.resizableTextArea.textArea, str)
     }
+    setImageModalVisible(false)
   }
 
   const returnImage = imageUrl => {
@@ -357,7 +372,7 @@ const Write = props => {
   const writeMenu = (
     <Menu className="mt-20">
       <Menu.Item key="0">
-        <a onClick={writeNew}>写文章</a>
+        <a onClick={writeNew}>新文章</a>
       </Menu.Item>
       <Menu.Item key="1">
         <a onClick={showDrawer}>草稿箱</a>
@@ -368,146 +383,99 @@ const Write = props => {
       </Menu.Item>
     </Menu>
   )
-  const addBold = () => {
-    if (dispatch) {
-      dispatch({
-        type: 'write/setMarkdown',
-        payload: { markdown: markdown + '**加粗**' },
-      })
-    }
-  }
 
-  const addItalic = () => {
+  const setMarkdown = (el, data, start, num) => {
     if (dispatch) {
-      dispatch({
-        type: 'write/setMarkdown',
-        payload: { markdown: markdown + '*斜体*' },
-      })
-    }
-  }
-
-  const addTable = () => {
-    if (dispatch) {
+      const { selectionStart, selectionEnd } = el
       dispatch({
         type: 'write/setMarkdown',
         payload: {
-          markdown:
-            markdown +
-            '\n| Col1 | Col2 | Col3 |\n| :----: | :----: | :----: |\n| field1 | field2 | field3 |',
+          markdown: [
+            markdown.substring(0, selectionStart),
+            data,
+            markdown.substring(selectionEnd),
+          ].join(''),
         },
       })
-    }
-  }
-  const addLink = () => {
-    if (dispatch) {
-      dispatch({
-        type: 'write/setMarkdown',
-        payload: { markdown: markdown + '[描述](链接)' },
-      })
+      el.focus()
+      el.setSelectionRange(selectionStart + start, selectionStart + start + num)
     }
   }
 
-  const addHeading = () => {
-    if (dispatch) {
-      dispatch({
-        type: 'write/setMarkdown',
-        payload: {
-          markdown: markdown ? `${markdown}\n## 标题` : markdown + '## 标题',
-        },
-      })
-    }
+  const addBold = el => {
+    setMarkdown(el, '**加粗**', 2, 2)
   }
+  const addItalic = el => {
+    setMarkdown(el, '*斜体*', 1, 2)
+  }
+  const addImage = el => {
+    setMarkdown(el, '![描述](链接)', 6, 2)
+  }
+  const addLink = el => {
+    setMarkdown(el, '[描述](链接)', 5, 2)
+  }
+  const addCode = el => {
+    setMarkdown(el, '\n```\n```', 4, 0)
+  }
+  const addLineCode = el => {
+    setMarkdown(el, '``', 1, 0)
+  }
+  const addQuote = el => {
+    setMarkdown(el, '\n> 引用', 3, 2)
+  }
+  const addTable = el => {
+    setMarkdown(
+      el,
+      '\n\n| Col1 | Col2 | Col3 |\n| :----: | :----: | :----: |\n| field1 | field2 | field3 |\n',
+      4,
+      4,
+    )
+  }
+  const addHeading = el => {
+    let title = '## 标题'
+    let start = 3
+    if (markdown) {
+      title = '\n## 标题'
+      start = 4
+    }
+    setMarkdown(el, title, start, 2)
+  }
+
   const onKeyEvent = (key, e) => {
     e.preventDefault()
-    console.log('444444444444444444444444')
-    console.log(key)
     switch (key) {
       case 'ctrl+b':
-        addBold()
+        addBold(e.target)
         break
       case 'ctrl+h':
-        addHeading()
+        addHeading(e.target)
         break
       case 'ctrl+l':
-        addLink()
+        addLink(e.target)
         break
       case 'ctrl+alt+t':
-        addTable()
+        addTable(e.target)
         break
       case 'ctrl+i':
-        showImageModal()
+        addImage(e.target)
+        break
+      case 'ctrl+q':
+        addQuote(e.target)
         break
       case 'ctrl+alt+i':
-        addItalic()
+        addItalic(e.target)
+        break
+      case 'ctrl+alt+c':
+        addCode(e.target)
+        break
+      case 'ctrl+alt+k':
+        addLineCode(e.target)
         break
       default:
         break
     }
   }
 
-  const fastMenu = (
-    <Menu>
-      <Menu.Item key="0">
-        <a onClick={showImageModal}>
-          <Tooltip title="图片" placement="left">
-            <PictureOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-      <Menu.Item key="bold">
-        <a onClick={addBold}>
-          <Tooltip title="加粗" placement="left">
-            <BoldOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-      {/* <Menu.Divider /> */}
-      <Menu.Item key="italic">
-        <a onClick={addItalic}>
-          <Tooltip title="斜体" placement="left">
-            <ItalicOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-      <Menu.Item key="table">
-        <a onClick={addTable}>
-          <Tooltip title="表格" placement="left">
-            <TableOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-
-      <Menu.Item key="link">
-        <a onClick={addLink}>
-          <Tooltip title="链接" placement="left">
-            <LinkOutlined />
-          </Tooltip>
-        </a>
-      </Menu.Item>
-      <Menu.Item key="heading">
-        <a onClick={addHeading}>
-          <Tooltip title="标题" placement="left">
-            <svg
-              t="1587646200731"
-              className="icon"
-              viewBox="0 0 1024 1024"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              p-id="18237"
-              width="1em"
-              height="1em"
-            >
-              <path
-                d="M235.5 871.691v-740h98v304h385v-304h98v740h-98v-349h-385v349h-98z"
-                p-id="18238"
-                fill="#515151"
-              ></path>
-            </svg>
-          </Tooltip>
-        </a>
-      </Menu.Item>
-    </Menu>
-  )
   return (
     <>
       <Row>
@@ -519,15 +487,22 @@ const Write = props => {
               onChange={onChangeTitle}
               size="large"
               placeholder="请输入标题"
-              ref={inputEl}
+              ref={inputRef}
             />
           </div>
         </Col>
         <Col span={5} style={{ background: '#fff' }}>
-          {/* <FullscreenOutlined /> */}
           <Popover
             placement="bottom"
-            // title={<strong>发布文章</strong>}
+            title={<strong>快捷键</strong>}
+            overlayStyle={{ width: 350 }}
+            content={<ShortCutKey />}
+          >
+            <QuestionCircleOutlined />
+          </Popover>
+          <Popover
+            placement="bottom"
+            title={<strong>发布文章</strong>}
             content={
               <Content
                 categories={categories}
@@ -577,6 +552,11 @@ const Write = props => {
                           }}
                         >
                           {item.title}
+                          {item.is_publish ? (
+                            <Tag color="success" className="ml-10">
+                              已发表
+                            </Tag>
+                          ) : null}
                         </a>
                       }
                       description={`${moment(item.updatedAt).format(
@@ -592,11 +572,10 @@ const Write = props => {
       </Row>
       <Row style={{ borderTop: '1px solid #ccc' }}>
         <Col span={12}>
-          <div style={{ position: 'absolute', right: 20, top: 10, zIndex: 10 }}>
-            <Dropdown overlay={fastMenu} placement="bottomCenter" overlayStyle>
-              <EllipsisOutlined style={{ fontSize: 25 }} />
-            </Dropdown>
-            {/* <span className="ml-10"><FullscreenOutlined style={{ fontSize: 20 }} /></span> */}
+          <div style={{ position: 'absolute', right: 0, top: 0, zIndex: 10 }}>
+            <Button type="link" onClick={showImageModal}>
+              <PictureOutlined className="ft-20" />
+            </Button>
           </div>
           <div
             style={{
@@ -616,10 +595,13 @@ const Write = props => {
                 'ctrl+alt+t',
                 'ctrl+i',
                 'ctrl+alt+i',
+                'ctrl+alt+c',
+                'ctrl+alt+k',
+                'ctrl+q',
               ]}
               onKeyEvent={onKeyEvent}
             >
-              <Input.TextArea
+              <TextArea
                 style={{
                   // minHeight: 'calc(100vh - 60px)',
                   border: 'none',
@@ -630,9 +612,10 @@ const Write = props => {
                 className={styles.textareScroll}
                 selectiontext="我们"
                 placeholder="请输入Markdown"
-                rows={27}
+                rows={3}
                 onChange={onChangeMarkdown}
                 value={markdown}
+                ref={textAreaRef}
                 spellCheck="false"
                 autoComplete="off"
                 autoCapitalize="off"

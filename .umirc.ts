@@ -1,29 +1,9 @@
 import { defineConfig } from 'umi'
 
 export default defineConfig({
-  scripts: [
-    // {
-    //   content:`MathJax = {
-    //     tex: {
-    //       inlineMath: [['$', '$'], ['\\(', '\\)']]
-    //     },
-    //     svg: {
-    //       fontCache: 'global'
-    //     }
-    //   };`
-    // },
-    // {
-    //   src:"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML",
-    //   // type:'text/javascript',
-    //   async:true
-    // },
-    // {
-    //   src:'https://mathjax.rstudio.com/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML',
-    //   // id:'MathJax-script',
-    //   async:true,
-    //   // charset:'utf-8',
-    // }
-  ],
+  title: '这是个人网站首页',
+  favicon:
+    'https://immisso-upload.oss-cn-hangzhou.aliyuncs.com/20200517/rc-upload-1589714215963-2.png',
   proxy: {
     '/api': {
       target: 'http://localhost:7001/api',
@@ -44,6 +24,7 @@ export default defineConfig({
         {
           path: '/home',
           component: '@/components/HomeArticleList',
+          // exact: true,
         },
         {
           path: '/home/:category',
@@ -112,6 +93,9 @@ export default defineConfig({
           component: '@/components/Account/Me',
         },
       ],
+    },
+    {
+      component: '@/pages/404',
     },
   ],
 })

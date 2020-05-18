@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 20:18:13
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-09 17:58:04
+ * @Last Modified time: 2020-05-17 19:29:37
  */
 import React from 'react'
 import { Menu, Row, Col } from 'antd'
@@ -34,10 +34,7 @@ const Account = props => {
                 <Menu.Item>代码风格</Menu.Item>
               </Menu>
             </div>
-            <div className={styles.right}>
-              {/* <div className={styles.title}>{this.getRightTitle()}</div> */}
-              {children}
-            </div>
+            <div className={styles.right}>{children}</div>
           </div>
         </Col>
       </Row>

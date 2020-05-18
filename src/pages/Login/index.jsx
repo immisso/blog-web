@@ -2,22 +2,20 @@
  * @Author: 柒叶
  * @Date: 2020-05-05 14:52:52
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-08 13:46:00
+ * @Last Modified time: 2020-05-15 12:59:05
  */
 
 import React, { useEffect } from 'react'
-import { Button, Row, Form, Input, message, Checkbox } from 'antd'
+import { Button, Row, Form, Input, Checkbox } from 'antd'
 import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'umi'
 import { connect } from 'dva'
-import storageHelper from '@/utils/storage'
 
 const Login = props => {
   const [form] = Form.useForm()
-  const { dispatch, history } = props
+  const { dispatch, history, location, account } = props
   useEffect(() => {
-    const user = storageHelper.get('user')
-    if (user && user.id && user.exp * 1000 > new Date().getTime()) {
+    if (account && account.id) {
       history.push('/')
     }
   }, [])
@@ -27,21 +25,16 @@ const Login = props => {
         type: 'user/login',
         payload: values,
         callback(res) {
-          if (res && res.status === 200) {
-            dispatch({
-              type: 'user/account',
-              callback(user) {
-                if (user.status === 200) {
-                  storageHelper.set('user', user.data)
-                  message.success('登录成功')
-                  history.push('/')
-                }
-              },
-            })
-          } else {
-            message.error('登录失败，请重新登录')
-            history.push('/login')
-          }
+          dispatch({
+            type: 'user/account',
+            callback(user) {
+              if (location.isRegister) {
+                history.push('/')
+              } else {
+                history.goBack()
+              }
+            },
+          })
         },
       })
     }
@@ -103,7 +96,7 @@ const Login = props => {
   )
 }
 
-export default connect(({ user, loading }) => ({
-  user,
+export default connect(({ user: { account }, loading }) => ({
+  account,
   loading,
 }))(Login)

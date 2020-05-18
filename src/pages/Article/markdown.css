@@ -39,6 +39,7 @@
 
 .markdown-body pre>code{
   background: inherit;
+  padding: 0;
 }
 
 .markdown-body a {

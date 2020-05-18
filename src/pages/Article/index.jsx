@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-09 21:43:20
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-10 20:39:45
+ * @Last Modified time: 2020-05-15 10:54:50
  */
 
 import React, { useEffect, useState } from 'react'
@@ -27,10 +27,7 @@ import AddComment from '@/components/Comment'
 import Markdown from '@/components/Markdown'
 
 import styles from './index.less'
-// import './markdown-github.css'
-// import './misty-light-macos.css'
 import './markdown.css'
-// import './vue.css'
 
 const { Content } = Layout
 const IconFont = createFromIconfontCN({
@@ -44,7 +41,8 @@ const Article = props => {
     loading2,
     detail,
     hots,
-    history,
+    isFavorite,
+    favoriteCount,
     match: {
       params: { id },
     },
@@ -53,20 +51,16 @@ const Article = props => {
   useEffect(() => {
     if (dispatch) {
       dispatch({ type: 'article/detail', payload: { id } })
+      dispatch({ type: 'article/isFavorite', payload: { id } })
       dispatch({ type: 'article/hot' })
     }
   }, [])
 
-  const handleLike = () => {
+  const handleFavorite = () => {
     if (dispatch) {
       dispatch({
         type: 'article/favorite',
-        payload: { id, author: detail.user_id },
-        callback(res) {
-          if (res.status !== 200) {
-            history.push('/login')
-          }
-        },
+        payload: { id, author: detail.uid },
       })
     }
   }
@@ -118,12 +112,12 @@ const Article = props => {
                 <h1 className="mt-15m fw-700 mb-15m">{detail.title}</h1>
                 <div className="markdown-body ft-16">
                   <MathJax.Provider>
-                    <Markdown markdown={detail.content_mark} />
+                    <Markdown markdown={detail.markdown} />
                   </MathJax.Provider>
                 </div>
               </div>
             </Card>
-            <AddComment id={id} author={detail.user_id} />
+            <AddComment id={id} author={detail.uid} />
           </div>
           <div className={styles.articleContainerSider}>
             <Card
@@ -244,23 +238,19 @@ const Article = props => {
             <div className={styles.articlePanelItem}>
               <div className={styles.articlePanelIcon}>
                 <LikeOutlined
-                  style={{ color: '#007bff' }}
-                  onClick={handleLike}
+                  style={{ color: isFavorite ? '#007bff' : '#ccc' }}
+                  onClick={handleFavorite}
                 />
-                {/* <ThumbsUp color={islike ? '#007bff' : '#ccc'} onClick={this.handleLike} /> */}
               </div>
               <div className={styles.articlePanelCount}>
-                {/* <span>{likeNum}</span> */}
-                <span>{detail.favorite}</span>
+                <span>{favoriteCount}</span>
               </div>
             </div>
             <div className={styles.articlePanelItem}>
               <div className={styles.articlePanelIcon}>
                 <MessageOutlined style={{ color: '#ccc' }} />
-                {/* <MessageSquare color="#ccc" onClick={this.handleMessage} /> */}
               </div>
               <div className={styles.articlePanelCount}>
-                {/* <span>{commentNum}</span> */}
                 <span>{detail.comment}</span>
               </div>
             </div>
@@ -271,9 +261,13 @@ const Article = props => {
   )
 }
 
-export default connect(({ article: { detail, hots }, loading }) => ({
-  detail,
-  hots,
-  loading: loading.effects['article/detail'],
-  loading2: loading.effects['article/hot'],
-}))(Article)
+export default connect(
+  ({ article: { detail, hots, isFavorite, favoriteCount }, loading }) => ({
+    detail,
+    hots,
+    isFavorite,
+    favoriteCount,
+    loading: loading.effects['article/detail'],
+    loading2: loading.effects['article/hot'],
+  }),
+)(Article)

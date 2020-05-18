@@ -2,9 +2,9 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-10 20:38:22
+ * @Last Modified time: 2020-05-12 14:58:18
  */
-
+import { history } from 'umi'
 import {
   getCategories,
   getArticles,
@@ -13,7 +13,9 @@ import {
   getComments,
   getTags,
   createNoLoginComment,
+  createComment,
   updateFavorite,
+  getIsFavorite,
 } from '@/services/article'
 
 export default {
@@ -26,107 +28,148 @@ export default {
     tags: [],
     detail: {},
     articleCount: 0,
+    isFavorite: false,
+    favoriteCount: 0,
   },
   effects: {
     *categories({ payload }, { call, put }) {
-      const response = yield call(getCategories, payload)
-      yield put({
-        type: 'categoriesHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getCategories, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            categories: data,
+          },
+        })
+      }
     },
+
     *articles({ payload }, { call, put }) {
-      const response = yield call(getArticles, payload)
-      yield put({
-        type: 'articlesHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getArticles, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            articles: data.articles,
+            articleCount: data.count,
+          },
+        })
+      }
     },
+
     *hot({ payload }, { call, put }) {
-      const response = yield call(getHotArticles, payload)
-      yield put({
-        type: 'hotHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getHotArticles, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            hots: data,
+          },
+        })
+      }
     },
+
     *detail({ payload }, { call, put }) {
-      const response = yield call(getArticleDetail, payload)
-      yield put({
-        type: 'detailHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getArticleDetail, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            detail: data,
+            favoriteCount: data.favorite,
+          },
+        })
+      }
     },
+
     *comments({ payload }, { call, put }) {
-      const response = yield call(getComments, payload)
-      yield put({
-        type: 'commentHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getComments, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            comments: data,
+          },
+        })
+      }
     },
+
     *tags({ payload }, { call, put }) {
-      const response = yield call(getTags, payload)
-      yield put({
-        type: 'tagsHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getTags, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            tags: data,
+          },
+        })
+      }
     },
+
     *addNoLoginComment({ payload }, { call, put }) {
-      const response = yield call(createNoLoginComment, payload)
-      yield put({
-        type: 'createNoLoginCommentHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(createNoLoginComment, payload)
+      if (status === 200) {
+        yield put({
+          type: 'createCommentHandle',
+          payload: data,
+        })
+      }
     },
-    *favorite({ payload, callback }, { call, put }) {
-      const response = yield call(updateFavorite, payload)
-      if (callback) callback(response)
+
+    *addComment({ payload }, { call, put }) {
+      const { status, data } = yield call(createComment, payload)
+      if (status === 200) {
+        yield put({
+          type: 'createCommentHandle',
+          payload: data,
+        })
+      }
+    },
+
+    *favorite({ payload }, { call, put }) {
+      const { status } = yield call(updateFavorite, payload)
+      if (status === 200) {
+        yield put({ type: 'changeFavorite' })
+      } else {
+        history.push('/login')
+      }
+    },
+
+    *isFavorite({ payload, callback }, { call, put }) {
+      const { status, data } = yield call(getIsFavorite, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            isFavorite: data,
+          },
+        })
+      }
     },
   },
   reducers: {
-    categoriesHandle(state, { payload }) {
+    changeFavorite(state) {
+      const type = state.isFavorite ? 'reduce' : 'plus'
+      let favoriteCount = state.favoriteCount
+      if (type === 'plus') {
+        favoriteCount += 1
+      }
+      if (type === 'reduce') {
+        favoriteCount -= 1
+      }
       return {
         ...state,
-        categories: payload.status === 200 ? payload.data : [],
+        isFavorite: !state.isFavorite,
+        favoriteCount,
       }
     },
-    articlesHandle(state, { payload }) {
-      return {
-        ...state,
-        articles: payload.status === 200 ? payload.data.articles : [],
-        articleCount: payload.status === 200 ? payload.data.count : 0,
-      }
+    handle(state, { payload }) {
+      return { ...state, ...payload }
     },
-    hotHandle(state, { payload }) {
+    createCommentHandle(state, { payload }) {
       return {
         ...state,
-        hots: payload.status === 200 ? payload.data : [],
-      }
-    },
-    detailHandle(state, { payload }) {
-      return {
-        ...state,
-        detail: payload.status === 200 ? payload.data : {},
-      }
-    },
-    commentHandle(state, { payload }) {
-      return {
-        ...state,
-        comments: payload.status === 200 ? payload.data : [],
-      }
-    },
-    tagsHandle(state, { payload }) {
-      return {
-        ...state,
-        tags: payload.status === 200 ? payload.data : [],
-      }
-    },
-    createNoLoginCommentHandle(state, { payload }) {
-      return {
-        ...state,
-        comments:
-          payload.status === 200
-            ? [payload.data, ...state.comments]
-            : [...state.comments],
+        comments: [payload, ...state.comments],
       }
     },
   },

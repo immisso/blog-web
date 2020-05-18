@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-16 06:35:02
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-19 16:00:25
+ * @Last Modified time: 2020-05-13 16:32:50
  */
 
 import React from 'react'
@@ -70,7 +70,7 @@ const CodeTag = props => {
   return (
     <SyntaxHighlighter
       language={language}
-      style={docco}
+      style={github}
       // showLineNumbers={true}
     >
       {value}

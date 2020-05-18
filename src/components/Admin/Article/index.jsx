@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-28 20:58:37
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-02 20:46:09
+ * @Last Modified time: 2020-05-12 12:46:30
  */
 import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Tag, Popconfirm } from 'antd'
@@ -42,7 +42,6 @@ const Article = props => {
     },
     {
       title: '标题',
-      // dataIndex: ['title', 'id'],
       width: 150,
       ellipsis: true,
       render(article) {
@@ -76,7 +75,7 @@ const Article = props => {
     },
     {
       title: '点赞数',
-      dataIndex: 'like',
+      dataIndex: 'favorite',
     },
     {
       title: '浏览量',

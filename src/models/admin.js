@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-29 18:05:19
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-02 19:33:35
+ * @Last Modified time: 2020-05-12 14:53:44
  */
 
 import {
@@ -29,154 +29,150 @@ export default {
   },
   effects: {
     *comments({ payload }, { call, put }) {
-      const response = yield call(getComments, payload)
-      yield put({
-        type: 'commentHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getComments, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            comments: data,
+          },
+        })
+      }
     },
+
     *categories({ payload }, { call, put }) {
-      const response = yield call(getCategories, payload)
-      yield put({
-        type: 'categoriesHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getCategories, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            categories: data,
+          },
+        })
+      }
     },
+
     *deleteCategory({ payload }, { call, put }) {
-      const response = yield call(deleteCategory, payload)
-      yield put({
-        type: 'deleteCategoryHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(deleteCategory, payload)
+      if (status === 200) {
+        yield put({
+          type: 'deleteCategoryHandle',
+          payload: data,
+        })
+      }
     },
+
     *createCategory({ payload }, { call, put }) {
-      const response = yield call(createCategory, payload)
-      yield put({
-        type: 'createCategoryHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(createCategory, payload)
+      if (status === 200) {
+        yield put({
+          type: 'createCategoryHandle',
+          payload: data,
+        })
+      }
     },
+
     *tags({ payload }, { call, put }) {
-      const response = yield call(getTags, payload)
-      yield put({
-        type: 'getTagsHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getTags, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            tags: data,
+          },
+        })
+      }
     },
+
     *deleteTag({ payload }, { call, put }) {
-      const response = yield call(deleteTag, payload)
-      yield put({
-        type: 'deleteTagHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(deleteTag, payload)
+      if (status === 200) {
+        yield put({
+          type: 'deleteTagHandle',
+          payload: data,
+        })
+      }
     },
     *createTag({ payload }, { call, put }) {
-      const response = yield call(createTag, payload)
-      yield put({
-        type: 'createTagHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(createTag, payload)
+      if (status === 200) {
+        yield put({
+          type: 'createTagHandle',
+          payload: data,
+        })
+      }
     },
     *deleteArticle({ payload }, { call, put }) {
-      const response = yield call(deleteArticle, payload)
-      yield put({
-        type: 'deleteArticleHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(deleteArticle, payload)
+      if (status === 200) {
+        yield put({
+          type: 'deleteArticleHandle',
+          payload: data,
+        })
+      }
     },
     *deleteComment({ payload }, { call, put }) {
-      const response = yield call(deleteComment, payload)
-      yield put({
-        type: 'deleteCommentHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(deleteComment, payload)
+      if (status === 200) {
+        yield put({
+          type: 'deleteCommentHandle',
+          payload: data,
+        })
+      }
     },
     *articles({ payload }, { call, put }) {
-      const response = yield call(getArticles, payload)
-      yield put({
-        type: 'articlesHandle',
-        payload: response,
-      })
+      const { status, data } = yield call(getArticles, payload)
+      if (status === 200) {
+        yield put({
+          type: 'handle',
+          payload: {
+            articles: data.articles,
+            articleCount: data.count,
+          },
+        })
+      }
     },
   },
   reducers: {
-    commentHandle(state, { payload }) {
-      return {
-        ...state,
-        comments: payload.status === 200 ? payload.data : [],
-      }
-    },
-    categoriesHandle(state, { payload }) {
-      return {
-        ...state,
-        categories: payload.status === 200 ? payload.data : [],
-      }
-    },
-    deleteCategoryHandle(state, { payload }) {
-      return {
-        ...state,
-        categories:
-          payload.status === 200
-            ? [...state.categories].filter(item => item.id !== payload.data.id)
-            : [...state.categories],
-      }
+    handle(state, { payload }) {
+      return { ...state, ...payload }
     },
     createCategoryHandle(state, { payload }) {
       return {
         ...state,
-        categories:
-          payload.status === 200
-            ? [...state.categories, payload.data]
-            : [...state.categories],
-      }
-    },
-    getTagsHandle(state, { payload }) {
-      return {
-        ...state,
-        tags: payload.status === 200 ? payload.data : [],
-      }
-    },
-    deleteTagHandle(state, { payload }) {
-      return {
-        ...state,
-        tags:
-          payload.status === 200
-            ? [...state.tags].filter(item => item.id !== payload.data.id)
-            : [...state.tags],
+        categories: [...state.categories, payload],
       }
     },
     createTagHandle(state, { payload }) {
       return {
         ...state,
-        tags:
-          payload.status === 200
-            ? [...state.tags, payload.data]
-            : [...state.tags],
+        tags: [...state.tags, payload],
+      }
+    },
+    deleteCategoryHandle(state, { payload }) {
+      return {
+        ...state,
+        categories: [...state.categories].filter(
+          item => item.id !== payload.id,
+        ),
+      }
+    },
+    deleteTagHandle(state, { payload }) {
+      return {
+        ...state,
+        tags: [...state.tags].filter(item => item.id !== payload.id),
       }
     },
     deleteArticleHandle(state, { payload }) {
       return {
         ...state,
-        articles:
-          payload.status === 200
-            ? [...state.articles].filter(item => item.id !== payload.data.id)
-            : [...state.articles],
+        articles: [...state.articles].filter(item => item.id !== payload.id),
       }
     },
     deleteCommentHandle(state, { payload }) {
       return {
         ...state,
-        comments:
-          payload.status === 200
-            ? [...state.comments].filter(item => item.id !== payload.data.id)
-            : [...state.comments],
-      }
-    },
-    articlesHandle(state, { payload }) {
-      return {
-        ...state,
-        articles: payload.status === 200 ? payload.data.articles : [],
-        articleCount: payload.status === 200 ? payload.data.count : 0,
+        comments: [...state.comments].filter(item => item.id !== payload.id),
       }
     },
   },
