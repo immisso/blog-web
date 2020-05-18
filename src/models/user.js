@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-05-06 09:25:04
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-15 12:51:43
+ * @Last Modified time: 2020-05-17 19:31:36
  */
 import { message } from 'antd'
 import { history } from 'umi'
@@ -41,7 +41,7 @@ export default {
       const { status } = yield call(registerAccount, payload)
       if (status === 200) {
         message.success('注册成功')
-        history.push({ path: '/login', isRegister: true })
+        history.push({ pathname: '/login', isRegister: true })
       } else {
         message.warn('注册失败，请重新注册')
       }
@@ -52,6 +52,7 @@ export default {
       if (response.status !== 200) {
         message.error(response.message)
       } else {
+        message.success('登录成功')
         if (callback) callback(response)
       }
     },
@@ -60,7 +61,6 @@ export default {
       const response = yield call(getAccount, payload)
       if (response.status === 200) {
         storageHelper.set('user', response.data)
-        message.success('登录成功')
         if (callback) callback(response)
         yield put({
           type: 'handle',

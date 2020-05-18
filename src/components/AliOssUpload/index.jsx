@@ -2,23 +2,17 @@
  * @Author: 柒叶
  * @Date: 2020-04-21 20:46:32
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-27 08:05:18
+ * @Last Modified time: 2020-05-17 19:02:55
  */
 
 import React, { useState } from 'react'
 import { Upload, message } from 'antd'
 import moment from 'moment'
 import OSS from 'ali-oss'
-import {
-  CaretDownOutlined,
-  PlusOutlined,
-  LoadingOutlined,
-  InboxOutlined,
-} from '@ant-design/icons'
+import { PlusOutlined, LoadingOutlined, InboxOutlined } from '@ant-design/icons'
 import { accessKeySecret, accessKeyId, bucket } from '@/config/secret'
 
 const { Dragger } = Upload
-// import './index.css'
 
 const client = new OSS({
   region: 'oss-cn-hangzhou',
@@ -52,9 +46,10 @@ const AliOssUpload = props => {
   const [imageUrl, setImageUrl] = useState(null)
 
   const beforeUpload = file => {
-    console.log('eeeeeeeeeeeeeeeeeeeeee')
-    console.log(file)
-    const isJpgOrPng = file.type === 'image/png' || file.type === 'image/jpeg'
+    const isJpgOrPng =
+      file.type === 'image/png' ||
+      file.type === 'image/jpeg' ||
+      file.type === 'image/gif'
     if (!isJpgOrPng) {
       message.error('你只能上传JPG/PNG格式的图片')
     }
@@ -64,13 +59,10 @@ const AliOssUpload = props => {
     }
     UploadToOss(filePath(file), file)
       .then(data => {
-        console.log('eeeeeeeeeeeeeeeeeeeeeeeeee')
-        console.log(data)
         setImageUrl(data.url)
         returnImageUrl(data.url)
       })
       .catch(error => {
-        console.log('bbbbbbbbbbbbbbbbbbbbbbbbbb')
         console.log(error)
       })
     return isJpgOrPng && isLt4M
@@ -81,7 +73,6 @@ const AliOssUpload = props => {
       setLoadding(true)
     }
     if (info.file.status === 'done') {
-      console.log('上传完成后的会走到这里')
       console.log(info)
     }
   }
