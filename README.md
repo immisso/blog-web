@@ -1,11 +1,11 @@
 # 个人博客网站
 > 如果这个项目对你有用，麻烦动动手指点star，谢谢！
 
-接下来我将对该项目进行大致的使用说明，后续也会写一份更为详细的免费的《Node全栈应用——从零开发前后端分离的个人网站》教程，带你走进从零开始开发的全过程。您现在看的这个项目只是个人网站的前端项目，服务端项目地址请点击[个人博客网站API]()
+接下来我将对该项目进行大致的使用说明，后续也会写一份更为详细的免费的《Node全栈开发——带你从零开发前后端分离的个人网站》教程，带你从零开发到部署上线的全过程，敬请期待。您现在看的这个项目只是网站的前端项目，服务端项目地址请点击[博客网站服务端](https://github.com/immisso/blog-server)
 
-该项目采用`React+antd+umi+dva`技术栈进行实现，线上地址[https://www.immisso.com](https://www.immisso.com)（暂时还没有部署上去，这是以前的网站）
+该项目采用`React+antd+umi+dva`技术栈进行实现，线上地址[https://www.immisso.com](https://www.immisso.com)（最新暂时还没有部署上去，这是以前的网站，最新的将于近期部署上去）
 
->**注意：** 接下来的说明都只针对该前端项目的说明。因为是前后端分离。所以启动是需要前后端一起启动的。服务端项目请移步[个人博客网站API]()
+>**注意：** 接下来的说明都只针对该前端项目的说明。因为是前后端分离。所以启动是需要前后端一起启动的。服务端项目请移步[博客网站服务端](https://github.com/immisso/blog-server)
 
 ## 运行效果
 下面是一些主要功能的效果图。请君参考。
@@ -21,13 +21,13 @@
 
 ## 如何开始
 
-+ clone项目到本地
+#### clone项目到本地
 
 ```git
 $ git clone https://github.com/immisso/blog-web
 ```
 
-+ 安装包
+#### 安装依赖
 
 ```bash
 $ npm install
@@ -36,7 +36,7 @@ $ npm install
 ```bash
 $ yarn
 ```
-+ 启动项目
+#### 启动项目
 
 ```bash
 $ npm run start
@@ -46,11 +46,22 @@ $ npm run start
 $ yarn start
 ```
 启动成功后，然后再浏览器上打开[http://localhost:8888](http://localhost:8888)即可！
+虽然此时可以我们可以成功启动，但是还不能上传文件到阿里云，因为我们还需要一些配置。在`src/`目录下创建`config`文件夹，然后创建一个`secret.js`文件。改文件内容如下:
+
+```javascript
+module.exports = {
+  accessKeyId: '', // 阿里云Keyid
+  accessKeySecret: '', // 阿里云Key secret
+  bucket: '', // Oss bucket 名字
+  ENCRYPT_KEY: '' // localStorage加密Key
+}
+```
+这样配置好，就可以成功上传文件了！
 
 > 当然你要和服务端同时启用。
 
 ## 功能介绍
-这个项目虽然不大，但是功能还算齐全。大体来说分为主网站和管理系统两部分。目前已实现主要功能如下：
+这个项目虽然不大，但是功能还算齐全。大体来说分为主网站和管理系统两部分。目前已经实现主要功能如下：
 
 ### 主网站
 + 登录
@@ -80,6 +91,7 @@ $ yarn start
 + `react-markdown`
 + `highlight.js`
 
-
+## 特别说明
+该项目会长期更新。会逐步完善其他许多功能。如果写教程功能、邮件提醒、用户管理、主题风格、代码风格等。欢迎长期关注，请您star、star、star！谢谢
 
 
