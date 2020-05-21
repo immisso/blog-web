@@ -43,6 +43,10 @@ export default defineConfig({
       component: '@/pages/Article',
     },
     {
+      path: '/write/drafts',
+      component: '@/pages/Draft',
+    },
+    {
       path: '/write/draft/:key',
       component: '@/pages/Write',
     },
