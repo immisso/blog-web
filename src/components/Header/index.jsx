@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-15 13:43:33
+ * @Last Modified time: 2020-05-21 07:21:24
  */
 
 import React, { useState, useEffect } from 'react'
@@ -176,7 +176,11 @@ const MainHeader = props => {
                   <Menu.Item key="setting:1">
                     <Link to="/write/draft/new">写文章</Link>
                   </Menu.Item>
-                  <Menu.Item key="setting:2">写教程</Menu.Item>
+                  <Menu.Item key="setting:2">
+                    <Link to="/write/drafts">草稿箱</Link>
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item key="setting:3">写教程</Menu.Item>
                   <Menu.Divider />
                   {account.account_type === 'ADMIN' ? (
                     <Menu.Item key="setting:4">

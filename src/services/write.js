@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:58:34
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-04-20 12:36:39
+ * @Last Modified time: 2020-05-21 07:25:11
  */
 
 import { stringify } from 'qs'
@@ -29,6 +29,14 @@ export async function getDrafts() {
 // 更新draft
 export async function updateDraft(data) {
   return request('/api/update/draft', {
+    method: 'POST',
+    data,
+  })
+}
+
+// 删除draft
+export async function deleteDraft(data) {
+  return request('/api/delete/draft', {
     method: 'POST',
     data,
   })

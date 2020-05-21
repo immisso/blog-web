@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-07 12:55:33
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-15 16:22:08
+ * @Last Modified time: 2020-05-21 07:28:44
  */
 import { message } from 'antd'
 import { history } from 'umi'
@@ -13,6 +13,7 @@ import {
   getDrafts,
   getCategories,
   createPublish,
+  deleteDraft,
 } from '@/services/write'
 
 export default {
@@ -83,6 +84,16 @@ export default {
       }
     },
 
+    *deleteDraft({ payload }, { call, put }) {
+      const { status, data } = yield call(deleteDraft, payload)
+      if (status === 200) {
+        yield put({
+          type: 'deleteDraftHandle',
+          payload: data,
+        })
+      }
+    },
+
     *publish({ payload, callback }, { call, put }) {
       const { status } = yield call(createPublish, payload)
       if (status === 200) {
@@ -106,6 +117,12 @@ export default {
         ...payload,
         selectedCategory: state.selectedCategory || payload.selectedCategory,
         selectedTag: state.selectedTag || payload.selectedTag,
+      }
+    },
+    deleteDraftHandle(state, { payload }) {
+      return {
+        ...state,
+        drafts: [...state.drafts].filter(item => item.id !== payload.id),
       }
     },
 
