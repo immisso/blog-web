@@ -2,7 +2,7 @@
  * @Author: 柒叶
  * @Date: 2020-04-05 12:05:06
  * @Last Modified by: 柒叶
- * @Last Modified time: 2020-05-21 07:21:24
+ * @Last Modified time: 2020-05-21 10:07:51
  */
 
 import React, { useState, useEffect } from 'react'
@@ -173,27 +173,29 @@ const MainHeader = props => {
             <Dropdown
               overlay={
                 <Menu>
-                  <Menu.Item key="setting:1">
+                  <Menu.Item key="write-article-key">
                     <Link to="/write/draft/new">写文章</Link>
                   </Menu.Item>
-                  <Menu.Item key="setting:2">
+                  <Menu.Item key="drafts-key">
                     <Link to="/write/drafts">草稿箱</Link>
                   </Menu.Item>
                   <Menu.Divider />
-                  <Menu.Item key="setting:3">写教程</Menu.Item>
+                  <Menu.Item key="write-course-key">
+                    <Link to="/write/course">写教程</Link>
+                  </Menu.Item>
                   <Menu.Divider />
                   {account.account_type === 'ADMIN' ? (
-                    <Menu.Item key="setting:4">
+                    <Menu.Item key="manager-center-key">
                       <Link to="/admin">管理中心</Link>
                     </Menu.Item>
                   ) : (
                     ''
                   )}
-                  <Menu.Item key="setting:5">
+                  <Menu.Item key="user-center-key">
                     <Link to="/account">个人中心</Link>
                   </Menu.Item>
                   <Menu.Divider />
-                  <Menu.Item key="setting:7" onClick={logout}>
+                  <Menu.Item key="logout-key" onClick={logout}>
                     退出
                   </Menu.Item>
                 </Menu>
