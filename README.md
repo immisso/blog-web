@@ -6,7 +6,7 @@
 接下来我将对该项目进行大致的使用说明，后续也会写一份更为详细的免费的《Node全栈开发——带你从零开发前后端分离的个人网站》教程，带你从零开发到部署上线的全过程，敬请期待。您现在看的这个项目只是网站的前端项目，服务端项目地址请点击[服务端](https://github.com/immisso/blog-server)
 
 ## 关于Demo
-该项目采用`React+antd+umi+dva`技术栈进行实现。后续会部署到[https://www.immisso.com](https://www.immisso.com)，当前[https://www.immisso.com](https://www.immisso.com)上部署的是老版本的博客，仅供参考。最新版近期会部署上去。
+该项目采用`React+antd+umi+dva`技术栈进行实现。查看[demo](https://blog-demo.immisso.com)，测试账号和密码都是`qiye@admin.com`
 
 
 >**注意：** 接下来的说明都只针对该前端项目的说明。因为是前后端分离。所以启动是需要前后端一起启动的。服务端项目请移步[博客网站服务端](https://github.com/immisso/blog-server)
